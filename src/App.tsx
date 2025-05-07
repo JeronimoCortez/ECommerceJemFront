@@ -1,4 +1,4 @@
-import ViewHM from "./components/screen/viewHM";
+import ViewHM from "./screen/ViewHM";
 
 function App() {
   return (

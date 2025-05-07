@@ -1,3 +1,5 @@
+import Search from "../Search/Search";
+
 const Filter = () => {
   return (
     <div className="flex justify-between items-center p-4">
@@ -17,15 +19,7 @@ const Filter = () => {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <div className="flex justify-around items-center border rounded-full w-[250px] p-2 bg-[#000] text-white">
-          <input
-            placeholder="Buscar"
-            className="all:unset focus:outline-none focus:ring-0"
-          />
-          <span className="material-symbols-outlined hover:cursor-pointer">
-            search
-          </span>
-        </div>
+        <Search />
         <span className="material-symbols-outlined">shopping_bag</span>
       </div>
     </div>
