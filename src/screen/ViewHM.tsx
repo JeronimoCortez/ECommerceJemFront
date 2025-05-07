@@ -1,5 +1,6 @@
 import AdvertisingHM from "../components/ui/AdvertisingHM/AdvertisingHM";
 import Filter from "../components/ui/Filter/Filter";
+import Footer from "../components/ui/Footer/Footer";
 import Header from "../components/ui/Header/Header";
 import HeroHM from "../components/ui/HeroHombre/HeroHM";
 import Location from "../components/ui/Location/Location";
@@ -14,6 +15,7 @@ const ViewHM = () => {
       <HeroHM />
       <ProductsHM />
       <AdvertisingHM />
+      <Footer />
     </div>
   );
 };
