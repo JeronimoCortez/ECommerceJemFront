@@ -1,5 +1,11 @@
+import ViewHM from "./components/screen/viewHM";
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <ViewHM />
+    </>
+  );
 }
 
 export default App;
