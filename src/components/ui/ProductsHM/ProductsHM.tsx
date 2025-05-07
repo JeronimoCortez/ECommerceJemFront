@@ -12,6 +12,7 @@ const ProductsHM = () => {
       spaceBetween={50}
       slidesPerView={1}
       navigation={true}
+      centeredSlides={true}
       breakpoints={{
         640: {
           slidesPerView: 2,
@@ -26,6 +27,7 @@ const ProductsHM = () => {
           spaceBetween: 50,
         },
       }}
+      className="my-4"
     >
       <SwiperSlide>
         <CardProductHM producto={""} />
