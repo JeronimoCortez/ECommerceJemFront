@@ -24,7 +24,10 @@ const LoginForm = () => {
         </div>
         <p className="text-center text-md mt-4">
           ¡No tengo usuario{" "}
-          <a className="underline cursor-pointer">quiero registrarme</a>!
+          <a href="/register" className="underline cursor-pointer">
+            quiero registrarme
+          </a>
+          !
         </p>
       </div>
     </div>
