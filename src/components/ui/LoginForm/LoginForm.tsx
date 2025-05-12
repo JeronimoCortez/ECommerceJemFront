@@ -1,7 +1,9 @@
-const Login = () => {
+import JEMBar from "../JEMBar/JEMBar";
+
+const LoginForm = () => {
   return (
     <div>
-      <div className="bg-black text-white text-center py-1 text-xl">JEM</div>
+      <JEMBar />
       <div className="min-h-screen flex flex-col items-center justify-center bg-white">
         <div className="bg-white shadow drop-shadow-lg p-6 rounded-md w-70 h-64 flex flex-col justify-center">
           <input
@@ -29,4 +31,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginForm;

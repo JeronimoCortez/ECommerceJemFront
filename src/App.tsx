@@ -1,17 +1,11 @@
-// import Header from "./components/ui/Header/Header";
-// import Footer from "./components/ui/Footer/Footer";
-// import Landing from "./components/screen/Landing/Landig";
-import Login from "./components/screen/Login";
-
-import Register from "./components/screen/Register";
+import Landing from "./screen/Landing/Landig";
+import Login from "./screen/Login/Login";
+import Register from "./screen/Register/Register";
 
 function App() {
   return (
-    <div className="font-roboto">
-      {/* <Header />
+    <div>
       <Landing />
-      <Footer /> 
-      <Login />*/}
       <Login />
       <Register />
     </div>

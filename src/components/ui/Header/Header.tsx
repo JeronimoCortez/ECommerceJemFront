@@ -1,7 +1,16 @@
+import Search from "../Search/Search";
+import ShoppingCartButton from "../ShoppingCartButton/ShoppingCartButton";
+
 const Header = () => {
   return (
-    <div className="bg-black text-white text-center py-2 text-sm">
-      Hasta 12 cuotas sin interés con bancos seleccionados
+    <div>
+      <div className="flex justify-between items-center p-4">
+        <div className="text-4xl jacquard-24-regular font-black">JEM</div>
+        <div className="flex items-center space-x-4">
+          <Search />
+          <ShoppingCartButton />
+        </div>
+      </div>
     </div>
   );
 };
