@@ -11,7 +11,7 @@ const CardProductHM: FC<IPropsCardProductHM> = ({ producto }) => {
       <div className="bg-[#D9D9D9] w-[200px] h-[200px] object-cover flex items-center justify-center">
         <img
           className="w-[150px] h-[150px] object-cover"
-          src="./ProductoHeroImageHM.png"
+          src="/ProductoHeroImageHM.png"
           alt="Imagen {producto.nombre}"
         />
       </div>
