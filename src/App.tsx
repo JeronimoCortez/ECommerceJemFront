@@ -1,9 +1,8 @@
-import ViewHM from "./screen/ViewHM";
-
+import AppRouter from "./routes/AppRouter";
 function App() {
   return (
     <>
-      <ViewHM />
+      <AppRouter />
     </>
   );
 }
