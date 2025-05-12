@@ -4,12 +4,12 @@ const HeroHM = () => {
       <div className="flex max-w-full">
         <img
           className="w-1/2 max-w-full"
-          src="./HeroImageHM.png"
+          src="/HeroImageHM.png"
           alt="Imagen de publicidad de zapatillas Acsis ff blast pure gel"
         />
         <img
           className="w-1/2 max-w-full"
-          src="./ProductoHeroImageHM.png"
+          src="/ProductoHeroImageHM.png"
           alt="Foto zapatillas Acsis ff blast pure gel"
         />
       </div>
