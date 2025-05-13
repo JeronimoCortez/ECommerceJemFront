@@ -3,7 +3,7 @@ const AdvertisingHM = () => {
     <div className="flex flex-col sm:flex-row gap-4 w-screen max-w-full ">
       <div className="flex-1 w-full">
         <img
-          className="w-full object-cover"
+          className="w-full object-cover h-full"
           src="/AdidasOriginals.png"
           alt="Publicidad adidas originals"
         />
@@ -11,7 +11,7 @@ const AdvertisingHM = () => {
       </div>
       <div className="flex-1 w-full ">
         <img
-          className="w-full object-cover"
+          className="w-full h-full object-cover"
           src="/Jordan.png"
           alt="Publicidad Nike Jordan"
         />
