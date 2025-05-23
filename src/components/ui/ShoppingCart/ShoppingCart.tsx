@@ -1,12 +1,12 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { FC, useState } from "react";
+import { FC } from "react";
+import ProductCounter from "../ProductCounter/ProductCounter";
 
 type IPropsShoppingCart = {
   onClose: VoidFunction;
 };
 
 const ShoppingCart: FC<IPropsShoppingCart> = ({ onClose }) => {
-  const [count, setCount] = useState(0);
   return (
     <div className="fixed inset-0 bg-[#D9D9D9]/75 z-[999] ">
       <div className="absolute bg-[#fff] w-[30vw] h-[100vh] right-0">
@@ -29,25 +29,7 @@ const ShoppingCart: FC<IPropsShoppingCart> = ({ onClose }) => {
             <p>
               Talle: {"L"} Color: {"blanca"}
             </p>
-            <div className="flex w-[125px] gap-4 bg-[#000] text-white justify-center items-center rounded-full">
-              <button
-                className="all:unset hover:cursor-pointer text-xl "
-                onClick={() => {
-                  setCount(count - 1);
-                }}
-              >
-                -
-              </button>
-              <p>{count}</p>
-              <button
-                className="all:unset hover:cursor-pointer text-xl "
-                onClick={() => {
-                  setCount(count + 1);
-                }}
-              >
-                +
-              </button>
-            </div>
+            <ProductCounter />
           </div>
           <div className="flex flex-col items-center gap-1">
             <Icon

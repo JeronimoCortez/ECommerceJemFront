@@ -3,6 +3,7 @@ import Landing from "../screen/Landing/Landing";
 import ViewHM from "../screen/ViewHM/ViewHM";
 import Login from "../screen/Login/Login";
 import Register from "../screen/Register/Register";
+import ProductDetails from "../screen/ProductDetails/ProductDetails";
 
 const AppRouter = () => {
   return (
@@ -11,6 +12,7 @@ const AppRouter = () => {
       <Route path="/view/:gender" element={<ViewHM />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/product/:id" element={<ProductDetails />} />
     </Routes>
   );
 };
