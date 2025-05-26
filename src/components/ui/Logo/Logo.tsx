@@ -6,8 +6,10 @@ type LogoProps = {
 
 const Logo: FC<LogoProps> = ({ className }) => {
   return (
-    <div className={`text-4xl jacquard-24-regular font-black ${className}`}>
-      JEM
+    <div className={`${className}`}>
+      <a href="/" className="text-4xl jacquard-24-regular font-black">
+        JEM
+      </a>
     </div>
   );
 };

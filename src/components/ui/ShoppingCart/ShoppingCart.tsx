@@ -9,7 +9,7 @@ type IPropsShoppingCart = {
 const ShoppingCart: FC<IPropsShoppingCart> = ({ onClose }) => {
   return (
     <div className="fixed inset-0 bg-[#D9D9D9]/75 z-[999] ">
-      <div className="absolute bg-[#fff] w-[30vw] h-[100vh] right-0">
+      <div className="absolute bg-[#fff] w-[100vw] md:w-[30vw] h-[100vh] right-0">
         <p className="text-center  font-bold mt-2">Mi compra</p>
         <Icon
           className="hover:cursor-pointer absolute right-0 top-0 mt-2"

@@ -9,7 +9,7 @@ const ProductsHM = () => {
   return (
     <Swiper
       modules={[Navigation]}
-      spaceBetween={50}
+      spaceBetween={20}
       slidesPerView={1}
       navigation={true}
       centeredSlides={true}

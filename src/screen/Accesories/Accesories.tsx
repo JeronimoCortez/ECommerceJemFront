@@ -9,7 +9,6 @@ import Location from "../../components/ui/Location/Location";
 import PublicityBar from "../../components/ui/PublicityBar/PublicityBar";
 import ShowMoreButton from "../../components/ui/ShowMoreButton/ShowMoreButton";
 
-
 const sampleProducts: Product[] = [
   {
     id: 1,
@@ -83,7 +82,7 @@ const Accessories: React.FC = () => {
     <div>
       <PublicityBar />
       <FilterHM />
-      <Location />
+      <Location location={"Accesories"} />
       <div className="flex justify-center">
         {filtersVisible && <AsideFilters />}
         <div className="flex-1">
