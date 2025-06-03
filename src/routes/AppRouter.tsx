@@ -5,6 +5,7 @@ import Login from "../screen/Login/Login";
 import Register from "../screen/Register/Register";
 import ProductDetails from "../screen/ProductDetails/ProductDetails";
 import Accessories from "../screen/Accesories/Accesories";
+import CreateProduct from "../components/ui/CreateProduct/CreateProduct";
 
 const AppRouter = () => {
   return (
@@ -15,6 +16,7 @@ const AppRouter = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path="/catalogue" element={<Accessories />} />
+      <Route path="/createProduct" element={<CreateProduct />} /> /* nuevo elemento */
     </Routes>
   );
 };
