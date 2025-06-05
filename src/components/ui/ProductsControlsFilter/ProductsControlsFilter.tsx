@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import UpArrow from "../UpArrow/UpArrow";
 
@@ -45,7 +45,7 @@ const ProductControlsFilter: React.FC<Props> = ({
         <div className="flex items-center gap-4">
           <button
             onClick={onToggleFilters}
-            className="flex items-center text-lg hover:underline"
+            className="flex items-center text-lg hover:underline cursor-pointer"
           >
             {filtersVisible ? "Ocultar Filtros" : "Mostrar Filtros"}
             <Icon
@@ -77,7 +77,7 @@ const ProductControlsFilter: React.FC<Props> = ({
           ref={containerRef}
           className="absolute top-full right-0 bg-white drop-shadow-xl w-48 z-10"
         >
-          <ul className="divide-y">
+          <ul>
             {sortOptions.map((opt) => (
               <li key={opt}>
                 <button

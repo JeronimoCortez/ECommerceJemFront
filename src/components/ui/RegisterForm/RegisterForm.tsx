@@ -12,7 +12,7 @@ const RegisterForm = () => {
             className="border border-gray-300 p-2 rounded"
           />
           <input
-            placeholder="DNI (sin puntos ni espacios)*"
+            placeholder="DNI(sin puntos ni espacios)*"
             className="border border-gray-300 p-2 rounded"
           />
           <input
