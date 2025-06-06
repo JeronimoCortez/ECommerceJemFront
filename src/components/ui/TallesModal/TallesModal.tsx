@@ -65,13 +65,13 @@ const TallesModal = ({ isOpen, initialTalles, onClose, onSave }: TallesModalProp
 
         <div className="flex justify-center gap-4 mb-4">
           <button
-            className={`px-4 py-2 rounded ${tipo === "alfabetico" ? "bg-black text-white" : "bg-gray-200"}`}
+            className={`px-4 py-2 rounded cursor-pointer ${tipo === "alfabetico" ? "bg-black text-white" : "bg-gray-200"}`}
             onClick={() => handleTipoChange("alfabetico")}
           >
             Alfabético
           </button>
           <button
-            className={`px-4 py-2 rounded ${tipo === "numerico" ? "bg-black text-white" : "bg-gray-200"}`}
+            className={`px-4 py-2 rounded cursor-pointer ${tipo === "numerico" ? "bg-black text-white" : "bg-gray-200"}`}
             onClick={() => handleTipoChange("numerico")}
           >
             Numérico
@@ -104,10 +104,10 @@ const TallesModal = ({ isOpen, initialTalles, onClose, onSave }: TallesModalProp
         </div>
 
         <div className="mt-6 flex justify-between">
-          <button className="bg-gray-300 px-4 py-2 rounded cursor-pointer" onClick={onClose}>
+          <button className="bg-gray-300 text-black buttons" onClick={onClose}>
             Cancelar
           </button>
-          <button className="bg-black text-white px-4 py-2 rounded cursor-pointer" onClick={() => onSave(talles)}>
+          <button className="bg-black text-white buttons" onClick={() => onSave(talles)}>
             Guardar
           </button>
         </div>

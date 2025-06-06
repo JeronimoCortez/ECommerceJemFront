@@ -9,6 +9,7 @@ import Carousel from "../../components/ui/Carousel/Carousel";
 const Landing = () => {
   return (
     <div>
+      {/*// usarioActivo && <AdminButton view="Segun que corresponde"/>*/}
       <PublicityBar />
       <LoginBar />
       <Header />

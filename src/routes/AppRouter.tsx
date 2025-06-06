@@ -6,6 +6,7 @@ import Register from "../screen/Register/Register";
 import ProductDetails from "../screen/ProductDetails/ProductDetails";
 import Accessories from "../screen/Accesories/Accesories";
 import CreateProduct from "../components/ui/CreateProduct/CreateProduct";
+import AddDiscount from "../components/ui/AddDiscount/AddDiscount";
 
 const AppRouter = () => {
   return (
@@ -17,6 +18,7 @@ const AppRouter = () => {
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path="/catalogue" element={<Accessories />} />
       <Route path="/createProduct" element={<CreateProduct />} /> /* nuevo elemento */
+      <Route path="/addDiscount" element={<AddDiscount />} /> /* nuevo elemento */
     </Routes>
   );
 };

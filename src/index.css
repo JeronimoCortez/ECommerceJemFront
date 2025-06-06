@@ -15,23 +15,14 @@
   padding: 0.4rem;
 }
 
-.selector {
-  background-color: #E5E7EB; /* gray-200 */
-  cursor: pointer;
-  transition: #D1D5DB 0.2s ease;
-  border-radius: 2px;
-  margin-right: 4px;
-}
-
-.selector:hover {
-  background-color: #D1D5DB; /* gray-300 */
-}
-
 .buttons{
   cursor: pointer;
   border-radius: 2px;
-  color: white;
   padding: 0.5rem;
   padding-left: 2.5rem;
   padding-right: 2.5rem;
+}
+
+.buttons:hover {
+  opacity: 0.9;
 }

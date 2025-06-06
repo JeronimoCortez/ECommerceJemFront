@@ -74,65 +74,74 @@ const CreateProduct = ({ initialData }: CreateProductProps) => {
       {({ values, handleChange, setFieldValue, touched, errors }) => (
         <>
           <Form>
-            <div className="flex flex-col w-[100vw] h-[100vh] justify-center items-center">
-              <div className="flex flex-col gap-2 p-4 m-4 border border-black mx-auto">
-                <div className="text-center text-2xl font-bold p-6">
+            <div className="flex flex-col min-h-screen items-center justify-center px-4 py-8">
+              <div className="w-full max-w-md border border-black p-6 bg-white">
+                <div className="text-center text-2xl font-bold mb-6">
                   <h1>{initialData ? "Editar Producto" : "Crear Producto"}</h1>
                 </div>
 
+                {/* Nombre */}
                 <input
                   type="text"
                   name="nombre"
                   value={values.nombre}
                   placeholder="Nombre:"
                   onChange={handleChange}
-                  className={`inputsProduct w-full p-2 border rounded ${
+                  className={`w-full p-2 border rounded mb-3 ${
                     touched.nombre && errors.nombre ? "border-red-500" : "border-gray-300"
                   }`}
                 />
 
+                {/* Descripción */}
                 <textarea
                   name="descripcion"
                   value={values.descripcion}
                   onChange={handleChange}
                   placeholder="Descripción:"
-                  className="inputsProduct w-full p-2"
+                  className="w-full p-2 border border-gray-300 rounded mb-3"
                 />
 
-                <div className="inputsProduct">
+                {/* Talles */}
+                <div className="flex flex-col sm:flex-row gap-2 mb-3">
                   <input
                     type="text"
                     readOnly
                     name="talles"
                     value={values.talles.map(t => `${t.talle}: ${t.stock}`).join(", ")}
-                    onChange={handleChange}
                     placeholder="Talles:"
-                    className="flex-grow outline-none"
+                    className="flex-grow p-2 border border-gray-300 rounded"
                   />
-                  <button type="button" className="text-black selector px-2" onClick={() => setShowTalleModal(true)}>
-                    Modificar Talles
+                  <button
+                    type="button"
+                    className="text-black border border-gray-300 rounded px-3 py-2 cursor-pointer hover:bg-gray-200"
+                    onClick={() => setShowTalleModal(true)}
+                  >
+                    Modificar
                   </button>
                 </div>
 
+                {/* Stock */}
                 <input
-                  type="text"
+                  type="number"
                   name="stock"
                   value={values.stock}
                   onChange={handleChange}
                   placeholder="Stock:"
-                  className="inputsProduct flex-grow outline-none"
+                  className="w-full p-2 border border-gray-300 rounded mb-3"
                 />
 
+                {/* Precio */}
                 <input
-                  type="text"
+                  type="number"
                   name="precio"
                   value={values.precio}
                   onChange={handleChange}
                   placeholder="Precio:"
-                  className="inputsProduct flex-grow outline-none"
+                  className="w-full p-2 border border-gray-300 rounded mb-3"
                 />
 
-                <div className="relative inputsProduct">
+                {/* Imagen */}
+                <div className="relative w-full mb-3">
                   <input
                     type="file"
                     id="imagenJPG"
@@ -146,37 +155,45 @@ const CreateProduct = ({ initialData }: CreateProductProps) => {
                   />
                   <label
                     htmlFor="imagenJPG"
-                    className="flex items-center justify-between px-4 py-2 cursor-pointer w-full bg-white text-gray-500 hover:bg-gray-100"
+                    className="flex items-center justify-between px-4 py-2 cursor-pointer border border-gray-300 rounded w-full bg-white hover:bg-gray-100"
                   >
                     {values.imagenJPG?.name || "Seleccionar imagen JPG..."}
                     <Icon icon="formkit:folder" width="18" height="18" />
                   </label>
                 </div>
 
+                {/* Marca */}
                 <input
                   type="text"
                   name="marca"
                   value={values.marca}
                   onChange={handleChange}
                   placeholder="Marca:"
-                  className="inputsProduct flex-grow outline-none"
+                  className="w-full p-2 border border-gray-300 rounded mb-3"
                 />
 
+                {/* Color */}
                 <input
                   type="text"
                   name="color"
                   value={values.color}
                   onChange={handleChange}
                   placeholder="Color:"
-                  className="inputsProduct flex-grow outline-none"
+                  className="w-full p-2 border border-gray-300 rounded mb-6"
                 />
 
-                <div className="flex gap-16 justify-center">
-                  <button type="submit" className="buttons bg-black">Guardar</button>
-                  <button type="button" className="buttons bg-[#5A0000]">Cancelar</button>
+                {/* Botones */}
+                <div className="flex flex-col sm:flex-row gap-22 justify-center">
+                  <button type="submit" className="w-full sm:w-auto bg-black buttons text-white">
+                    Guardar
+                  </button>
+                  <button type="button" className="w-full sm:w-auto bg-[#5A0000] buttons text-white">
+                    Cancelar
+                  </button>
                 </div>
               </div>
             </div>
+
           </Form>
           {showTalleModal && (
             <TallesModal
