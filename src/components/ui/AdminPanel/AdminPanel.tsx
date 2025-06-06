@@ -7,6 +7,7 @@ import SortFiltersAdmin from "../SortFiltersAdmin/SortFiltersAdmin";
 import UserTable from "../User/User";
 import ProductTable from "../Product/Product";
 import SalesTable from "../SalesTable/SalesTable";
+import CreateProduct from "../CreateProduct/CreateProduct";
 
 export type Sale = {
   usuario: string;
@@ -83,9 +84,24 @@ const productosData = [
 
 //Borrar Luego
 const comprasData: Sale[] = [
-  { usuario: "Jeronimo Cortez", fecha: "4/6/25", precio: 123000, estado: "Pendiente" },
-  { usuario: "Mauro Arzuza", fecha: "5/12/24", precio: 94500, estado: "En Progreso" },
-  { usuario: "Ezequiel Argentini", fecha: "13/4/25", precio: 200000, estado: "Completada" },
+  {
+    usuario: "Jeronimo Cortez",
+    fecha: "4/6/25",
+    precio: 123000,
+    estado: "Pendiente",
+  },
+  {
+    usuario: "Mauro Arzuza",
+    fecha: "5/12/24",
+    precio: 94500,
+    estado: "En Progreso",
+  },
+  {
+    usuario: "Ezequiel Argentini",
+    fecha: "13/4/25",
+    precio: 200000,
+    estado: "Completada",
+  },
 ];
 
 const AdminPanel = () => {
@@ -103,6 +119,7 @@ const AdminPanel = () => {
   const salesOptions = ["Usuario", "Fecha", "Precio", "Estado"];
   const [options, setOptions] = useState<string[]>(userOptions);
   const [sortKey, setSortKey] = useState<string>(userOptions[0]);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     if (vista === "usuarios") {
@@ -168,7 +185,10 @@ const AdminPanel = () => {
         </div>
 
         <div className="flex justify-center items-center mb-8">
-          <button className="flex justify-around items-center bg-green-700 text-white px-6 py-2 rounded-full hover:cursor-pointer">
+          <button
+            onClick={() => setOpenModal(true)}
+            className="flex justify-around items-center bg-green-700 text-white px-6 py-2 rounded-full hover:cursor-pointer"
+          >
             Nuevo
             <span className="ml-1">
               <Icon icon="ph:plus-fill" width="24" height="24" />
@@ -186,6 +206,9 @@ const AdminPanel = () => {
           <SalesTable data={comprasData} sortKey={sortKey} />
         )}
       </div>
+      {vista === "productos" && openModal && (
+        <CreateProduct onClose={() => setOpenModal(false)} />
+      )}
     </div>
   );
 };

@@ -5,12 +5,15 @@ import Header from "../../components/ui/Header/Header";
 import Filter from "../../components/ui/Filter/Filter";
 import Hero from "../../components/ui/Hero/Hero";
 import Carousel from "../../components/ui/Carousel/Carousel";
+import { userStore } from "../../store/userStore";
+import AdminButton from "../../components/ui/AdminButton/AdminButton";
 
 const Landing = () => {
+  const { userActive } = userStore();
   return (
     <div>
-      {/*// usarioActivo && <AdminButton view="Segun que corresponde"/>*/}
-      <PublicityBar />
+      {userActive && <AdminButton view="Usuario" />}
+      {userActive?.rol === 0 && <PublicityBar />}
       <LoginBar />
       <Header />
       <Filter />

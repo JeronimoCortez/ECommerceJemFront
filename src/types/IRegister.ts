@@ -3,6 +3,6 @@ export interface IRegister {
   lastname: string;
   password: string;
   email: string;
-  DNI: string;
+  dni: string;
   phone: string;
 }

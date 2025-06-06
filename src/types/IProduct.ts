@@ -10,9 +10,8 @@ export interface IProduct extends IBase {
   descripcion: string;
   talles: ITalle[];
   stock: number;
-  imagenJPG: File | null;
+  imagen: File | null;
   color: string;
   marca: string;
-  imagen: string;
   descuentos: IDescuento[];
 }

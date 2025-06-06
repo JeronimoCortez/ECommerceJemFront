@@ -17,7 +17,7 @@ const validationSchema = Yup.object({
     "Las contraseñas no coinciden"
   ),
   email: Yup.string().required(),
-  DNI: Yup.string().required(),
+  dni: Yup.string().required(),
   phone: Yup.string().required(),
 });
 
@@ -31,7 +31,7 @@ const RegisterForm = () => {
     password: "",
     passwordRepeat: "",
     email: "",
-    DNI: "",
+    dni: "",
     phone: "",
   };
   return (
@@ -74,8 +74,8 @@ const RegisterForm = () => {
                   />
                   <input
                     type="text"
-                    name="DNI"
-                    value={values.DNI}
+                    name="dni"
+                    value={values.dni}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder="DNI (sin puntos ni espacios)*"
