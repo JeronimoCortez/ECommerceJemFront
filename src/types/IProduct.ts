@@ -11,5 +11,6 @@ export interface IProduct extends IBase {
   talles: ITalle[];
   color: string;
   marca: string;
+  imagen: string;
   descuentos: IDescuento[];
 }

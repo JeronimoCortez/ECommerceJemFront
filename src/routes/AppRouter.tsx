@@ -5,6 +5,9 @@ import Login from "../screen/Login/Login";
 import Register from "../screen/Register/Register";
 import ProductDetails from "../screen/ProductDetails/ProductDetails";
 import Accessories from "../screen/Accesories/Accesories";
+import PaymentSuccess from "../screen/PaymentSucces/PaymentSuccess";
+import PaymentFailure from "../screen/PaymentFailure/PaymentFailure";
+import OrdersUser from "../screen/OrdersUser/OrdersUser";
 
 const AppRouter = () => {
   return (
@@ -15,6 +18,9 @@ const AppRouter = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path="/catalogue" element={<Accessories />} />
+      <Route path="/pagoExitoso" element={<PaymentSuccess />} />
+      <Route path="/pagoRechazado" element={<PaymentFailure />} />
+      <Route path="/ordersUser/:id" element={<OrdersUser />} />
     </Routes>
   );
 };

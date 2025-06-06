@@ -1,13 +1,12 @@
 import { Estado } from "./enums/Estado.enum";
 import IBase from "./IBase";
 import { IDetalle } from "./IDetalle";
-import { IDireccion } from "./IDireccion";
+import { IUsuario } from "./IUsuario";
 
 export interface IOrdenCompra extends IBase {
-  direccionUsuario: IDireccion;
-  detalles: IDetalle[];
+  usuario?: IUsuario;
+  detalles?: IDetalle[];
   fecha: Date;
   precioTotal: number;
-  metodoPago: string;
   estado: Estado;
 }
