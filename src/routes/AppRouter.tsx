@@ -8,6 +8,8 @@ import Accessories from "../screen/Accesories/Accesories";
 import PaymentSuccess from "../screen/PaymentSucces/PaymentSuccess";
 import PaymentFailure from "../screen/PaymentFailure/PaymentFailure";
 import OrdersUser from "../screen/OrdersUser/OrdersUser";
+import Profile from "../screen/Profile/Profile";
+import Admin from "../screen/Admin/Admin";
 
 const AppRouter = () => {
   return (
@@ -21,6 +23,8 @@ const AppRouter = () => {
       <Route path="/pagoExitoso" element={<PaymentSuccess />} />
       <Route path="/pagoRechazado" element={<PaymentFailure />} />
       <Route path="/ordersUser/:id" element={<OrdersUser />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/admin" element={<Admin />} />
     </Routes>
   );
 };
