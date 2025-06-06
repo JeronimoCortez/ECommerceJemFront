@@ -9,3 +9,20 @@
   font-weight: 400;
   font-style: normal;
 }
+
+.inputsProduct{
+  border: 1px solid #D9D9D9;
+  padding: 0.4rem;
+}
+
+.buttons{
+  cursor: pointer;
+  border-radius: 2px;
+  padding: 0.5rem;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.buttons:hover {
+  opacity: 0.9;
+}
