@@ -1,32 +1,26 @@
 import EditButton from "../EditButton/EditButton";
 import DeleteButton from "../DeleteButton/DeleteButton";
-import { FC, useEffect } from "react";
-import { userStore } from "../../../store/userStore";
-import { getUsers } from "../../../services/userService";
+
+interface Usuario {
+  nombre: string;
+  id: string;
+  mail: string;
+}
 
 interface Props {
+  data: Usuario[];
   sortKey: string;
 }
 
-const UserTable: FC<Props> = ({ sortKey }) => {
-  const { users, setUsers } = userStore();
-
-  useEffect(() => {
-    const getData = async () => {
-      const data = await getUsers();
-      if (data) setUsers(data);
-    };
-    getData()
-  });
-
-  const sortedData = [...users].sort((a, b) => {
+const UserTable: React.FC<Props> = ({ data, sortKey }) => {
+  const sortedData = [...data].sort((a, b) => {
     switch (sortKey) {
       case "Usuario":
-        return a.userName.localeCompare(b.userName);
+        return a.nombre.localeCompare(b.nombre);
       case "ID":
-        return a.id - b.id;
+        return a.id.localeCompare(b.id);
       case "Mail":
-        return a.email.localeCompare(b.email);
+        return a.mail.localeCompare(b.mail);
       default:
         return 0;
     }
@@ -45,9 +39,9 @@ const UserTable: FC<Props> = ({ sortKey }) => {
       <tbody>
         {sortedData.map((u, i) => (
           <tr key={i}>
-            <td className="p-2">{u.userName}</td>
+            <td className="p-2">{u.nombre}</td>
             <td>{u.id}</td>
-            <td>{u.email}</td>
+            <td>{u.mail}</td>
             <td className="flex gap-2 mt-[14px]">
               <EditButton />
               <DeleteButton />

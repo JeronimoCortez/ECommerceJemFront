@@ -15,19 +15,6 @@ export type Sale = {
   estado: "Pendiente" | "En Progreso" | "Completada";
 };
 
-// Borrar luego
-const usuariosData = [
-  { nombre: "Jeronimo Cortez", id: "1122334", mail: "Jeroortez@gmail.com" },
-  {
-    nombre: "Ezequiel Argentini",
-    id: "1222211",
-    mail: "ezeargentini@gmail.com",
-  },
-  { nombre: "Mauro Arzuza", id: "1133671", mail: "Mauroezequiel365@gmail.com" },
-  { nombre: "Maxon", id: "1242611", mail: "Maxon@gmail.com" },
-  { nombre: "Tonga", id: "1124445", mail: "Tonga@gmail.com" },
-  { nombre: "Chivo Neura", id: "1222233", mail: "chivin@gmail.com" },
-];
 
 // Borrar luego
 const productosData = [
@@ -83,14 +70,29 @@ const productosData = [
 
 //Borrar Luego
 const comprasData: Sale[] = [
-  { usuario: "Jeronimo Cortez", fecha: "4/6/25", precio: 123000, estado: "Pendiente" },
-  { usuario: "Mauro Arzuza", fecha: "5/12/24", precio: 94500, estado: "En Progreso" },
-  { usuario: "Ezequiel Argentini", fecha: "13/4/25", precio: 200000, estado: "Completada" },
+  {
+    usuario: "Jeronimo Cortez",
+    fecha: "4/6/25",
+    precio: 123000,
+    estado: "Pendiente",
+  },
+  {
+    usuario: "Mauro Arzuza",
+    fecha: "5/12/24",
+    precio: 94500,
+    estado: "En Progreso",
+  },
+  {
+    usuario: "Ezequiel Argentini",
+    fecha: "13/4/25",
+    precio: 200000,
+    estado: "Completada",
+  },
 ];
 
 const AdminPanel = () => {
   const [vista, setVista] = useState<
-    "usuarios" | "productos" | "estadisticas" | "compras"
+    "usuarios" | "productos" | "categoria" | "compras"
   >("usuarios");
   const userOptions = ["Usuario", "ID", "Mail"];
   const prodOptions = [
@@ -101,6 +103,7 @@ const AdminPanel = () => {
     "Stock",
   ];
   const salesOptions = ["Usuario", "Fecha", "Precio", "Estado"];
+  const categoryOptions = ["Categoria", "Tipo"];
   const [options, setOptions] = useState<string[]>(userOptions);
   const [sortKey, setSortKey] = useState<string>(userOptions[0]);
 
@@ -114,7 +117,9 @@ const AdminPanel = () => {
     } else if (vista === "compras") {
       setOptions(salesOptions);
       setSortKey(salesOptions[0]);
-    } else {
+    } else if (vista === "categoria") {
+      setOptions(categoryOptions);
+      setSortKey(categoryOptions[0]);
     }
   }, [vista]);
 
@@ -133,9 +138,9 @@ const AdminPanel = () => {
         </button>
         <button
           className={`hover:underline cursor-pointer ${
-            vista === "estadisticas" ? "underline" : ""
+            vista === "categoria" ? "underline" : ""
           }`}
-          onClick={() => setVista("estadisticas")}
+          onClick={() => setVista("categoria")}
         >
           Estadísticas
         </button>
@@ -177,7 +182,7 @@ const AdminPanel = () => {
         </div>
 
         {vista === "usuarios" && (
-          <UserTable data={usuariosData} sortKey={sortKey} />
+          <UserTable sortKey={sortKey} />
         )}
         {vista === "productos" && (
           <ProductTable data={productosData} sortKey={sortKey} />
