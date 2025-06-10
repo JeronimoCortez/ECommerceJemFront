@@ -10,13 +10,32 @@ const LoginBar = () => {
     setUserActive(null);
     navigate("/");
   };
+
+  const handleNavigateToProfile = () => {
+    // RUTA PERFIL
+    navigate("/");
+  };
   return (
     <div className="bg-gray-300 text-black text-right py-1 text-sm ">
       <div>
         {userActive ? (
-          <button className="cursor-pointer" onClick={handleCloseSession}>
-            Cerrar Sesión
-          </button>
+          userActive.rol ? (
+            <div>
+              <button
+                className="cursor-pointer"
+                onClick={handleNavigateToProfile}
+              >
+                Mi perfil /
+              </button>
+              <button className="cursor-pointer" onClick={handleCloseSession}>
+                Cerrar Sesión
+              </button>
+            </div>
+          ) : (
+            <button className="cursor-pointer" onClick={handleCloseSession}>
+              Cerrar Sesión
+            </button>
+          )
         ) : (
           <>
             <a href="/login">Iniciar Sesión</a> /{" "}

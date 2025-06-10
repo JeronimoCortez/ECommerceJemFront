@@ -34,8 +34,45 @@ const useProduct = () => {
     }
   };
 
+  const updateProduct = async (id: number, productUpdate: IProduct) => {
+    const estadoPrevio = products.find((p) => p.id === productUpdate.id);
+    try {
+      await productService.updateProduct(id, productUpdate);
+      editProduct(productUpdate);
+      Swal.fire("Éxito", "Sprint actualizado correctamente", "success");
+    } catch (error) {
+      if (estadoPrevio) {
+        editProduct(estadoPrevio);
+      }
+      console.error("Error: ", error);
+    }
+  };
+
+  const deleteProductHook = async (id: number) => {
+    const estadoPrevio = products.find((p) => p.id === id);
+    const confirm = await Swal.fire({
+      title: "¿Estas seguro?",
+      text: "Esta accion no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Si, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+    if (!confirm.isConfirmed) return;
+    try {
+      await productService.deleteProduct(id), deleteProduct(id);
+    } catch (error) {
+      if (estadoPrevio) createProduct(estadoPrevio);
+      console.error("Error: ", error);
+    }
+  };
+
   return {
     getProducts,
     createProduct,
+    updateProduct,
+    deleteProductHook,
   };
 };
+
+export default useProduct;
