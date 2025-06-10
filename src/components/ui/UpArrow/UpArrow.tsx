@@ -2,9 +2,9 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 
 const UpArrow = () => {
   return (
-    <div>
+    <button>
       <Icon icon="mdi:caret" width="24" height="24" />
-    </div>
+    </button>
   );
 };
 

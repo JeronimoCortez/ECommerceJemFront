@@ -6,7 +6,7 @@ import { ITalle } from "./ITalle";
 export interface IProduct extends IBase {
   nombre: string;
   precio: number;
-  categorias: ICategoria[];
+  categorias: ICategoria;
   descripcion: string;
   talles: ITalle[];
   stock: number;
