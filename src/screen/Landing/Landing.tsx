@@ -10,10 +10,13 @@ import AdminButton from "../../components/ui/AdminButton/AdminButton";
 
 const Landing = () => {
   const { userActive } = userStore();
+
   return (
     <div>
-      {userActive && <AdminButton view="Usuario" />}
-      {userActive?.rol === 0 && <PublicityBar />}
+      {userActive && userActive.rol === "ADMIN" && (
+        <AdminButton view="Usuario" />
+      )}
+      {userActive?.rol !== "ADMIN" && <PublicityBar />}
       <LoginBar />
       <Header />
       <Filter />

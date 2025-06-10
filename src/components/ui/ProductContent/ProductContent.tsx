@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import ProductCounter from "../ProductCounter/ProductCounter";
+import { ProductCounter } from "../ProductCounter/ProductCounter";
 
 const ProductContent = () => {
   return (
@@ -11,7 +11,7 @@ const ProductContent = () => {
           alt="Imagen producto"
         />
         <div>{/* Verificar si esta filtro de talles e incluirlo */}</div>
-        <ProductCounter />
+        {/* <ProductCounter /> */}
       </div>
       <div className="w-1/2 flex flex-col gap-1">
         <h4 className="text-[1rem] md:text-[2rem] font-bold">

@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { FC, useState } from "react";
+import { IDetalle } from "../../../types/IDetalle";
 
-export default function ProductCounter() {
+interface IPropsProductCounter {
+  detalle: IDetalle;
+}
+
+export const ProductCounter: FC<IPropsProductCounter> = ({ detalle }) => {
   const [count, setCount] = useState(0);
   return (
     <>
@@ -19,10 +24,9 @@ export default function ProductCounter() {
         <button
           className="all:unset hover:cursor-pointer text-xl "
           onClick={() => {
-            {
-              /*Incluir verificacion para que no supere el stock disponible*/
+            if (count <= detalle.talle.stock) {
+              setCount(count + 1);
             }
-            setCount(count + 1);
           }}
         >
           +
@@ -30,4 +34,4 @@ export default function ProductCounter() {
       </div>
     </>
   );
-}
+};
