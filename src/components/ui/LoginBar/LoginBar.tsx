@@ -13,7 +13,7 @@ const LoginBar = () => {
 
   const handleNavigateToProfile = () => {
     // RUTA PERFIL
-    navigate("/");
+    navigate("/profile");
   };
   return (
     <div className="bg-gray-300 text-black text-right py-1 text-sm ">

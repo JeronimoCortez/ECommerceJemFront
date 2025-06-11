@@ -6,12 +6,13 @@ import { ITalle } from "./ITalle";
 export interface IProduct extends IBase {
   nombre: string;
   precio: number;
-  categorias: ICategoria[];
+  categoria: ICategoria;
   descripcion: string;
   talles: ITalle[];
   stock: number;
   imagen: File | null;
   color: string;
   marca: string;
+  gender: string;
   descuentos: IDescuento[];
 }

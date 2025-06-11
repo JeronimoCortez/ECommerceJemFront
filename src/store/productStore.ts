@@ -4,7 +4,9 @@ import { IProduct } from "../types/IProduct";
 interface IProductStore {
   products: IProduct[];
   productActive: IProduct | null;
-  setProducts: (arrayProducts: IProduct[]) => void;
+  setProducts: (
+    updater: IProduct[] | ((prev: IProduct[]) => IProduct[])
+  ) => void;
   setProductActive: (product: IProduct | null) => void;
   addProduct: (newProduct: IProduct) => void;
   editProduct: (productUpdate: IProduct) => void;
@@ -15,7 +17,11 @@ const productStore = create<IProductStore>()((set) => ({
   products: [],
   productActive: null,
 
-  setProducts: (arrayProducts) => set(() => ({ products: arrayProducts })),
+  setProducts: (updater) =>
+    set((state) => ({
+      products:
+        typeof updater === "function" ? updater(state.products) : updater,
+    })),
 
   setProductActive: (productIn) => set(() => ({ productActive: productIn })),
 

@@ -18,11 +18,18 @@ const useProduct = () => {
       }))
     );
 
-  const getProducts = async () => {
-    const data = await productService.getProducts();
-    if (data) setProducts(data);
+  const getProducts = async (page: number, size: number = 9) => {
+    const data = await productService.getProducts(page, size);
+    if (data) {
+      setProducts((prev: IProduct[]) => {
+        const newProducts = data.content.filter(
+          (np) => !prev.some((pp) => pp.id === np.id)
+        );
+        return [...prev, ...newProducts];
+      });
+    }
+    return data;
   };
-
   const createProduct = async (newProduct: IProduct) => {
     try {
       await productService.createProduct(newProduct);

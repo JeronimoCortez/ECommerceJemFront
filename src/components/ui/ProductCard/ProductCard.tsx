@@ -1,19 +1,22 @@
-export interface Product {
-  id: number;
-  image: string;
-  title: string;
-  price: number;
-  isNew: boolean;
+import { IProduct } from "../../../types/IProduct";
+
+interface ProductCardProps {
+  product: IProduct;
 }
 
-interface ProductCardProps extends Product {}
-
-const ProductCard: React.FC<ProductCardProps> = ({ image, title, price, isNew }) => (
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => (
   <div className="px-4 py-4">
-    <img src={image} alt={title} className="w-full h-48 object-cover mb-2" />
-    {isNew && <p className="text-yellow-500 text-sm font-bold">NUEVO</p>}
-    <p className="text-sm">{title}</p>
-    <p className="font-semibold">${price.toLocaleString()}</p>
+    <img
+      src={`${product.imagen}`}
+      alt={product.nombre}
+      className="w-full h-48 object-cover mb-2"
+    />
+    {/* {isNew && <p className="text-yellow-500 text-sm font-bold">NUEVO</p>} */}
+    <p className="text-sm">{product.nombre}</p>
+    <p className="font-semibold">${product.precio}</p>
+    <button className="bg-[#000] text-white p-2  rounded cursor-pointer font-bold">
+      Añadir al carrito
+    </button>
   </div>
 );
 

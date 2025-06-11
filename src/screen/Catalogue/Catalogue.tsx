@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react";
-
-import ProductControlsFilter from "../../components/ui/ProductsControlsFilter/ProductsControlsFilter";
-import AsideFilters from "../../components/ui/AsideFilters/AsideFIlters";
+import productStore from "../../store/productStore";
+import useProduct from "../../hook/useProduct";
+import PublicityBar from "../../components/ui/PublicityBar/PublicityBar";
 import FilterHM from "../../components/ui/FilterHM/FilterHM";
 import Location from "../../components/ui/Location/Location";
-import PublicityBar from "../../components/ui/PublicityBar/PublicityBar";
-import ShowMoreButton from "../../components/ui/ShowMoreButton/ShowMoreButton";
-import productStore from "../../store/productStore";
+import AsideFilters from "../../components/ui/AsideFilters/AsideFIlters";
+import ProductControlsFilter from "../../components/ui/ProductsControlsFilter/ProductsControlsFilter";
 import { IProduct } from "../../types/IProduct";
 import ProductCard from "../../components/ui/ProductCard/ProductCard";
-import useProduct from "../../hook/useProduct";
+import ShowMoreButton from "../../components/ui/ShowMoreButton/ShowMoreButton";
+import { useParams } from "react-router-dom";
 
-const Accessories: React.FC = () => {
+const Catalogue = () => {
+  const { gender } = useParams();
   const [filtersVisible, setFiltersVisible] = useState(true);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const { products } = productStore();
   const { getProducts } = useProduct();
-  const categoryFilter = "accesorios";
-
-  const filteredProducts = products.filter(
-    (p) => p.categoria?.nombre.toLowerCase() === categoryFilter
-  );
+  const genderFilter = gender?.toLowerCase();
 
   useEffect(() => {
     loadMoreProducts();
@@ -35,11 +32,14 @@ const Accessories: React.FC = () => {
       setHasMore(!data.last);
     }
   };
+
+  const filteredProducts = products.filter((p) => p.gender === genderFilter);
+
   return (
     <div>
       <PublicityBar />
       <FilterHM />
-      <Location location={"Accesories"} />
+      <Location location={String(gender)} />
       <div className="flex justify-center">
         {filtersVisible && <AsideFilters />}
         <div className="flex-1">
@@ -52,9 +52,6 @@ const Accessories: React.FC = () => {
             {filteredProducts.map((p: IProduct) => (
               <ProductCard key={p.id} product={p} />
             ))}
-            {filteredProducts.map((p: IProduct) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
 
             <ShowMoreButton showMore={loadMoreProducts} />
           </div>
@@ -64,4 +61,4 @@ const Accessories: React.FC = () => {
   );
 };
 
-export default Accessories;
+export default Catalogue;

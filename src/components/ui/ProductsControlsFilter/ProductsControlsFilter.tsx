@@ -13,7 +13,7 @@ const sortOptions = [
   "Precio Más alto",
   "Precio Más bajo",
   "A - Z",
-  "Z - A"
+  "Z - A",
 ];
 
 const ProductControlsFilter: React.FC<Props> = ({
@@ -41,7 +41,6 @@ const ProductControlsFilter: React.FC<Props> = ({
   return (
     <div className="relative">
       <div className="flex justify-between items-center p-2">
-        <span className="text-lg">187 Productos</span>
         <div className="flex items-center gap-4">
           <button
             onClick={onToggleFilters}

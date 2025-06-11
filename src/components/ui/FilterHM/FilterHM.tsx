@@ -30,10 +30,11 @@ const FilterHM = () => {
         </div>
         <div className="flex items-center gap-2">
           <Search />
-          <span className="material-symbols-outlined">shopping_bag</span>
+          <ShoppingCartButton />
         </div>
       </div>
 
+      {/* Menu mobile */}
       <div className="md:hidden flex justify-between p-1">
         <Logo />
         <div className="flex gap-2">
