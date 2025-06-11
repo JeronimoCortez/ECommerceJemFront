@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { Formik, Form } from "formik";
 import { useState } from "react";
 import TallesModal from "../TallesModal/TallesModal";
+import { Genero } from "../../../types/enums/Genero.enum"
 
 interface CreateProductProps {
   initialData?: IProduct;
@@ -24,7 +25,8 @@ const CreateProduct = ({ initialData }: CreateProductProps) => {
     imagenJPG: null,
     color: "",
     marca: "",
-    descuentos: []
+    descuentos: [],
+    genero: Genero.HOMBRE
   };
 
   const validationSchema = Yup.object({
@@ -58,7 +60,11 @@ const CreateProduct = ({ initialData }: CreateProductProps) => {
 
     marca: Yup.string().required("Ingrese una marca"),
 
-    descuentos: Yup.array().of(Yup.object())
+    descuentos: Yup.array().of(Yup.object()),
+
+    genero: Yup.mixed<Genero>()
+    .oneOf(Object.values(Genero).filter((v): v is Genero => typeof v === "string"), "Seleccione un género válido")
+    .required("El género es obligatorio"),
   });
 
   return (
@@ -179,11 +185,31 @@ const CreateProduct = ({ initialData }: CreateProductProps) => {
                   value={values.color}
                   onChange={handleChange}
                   placeholder="Color:"
-                  className="w-full p-2 border border-gray-300 rounded mb-6"
+                  className="w-full p-2 border border-gray-300 rounded mb-3"
                 />
 
+                {/* Género */}
+                <div className="mb-3">
+                    <select
+                      id="genero"
+                      name="genero"
+                      value={values.genero}
+                      onChange={handleChange}
+                      className="w-full p-3 border border-gray-300 rounded mb-6"
+                    >
+                      <option value="">Seleccione un género</option>
+                      <option value={Genero.HOMBRE}>Hombre</option>
+                      <option value={Genero.MUJER}>Mujer</option>
+                      <option value={Genero.NINO}>Niño</option>
+                      <option value={Genero.NINA}>Niña</option>
+                    </select>
+                    {touched.genero && errors.genero && (
+                      <p className="text-red-500">{errors.genero}</p>
+                    )}
+                </div>
+
                 {/* Botones */}
-                <div className="flex flex-col sm:flex-row gap-22 justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-22 justify-center">
                   <button type="submit" className="w-full sm:w-auto bg-black buttons text-white">
                     Guardar
                   </button>

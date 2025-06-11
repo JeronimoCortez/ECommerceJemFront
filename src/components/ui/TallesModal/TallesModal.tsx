@@ -62,7 +62,6 @@ const TallesModal = ({ isOpen, initialTalles, onClose, onSave }: TallesModalProp
     <div className="fixed inset-0 bg-whiteborder flex items-center justify-center z-50 mx-auto">
       <div className="bg-white p-6 w-[90vw] max-w-md border border-black">
         <h2 className="text-xl font-bold mb-4 text-center">Seleccionar Talles</h2>
-
         <div className="flex justify-center gap-4 mb-4">
           <button
             className={`px-4 py-2 rounded cursor-pointer ${tipo === "alfabetico" ? "bg-black text-white" : "bg-gray-200"}`}
@@ -103,7 +102,7 @@ const TallesModal = ({ isOpen, initialTalles, onClose, onSave }: TallesModalProp
           })}
         </div>
 
-        <div className="mt-6 flex justify-between">
+        <div className="mt-6 flex justify-center gap-4 items-center">
           <button className="bg-gray-300 text-black buttons" onClick={onClose}>
             Cancelar
           </button>
