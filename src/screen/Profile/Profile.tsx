@@ -1,11 +1,11 @@
-import ProfileForm from "../../components/ui/ProfileForm/ProfileForm"
+import EditProfileUser from "../../components/ui/EditProfileUser/EditProfileUser";
 
 const Profile = () => {
   return (
     <div>
-      <ProfileForm />
+      <EditProfileUser />
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

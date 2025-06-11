@@ -18,7 +18,7 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
     activo: false,
     nombre: "",
     precio: 0,
-    categorias: [],
+    categorias: {},
     descripcion: "",
     talles: [],
     stock: 0,
@@ -64,7 +64,7 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
   });
 
   return (
-    <div className="w-[100vw] h-[100vh] absolute bg-[#D9D9D9]/75 top-0 left-0">
+    <div className="fixed inset-0 bg-[#D9D9D9]/75 flex items-center justify-center z-50">
       <Formik
         initialValues={initialValues}
         enableReinitialize
@@ -79,7 +79,7 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
             <Form>
               <div className="flex flex-col min-h-screen items-center justify-center px-4 py-8">
                 <div className="w-full max-w-md border border-black p-6 bg-white">
-                  <div className="text-center text-2xl font-bold mb-6">
+                  <div className="text-center text-1xl font-bold mb-4">
                     <h1>
                       {initialData ? "Editar Producto" : "Crear Producto"}
                     </h1>
@@ -92,7 +92,7 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     value={values.nombre}
                     placeholder="Nombre:"
                     onChange={handleChange}
-                    className={`w-full p-2 border rounded mb-3 ${
+                    className={`w-full p-2 border rounded mb-2 ${
                       touched.nombre && errors.nombre
                         ? "border-red-500"
                         : "border-gray-300"
@@ -105,11 +105,11 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     value={values.descripcion}
                     onChange={handleChange}
                     placeholder="Descripción:"
-                    className="w-full p-2 border border-gray-300 rounded mb-3"
+                    className="w-full p-2 border border-gray-300 rounded mb-2"
                   />
 
                   {/* Talles */}
-                  <div className="flex flex-col sm:flex-row gap-2 mb-3">
+                  <div className="flex flex-col sm:flex-row gap-2 mb-2">
                     <input
                       type="text"
                       readOnly
@@ -122,7 +122,7 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     />
                     <button
                       type="button"
-                      className="text-black border border-gray-300 rounded px-3 py-2 cursor-pointer hover:bg-gray-200"
+                      className="text-black border border-gray-300 rounded px-2 py-2 cursor-pointer hover:bg-gray-200"
                       onClick={() => setShowTalleModal(true)}
                     >
                       Modificar
@@ -136,7 +136,7 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     value={values.stock}
                     onChange={handleChange}
                     placeholder="Stock:"
-                    className="w-full p-2 border border-gray-300 rounded mb-3"
+                    className="w-full p-2 border border-gray-300 rounded mb-2"
                   />
 
                   {/* Precio */}
@@ -146,11 +146,11 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     value={values.precio}
                     onChange={handleChange}
                     placeholder="Precio:"
-                    className="w-full p-2 border border-gray-300 rounded mb-3"
+                    className="w-full p-2 border border-gray-300 rounded mb-2"
                   />
 
                   {/* Imagen */}
-                  <div className="relative w-full mb-3">
+                  <div className="relative w-full mb-2">
                     <input
                       type="file"
                       id="imagenJPG"
@@ -178,7 +178,7 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     value={values.marca}
                     onChange={handleChange}
                     placeholder="Marca:"
-                    className="w-full p-2 border border-gray-300 rounded mb-3"
+                    className="w-full p-2 border border-gray-300 rounded mb-2"
                   />
 
                   {/* Color */}
@@ -188,21 +188,21 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     value={values.color}
                     onChange={handleChange}
                     placeholder="Color:"
-                    className="w-full p-2 border border-gray-300 rounded mb-6"
+                    className="w-full p-2 border border-gray-300 rounded mb-4"
                   />
 
                   {/* Botones */}
                   <div className="flex flex-col sm:flex-row gap-22 justify-center">
                     <button
                       type="submit"
-                      className="w-full sm:w-auto bg-black buttons text-white"
+                      className="w-full sm:w-auto bg-black buttons hover:cursor-pointertext-white py-2 px-6"
                     >
                       Guardar
                     </button>
                     <button
                       onClick={onClose}
                       type="button"
-                      className="w-full sm:w-auto bg-[#5A0000] buttons text-white"
+                      className="w-full sm:w-auto bg-[#5A0000] buttons hover:cursor-pointer text-white py-2 px-6"
                     >
                       Cancelar
                     </button>

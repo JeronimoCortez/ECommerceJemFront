@@ -3,7 +3,7 @@ import JEMBar from "../JEMBar/JEMBar";
 import LoginBar from "../LoginBar/LoginBar";
 import UpArrow from "../UpArrow/UpArrow";
 
-const ProfileForm = () => {
+const EditProfileUser = () => {
   const [addressOpen, setAddressOpen] = useState(false);
   const [pwdOpen, setPwdOpen] = useState(false);
   const addressRef = useRef<HTMLDivElement>(null);
@@ -142,4 +142,4 @@ const ProfileForm = () => {
   );
 };
 
-export default ProfileForm;
+export default EditProfileUser;

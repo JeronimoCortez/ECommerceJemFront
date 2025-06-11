@@ -1,112 +1,97 @@
 import { useState, useEffect } from "react";
 import Search from "../Search/Search";
-import { Icon } from "@iconify/react";
 import JEMBar from "../JEMBar/JEMBar";
 import LoginBar from "../LoginBar/LoginBar";
 import SortFiltersAdmin from "../SortFiltersAdmin/SortFiltersAdmin";
 import UserTable from "../User/User";
 import ProductTable from "../Product/Product";
 import SalesTable from "../SalesTable/SalesTable";
-import CreateProduct from "../CreateProduct/CreateProduct";
+import CategoryTable from "../CategoryTable/CategoryTable";
 
-export type Sale = {
-  usuario: string;
-  fecha: string;
-  precio: number;
-  estado: "Pendiente" | "En Progreso" | "Completada";
-};
+// export type Sale = {
+//   usuario: string;
+//   fecha: string;
+//   precio: number;
+//   estado: "Pendiente" | "En Progreso" | "Completada";
+// };
 
-// Borrar luego
-const usuariosData = [
-  { nombre: "Jeronimo Cortez", id: "1122334", mail: "Jeroortez@gmail.com" },
-  {
-    nombre: "Ezequiel Argentini",
-    id: "1222211",
-    mail: "ezeargentini@gmail.com",
-  },
-  { nombre: "Mauro Arzuza", id: "1133671", mail: "Mauroezequiel365@gmail.com" },
-  { nombre: "Maxon", id: "1242611", mail: "Maxon@gmail.com" },
-  { nombre: "Tonga", id: "1124445", mail: "Tonga@gmail.com" },
-  { nombre: "Chivo Neura", id: "1222233", mail: "chivin@gmail.com" },
-];
+// // Borrar luego
+// const productosData = [
+//   {
+//     nombre: "Zapatillas Adidas Campus",
+//     categoria: "Zapatilla",
+//     precioVenta: 180000,
+//     costo: 120000,
+//     ganancia: 60000,
+//     stock: 7,
+//   },
+//   {
+//     nombre: "Zapatillas Nike AirForce",
+//     categoria: "Zapatilla",
+//     precioVenta: 165000,
+//     costo: 105000,
+//     ganancia: 60000,
+//     stock: 25,
+//   },
+//   {
+//     nombre: "Zapatillas Adidas Grand Court",
+//     categoria: "Zapatilla",
+//     precioVenta: 160000,
+//     costo: 110000,
+//     ganancia: 50000,
+//     stock: 14,
+//   },
+//   {
+//     nombre: "Zapatillas Nike Essential",
+//     categoria: "Zapatilla",
+//     precioVenta: 205000,
+//     costo: 135000,
+//     ganancia: 70000,
+//     stock: 12,
+//   },
+//   {
+//     nombre: "Campera Deportiva LA Lakers",
+//     categoria: "Ropa",
+//     precioVenta: 220000,
+//     costo: 180000,
+//     ganancia: 40000,
+//     stock: 40,
+//   },
+//   {
+//     nombre: "Gorra Nike Chelsea",
+//     categoria: "Accesorios",
+//     precioVenta: 65000,
+//     costo: 25000,
+//     ganancia: 35000,
+//     stock: 27,
+//   },
+// ];
 
-// Borrar luego
-const productosData = [
-  {
-    nombre: "Zapatillas Adidas Campus",
-    categoria: "Zapatilla",
-    precioVenta: 180000,
-    costo: 120000,
-    ganancia: 60000,
-    stock: 7,
-  },
-  {
-    nombre: "Zapatillas Nike AirForce",
-    categoria: "Zapatilla",
-    precioVenta: 165000,
-    costo: 105000,
-    ganancia: 60000,
-    stock: 25,
-  },
-  {
-    nombre: "Zapatillas Adidas Grand Court",
-    categoria: "Zapatilla",
-    precioVenta: 160000,
-    costo: 110000,
-    ganancia: 50000,
-    stock: 14,
-  },
-  {
-    nombre: "Zapatillas Nike Essential",
-    categoria: "Zapatilla",
-    precioVenta: 205000,
-    costo: 135000,
-    ganancia: 70000,
-    stock: 12,
-  },
-  {
-    nombre: "Campera Deportiva LA Lakers",
-    categoria: "Ropa",
-    precioVenta: 220000,
-    costo: 180000,
-    ganancia: 40000,
-    stock: 40,
-  },
-  {
-    nombre: "Gorra Nike Chelsea",
-    categoria: "Accesorios",
-    precioVenta: 65000,
-    costo: 25000,
-    ganancia: 35000,
-    stock: 27,
-  },
-];
-
-//Borrar Luego
-const comprasData: Sale[] = [
-  {
-    usuario: "Jeronimo Cortez",
-    fecha: "4/6/25",
-    precio: 123000,
-    estado: "Pendiente",
-  },
-  {
-    usuario: "Mauro Arzuza",
-    fecha: "5/12/24",
-    precio: 94500,
-    estado: "En Progreso",
-  },
-  {
-    usuario: "Ezequiel Argentini",
-    fecha: "13/4/25",
-    precio: 200000,
-    estado: "Completada",
-  },
-];
+// //Borrar Luego
+// const comprasData: Sale[] = [
+//   {
+//     usuario: "Jeronimo Cortez",
+//     fecha: "4/6/25",
+//     precio: 123000,
+//     estado: "Pendiente",
+//   },
+//   {
+//     usuario: "Mauro Arzuza",
+//     fecha: "5/12/24",
+//     precio: 94500,
+//     estado: "En Progreso",
+//   },
+//   {
+//     usuario: "Ezequiel Argentini",
+//     fecha: "13/4/25",
+//     precio: 200000,
+//     estado: "Completada",
+//   },
+// ];
 
 const AdminPanel = () => {
   const [vista, setVista] = useState<
-    "usuarios" | "productos" | "estadisticas" | "compras"
+    "usuarios" | "productos" | "categoria" | "compras"
   >("usuarios");
   const userOptions = ["Usuario", "ID", "Mail"];
   const prodOptions = [
@@ -117,9 +102,9 @@ const AdminPanel = () => {
     "Stock",
   ];
   const salesOptions = ["Usuario", "Fecha", "Precio", "Estado"];
+  const categoryOptions = ["Categoria", "Tipo"];
   const [options, setOptions] = useState<string[]>(userOptions);
   const [sortKey, setSortKey] = useState<string>(userOptions[0]);
-  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     if (vista === "usuarios") {
@@ -131,7 +116,9 @@ const AdminPanel = () => {
     } else if (vista === "compras") {
       setOptions(salesOptions);
       setSortKey(salesOptions[0]);
-    } else {
+    } else if (vista === "categoria") {
+      setOptions(categoryOptions);
+      setSortKey(categoryOptions[0]);
     }
   }, [vista]);
 
@@ -150,11 +137,11 @@ const AdminPanel = () => {
         </button>
         <button
           className={`hover:underline cursor-pointer ${
-            vista === "estadisticas" ? "underline" : ""
+            vista === "categoria" ? "underline" : ""
           }`}
-          onClick={() => setVista("estadisticas")}
+          onClick={() => setVista("categoria")}
         >
-          Estadísticas
+          Categoria
         </button>
         <button
           className={`hover:underline cursor-pointer ${
@@ -183,32 +170,17 @@ const AdminPanel = () => {
           />
           <Search />
         </div>
-
-        <div className="flex justify-center items-center mb-8">
-          <button
-            onClick={() => setOpenModal(true)}
-            className="flex justify-around items-center bg-green-700 text-white px-6 py-2 rounded-full hover:cursor-pointer"
-          >
-            Nuevo
-            <span className="ml-1">
-              <Icon icon="ph:plus-fill" width="24" height="24" />
-            </span>
-          </button>
-        </div>
-
         {vista === "usuarios" && (
-          <UserTable data={usuariosData} sortKey={sortKey} />
+          <UserTable data={} sortKey={sortKey} vista={vista} />
         )}
         {vista === "productos" && (
-          <ProductTable data={productosData} sortKey={sortKey} />
+          <ProductTable data={} sortKey={sortKey} vista={vista} />
         )}
-        {vista === "compras" && (
-          <SalesTable data={comprasData} sortKey={sortKey} />
+        {vista === "categoria" && (
+          <CategoryTable sortKey={sortKey} vista={vista} />
         )}
+        {vista === "compras" && <SalesTable data={} sortKey={sortKey} />}
       </div>
-      {vista === "productos" && openModal && (
-        <CreateProduct onClose={() => setOpenModal(false)} />
-      )}
     </div>
   );
 };

@@ -1,55 +1,68 @@
 import EditButton from "../EditButton/EditButton";
 import DeleteButton from "../DeleteButton/DeleteButton";
-
-interface Usuario {
-  nombre: string;
-  id: string;
-  mail: string;
-}
+import { FC, useState } from "react";
+import NewButton from "../NewButton/NewButton";
+import { IUsuario } from "../../../types/IUsuario";
+import CreateUserModal from "../CreateUserModal/CreateUserModal";
 
 interface Props {
-  data: Usuario[];
+  data: IUsuario[];
   sortKey: string;
+  vista: string;
 }
 
-const UserTable: React.FC<Props> = ({ data, sortKey }) => {
+const UserTable: FC<Props> = ({ data, sortKey, vista }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<IUsuario | null>(null);
+
+  const handleEditClick = (product: IUsuario) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
   const sortedData = [...data].sort((a, b) => {
     switch (sortKey) {
       case "Usuario":
-        return a.nombre.localeCompare(b.nombre);
+        return a.userName.localeCompare(b.userName);
       case "ID":
-        return a.id.localeCompare(b.id);
+        return a.id - b.id;
       case "Mail":
-        return a.mail.localeCompare(b.mail);
+        return a.email.localeCompare(b.email);
       default:
         return 0;
     }
   });
 
   return (
-    <table className="w-full text-left">
-      <thead className="bg-black text-white">
-        <tr>
-          <th className="p-2">Usuario</th>
-          <th>ID</th>
-          <th>Mail</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {sortedData.map((u, i) => (
-          <tr key={i}>
-            <td className="p-2">{u.nombre}</td>
-            <td>{u.id}</td>
-            <td>{u.mail}</td>
-            <td className="flex gap-2 mt-[14px]">
-              <EditButton />
-              <DeleteButton />
-            </td>
+    <div className="mt-2">
+      <NewButton vista={vista} />
+      <table className="w-full text-left">
+        <thead className="bg-black text-white">
+          <tr>
+            <th className="p-2">Usuario</th>
+            <th>ID</th>
+            <th>Mail</th>
+            <th>Acciones</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {sortedData.map((u, i) => (
+            <tr key={i}>
+              <td className="p-2">{u.userName}</td>
+              <td>{u.id}</td>
+              <td>{u.email}</td>
+              <td className="flex gap-2 mt-[14px]">
+                <EditButton onClick={() => handleEditClick} />
+                {isModalOpen && selectedProduct && (
+                  <CreateUserModal onClose={() => setIsModalOpen(false)} />
+                )}
+                <DeleteButton />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
