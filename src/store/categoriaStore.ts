@@ -21,8 +21,7 @@ export const categoriaStore = create<ICategoriaStore>()(
       setCategoriaActiva: (categoria) =>
         set(() => ({ categoriaActiva: categoria })),
 
-      setCategorias: (categorias) =>
-        set(() => ({ categorias })),
+      setCategorias: (categorias) => set(() => ({ categorias })),
 
       addCategoria: (nuevaCategoria) =>
         set((state) => ({
