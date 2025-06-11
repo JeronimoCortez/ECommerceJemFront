@@ -81,121 +81,126 @@ const CreateProduct = ({ initialData }: CreateProductProps) => {
         <>
           <Form>
             <div className="flex flex-col min-h-screen items-center justify-center px-4 py-8">
-              <div className="w-full max-w-md border border-black p-6 bg-white">
+              <div className="w-full max-w-4xl border border-black p-6 bg-white">
                 <div className="text-center text-2xl font-bold mb-6">
-                  <h1>{initialData ? "Editar Producto" : "Crear Producto"}</h1>
+                  <h1>{initialData ? "Editar Producto" : "Nuevo Producto"}</h1>
                 </div>
 
-                {/* Nombre */}
-                <input
-                  type="text"
-                  name="nombre"
-                  value={values.nombre}
-                  placeholder="Nombre:"
-                  onChange={handleChange}
-                  className={`w-full p-2 border rounded mb-3 ${
-                    touched.nombre && errors.nombre ? "border-red-500" : "border-gray-300"
-                  }`}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Columna Izquierda */}
+                  <div className="flex flex-col gap-4">
+                    {/* Nombre */}
+                    <input
+                      type="text"
+                      name="nombre"
+                      value={values.nombre}
+                      placeholder="Nombre:"
+                      onChange={handleChange}
+                      className={`w-full p-2 border rounded ${
+                        touched.nombre && errors.nombre ? "border-red-500" : "border-gray-300"
+                      }`}
+                    />
 
-                {/* Descripción */}
-                <textarea
-                  name="descripcion"
-                  value={values.descripcion}
-                  onChange={handleChange}
-                  placeholder="Descripción:"
-                  className="w-full p-2 border border-gray-300 rounded mb-3"
-                />
+                    {/* Descripción */}
+                    <textarea
+                      name="descripcion"
+                      value={values.descripcion}
+                      onChange={handleChange}
+                      placeholder="Descripción:"
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
 
-                {/* Talles */}
-                <div className="flex flex-col sm:flex-row gap-2 mb-3">
-                  <input
-                    type="text"
-                    readOnly
-                    name="talles"
-                    value={values.talles.map(t => `${t.talle}: ${t.stock}`).join(", ")}
-                    placeholder="Talles:"
-                    className="flex-grow p-2 border border-gray-300 rounded"
-                  />
-                  <button
-                    type="button"
-                    className="text-black border border-gray-300 rounded px-3 py-2 cursor-pointer hover:bg-gray-200"
-                    onClick={() => setShowTalleModal(true)}
-                  >
-                    Modificar
-                  </button>
-                </div>
+                    {/* Talles */}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        name="talles"
+                        value={values.talles.map((t) => `${t.talle}: ${t.stock}`).join(", ")}
+                        placeholder="Talles:"
+                        className="flex-grow p-2 border border-gray-300 rounded"
+                      />
+                      <button
+                        type="button"
+                        className="text-black cursor-pointer border border-gray-300 rounded px-3 py-2 hover:bg-gray-200"
+                        onClick={() => setShowTalleModal(true)}
+                      >
+                        Modificar talles
+                      </button>
+                    </div>
 
-                {/* Stock */}
-                <input
-                  type="number"
-                  name="stock"
-                  value={values.stock}
-                  onChange={handleChange}
-                  placeholder="Stock:"
-                  className="w-full p-2 border border-gray-300 rounded mb-3"
-                />
+                    {/* Stock */}
+                    <input
+                      type="number"
+                      name="stock"
+                      value={values.stock}
+                      onChange={handleChange}
+                      placeholder="Stock:"
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
 
-                {/* Precio */}
-                <input
-                  type="number"
-                  name="precio"
-                  value={values.precio}
-                  onChange={handleChange}
-                  placeholder="Precio:"
-                  className="w-full p-2 border border-gray-300 rounded mb-3"
-                />
+                    {/* Precio */}
+                    <input
+                      type="number"
+                      name="precio"
+                      value={values.precio}
+                      onChange={handleChange}
+                      placeholder="Precio:"
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
 
-                {/* Imagen */}
-                <div className="relative w-full mb-3">
-                  <input
-                    type="file"
-                    id="imagenJPG"
-                    name="imagenJPG"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.currentTarget.files?.[0] ?? null;
-                      setFieldValue("imagenJPG", file);
-                    }}
-                    className="hidden"
-                  />
-                  <label
-                    htmlFor="imagenJPG"
-                    className="flex items-center justify-between px-4 py-2 cursor-pointer border border-gray-300 rounded w-full bg-white hover:bg-gray-100"
-                  >
-                    {values.imagenJPG?.name || "Seleccionar imagen JPG..."}
-                    <Icon icon="formkit:folder" width="18" height="18" />
-                  </label>
-                </div>
+                    {/* Imagen JPG */}
+                    <div className="relative w-full">
+                      <input
+                        type="file"
+                        id="imagenJPG"
+                        name="imagenJPG"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.currentTarget.files?.[0] ?? null;
+                          setFieldValue("imagenJPG", file);
+                        }}
+                        className="hidden"
+                      />
+                      <label
+                        htmlFor="imagenJPG"
+                        className="flex items-center justify-between px-4 py-2 cursor-pointer border border-gray-300 rounded w-full bg-white hover:bg-gray-100"
+                      >
+                        {values.imagenJPG?.name || "Seleccionar imagen JPG..."}
+                        <Icon icon="formkit:folder" width="18" height="18" />
+                      </label>
+                    </div>
+                  </div>
 
-                {/* Marca */}
-                <input
-                  type="text"
-                  name="marca"
-                  value={values.marca}
-                  onChange={handleChange}
-                  placeholder="Marca:"
-                  className="w-full p-2 border border-gray-300 rounded mb-3"
-                />
+                  {/* Columna Derecha */}
+                  <div className="flex flex-col gap-4">
+                    {/* Marca */}
+                    <input
+                      type="text"
+                      name="marca"
+                      value={values.marca}
+                      onChange={handleChange}
+                      placeholder="Marca:"
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
 
-                {/* Color */}
-                <input
-                  type="text"
-                  name="color"
-                  value={values.color}
-                  onChange={handleChange}
-                  placeholder="Color:"
-                  className="w-full p-2 border border-gray-300 rounded mb-3"
-                />
+                    {/* Color */}
+                    <input
+                      type="text"
+                      name="color"
+                      value={values.color}
+                      onChange={handleChange}
+                      placeholder="Color:"
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
 
-                {/* Género */}
-                <div className="mb-3">
+                    {/* Género */}
                     <select
                       id="genero"
                       name="genero"
                       value={values.genero}
                       onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded mb-6"
+                      className="w-full p-3 border border-gray-300 rounded"
                     >
                       <option value="">Seleccione un género</option>
                       <option value={Genero.HOMBRE}>Hombre</option>
@@ -206,10 +211,19 @@ const CreateProduct = ({ initialData }: CreateProductProps) => {
                     {touched.genero && errors.genero && (
                       <p className="text-red-500">{errors.genero}</p>
                     )}
+
+                    {/* Categoria */}
+                    <select name="categorias" id="categorias" value={values.categorias.map(c => c.id.toString())} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded">
+                      <option value="">Seleccione una categoria</option>
+                      <option value="calzado">Calzado</option>
+                      <option value="remera">Remera</option>
+                      <option value="pantalon">Pantalon</option>
+                    </select>
+                  </div>
                 </div>
 
                 {/* Botones */}
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-22 justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                   <button type="submit" className="w-full sm:w-auto bg-black buttons text-white">
                     Guardar
                   </button>
@@ -220,7 +234,19 @@ const CreateProduct = ({ initialData }: CreateProductProps) => {
               </div>
             </div>
 
+            {showTalleModal && (
+              <TallesModal
+                isOpen={true}
+                initialTalles={values.talles}
+                onClose={() => setShowTalleModal(false)}
+                onSave={(newTalles) => {
+                  setFieldValue("talles", newTalles);
+                  setShowTalleModal(false);
+                }}
+              />
+            )}
           </Form>
+
           {showTalleModal && (
             <TallesModal
               isOpen={true}
