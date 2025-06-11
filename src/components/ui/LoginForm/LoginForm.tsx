@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { userStore } from "../../../store/userStore";
 import { IAuthResponse } from "../../../types/IAuthResponse";
-import { getUser } from "../../../services/userService";
 import { IUsuario } from "../../../types/IUsuario";
+import { UserService } from "../../../services/userService";
 
 const validationSchema = Yup.object({
   email: Yup.string().email().required(),
@@ -19,6 +19,7 @@ const LoginForm = () => {
   const { setUserActive } = userStore();
   const navigate = useNavigate();
   const [errorLogin, setErrorLogin] = useState(false);
+  const userService = new UserService();
 
   const initialValues: ILogin = {
     email: "",
@@ -35,7 +36,9 @@ const LoginForm = () => {
         onSubmit={async (values) => {
           const data: IAuthResponse | null | undefined = await login(values);
           if (data) {
-            const user: IUsuario | undefined = await getUser(data.userId);
+            const user: IUsuario | undefined = await userService.getById(
+              data.userId
+            );
             if (user && user.activo) {
               setUserActive(user);
               navigate("/");

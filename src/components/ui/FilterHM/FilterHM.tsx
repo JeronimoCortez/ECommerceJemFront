@@ -5,10 +5,12 @@ import { useState } from "react";
 import ShoppingCartButton from "../ShoppingCartButton/ShoppingCartButton";
 import MenuMobile from "../MenuMobile/MenuMobile";
 import OpenSearch from "../OpenSearch/OpenSearch";
+import { useParams } from "react-router-dom";
 
 const FilterHM = () => {
   const [menuMobile, setMenuMobile] = useState(false);
   const [search, setSearch] = useState(false);
+  const { gender } = useParams();
 
   return (
     <>
@@ -16,16 +18,18 @@ const FilterHM = () => {
         <Logo />
         <div>
           <div className="flex justify-around items-center font-bold">
-            <a href="">Hombre</a>
-            <a href="">Mujer</a>
-            <a href="">Niño/a</a>
-            <a href="">Accesorios</a>
+            <a href="/view/hombre">Hombre</a>
+            <a href="/view/mujer">Mujer</a>
+            <a href="/catalogue/niños">Niño/a</a>
+            <a href="/accesories">Accesorios</a>
           </div>
           <div className="flex justify-between items-center gap-6 ">
-            <a href="">Ver todo en {"Categoria"}</a>
+            <a href={`${gender ? `/catalogue/${gender}` : "/accesories"}`}>
+              Ver todo en {gender || "accesorios"}
+            </a>
             <a href="">Calzado</a>
             <a href="">Ropa</a>
-            <a href="">Accesorios</a>
+            <a href="/accesories">Accesorios</a>
           </div>
         </div>
         <div className="flex items-center gap-2">

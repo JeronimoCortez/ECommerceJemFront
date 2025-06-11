@@ -6,7 +6,7 @@ import { register } from "../../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { userStore } from "../../../store/userStore";
 import { IAuthResponse } from "../../../types/IAuthResponse";
-import { getUser } from "../../../services/userService";
+import { UserService } from "../../../services/userService";
 
 const validationSchema = Yup.object({
   name: Yup.string().required(),
@@ -24,6 +24,7 @@ const validationSchema = Yup.object({
 const RegisterForm = () => {
   const { setUserActive } = userStore();
   const navigate = useNavigate();
+  const userService = new UserService();
 
   const initialValues: IRegister & { passwordRepeat: string } = {
     name: "",
@@ -48,7 +49,7 @@ const RegisterForm = () => {
             registerData
           );
           if (data) {
-            const user = await getUser(data?.userId);
+            const user = await userService.getById(data?.userId);
             if (user) {
               setUserActive(user);
               navigate("/");
@@ -59,8 +60,8 @@ const RegisterForm = () => {
         {({ values, handleChange, errors, touched, handleBlur }) => (
           <Form>
             <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-              <div className="bg-white shadow drop-shadow-lg p-6 rounded-md w-[620px]">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white shadow drop-shadow-lg p-6 rounded-md md:w-[620px]">
+                <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
                   <input
                     type="text"
                     name="name"

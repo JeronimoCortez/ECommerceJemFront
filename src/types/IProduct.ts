@@ -13,6 +13,6 @@ export interface IProduct extends IBase {
   imagen: File | null;
   color: string;
   marca: string;
-  gender: string;
+  genero: string;
   descuentos: IDescuento[];
 }

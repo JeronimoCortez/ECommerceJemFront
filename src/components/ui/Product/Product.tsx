@@ -24,7 +24,7 @@ const ProductTable: FC<Props> = ({ data, sortKey, vista }) => {
   const sortedData = [...data].sort((a, b) => {
     switch (sortKey) {
       case "Categoría":
-        return a.categorias.nombre.localeCompare(b.categorias.nombre);
+        return a.categoria?.nombre.localeCompare(String(b.categoria?.nombre));
       case "Precio Venta":
         return b.precio - a.precio;
       case "Stock":
@@ -51,11 +51,11 @@ const ProductTable: FC<Props> = ({ data, sortKey, vista }) => {
           {sortedData.map((p, i) => (
             <tr
               key={i}
-              className={`${p.stock < 15 ? "bg-red-500 text-white" : ""}`}
+              // className={`${p.talles.map((t) => t.stock) < 15 ? "bg-red-500 text-white" : ""}`}
             >
               <td className="p-2">{p.nombre}</td>
-              <td>{`$${p.categorias.toLocaleString()}`}</td>
-              <td>{`$${p.precio.toLocaleString()}`}</td>
+              <td>{p.categoria?.nombre || "Sin categoria"}</td>
+              <td>{`${p.precio.toLocaleString()}`}</td>
               <td>{p.stock}</td>
               <td className="flex gap-2 mt-[14px]">
                 <PaymentArDownButton />

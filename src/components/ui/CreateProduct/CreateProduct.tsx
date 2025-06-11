@@ -2,8 +2,10 @@ import { Icon } from "@iconify/react";
 import { IProduct } from "../../../types/IProduct";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import TallesModal from "../TallesModal/TallesModal";
+import { ICreateProduct } from "../../../types/ICreateProduct";
+import { Genero } from "../../../types/enums/Genero.enum";
 
 interface CreateProductProps {
   initialData?: IProduct;
@@ -12,21 +14,24 @@ interface CreateProductProps {
 
 const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
   const [showTalleModal, setShowTalleModal] = useState(false);
+  const [categorias, setCategorias] = useState();
 
-  const initialValues: IProduct = initialData ?? {
-    id: 0,
-    activo: false,
-    nombre: "",
-    precio: 0,
-    categorias: {},
-    descripcion: "",
-    talles: [],
-    stock: 0,
-    imagen: null,
-    color: "",
-    marca: "",
-    descuentos: [],
-  };
+  const initialValues: ICreateProduct | IProduct = initialData
+    ? {
+        ...initialData,
+        talles: initialData.talles ? initialData.talles : [],
+      }
+    : {
+        nombre: "",
+        precio: 0,
+        idCategoria: 0,
+        descripcion: "",
+        talles: [],
+        imagen: "",
+        color: "",
+        marca: "",
+        genero: "",
+      };
 
   const validationSchema = Yup.object({
     nombre: Yup.string()
@@ -62,6 +67,8 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
 
     descuentos: Yup.array().of(Yup.object()),
   });
+
+  useEffect(() => {});
 
   return (
     <div className="fixed inset-0 bg-[#D9D9D9]/75 flex items-center justify-center z-50">
@@ -132,9 +139,10 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                   {/* Stock */}
                   <input
                     type="number"
-                    name="stock"
-                    value={values.stock}
-                    onChange={handleChange}
+                    name="talles"
+                    value={values.talles
+                      .map((t) => `${t.talle}: ${t.stock}`)
+                      .join(", ")}
                     placeholder="Stock:"
                     className="w-full p-2 border border-gray-300 rounded mb-2"
                   />
@@ -166,7 +174,7 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                       htmlFor="imagenJPG"
                       className="flex items-center justify-between px-4 py-2 cursor-pointer border border-gray-300 rounded w-full bg-white hover:bg-gray-100"
                     >
-                      {values.imagen?.name || "Seleccionar imagen JPG..."}
+                      {values.imagen?.toString() || "Seleccionar imagen JPG..."}
                       <Icon icon="formkit:folder" width="18" height="18" />
                     </label>
                   </div>
@@ -190,12 +198,43 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     placeholder="Color:"
                     className="w-full p-2 border border-gray-300 rounded mb-4"
                   />
+                  {/* Género */}
+                  <select
+                    id="genero"
+                    name="genero"
+                    value={values.genero}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded"
+                  >
+                    <option value="">Seleccione un género</option>
+                    <option value={Genero.HOMBRE}>Hombre</option>
+                    <option value={Genero.MUJER}>Mujer</option>
+                    <option value={Genero.NINO}>Niño</option>
+                    <option value={Genero.NINA}>Niña</option>
+                  </select>
+                  {touched.genero && errors.genero && (
+                    <p className="text-red-500">{errors.genero}</p>
+                  )}
+
+                  {/* Categoria */}
+                  <select
+                    name="categorias"
+                    id="categorias"
+                    // value={categorias.map((c) => c.id.toString())}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-300 rounded"
+                  >
+                    <option value="">Seleccione una categoria</option>
+                    <option value="calzado">Calzado</option>
+                    <option value="remera">Remera</option>
+                    <option value="pantalon">Pantalon</option>
+                  </select>
 
                   {/* Botones */}
                   <div className="flex flex-col sm:flex-row gap-22 justify-center">
                     <button
                       type="submit"
-                      className="w-full sm:w-auto bg-black buttons hover:cursor-pointertext-white py-2 px-6"
+                      className="w-full sm:w-auto bg-black buttons hover:cursor-pointer text-white py-2 px-6"
                     >
                       Guardar
                     </button>

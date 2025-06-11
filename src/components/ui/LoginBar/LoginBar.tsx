@@ -19,7 +19,7 @@ const LoginBar = () => {
     <div className="bg-gray-300 text-black text-right py-1 text-sm ">
       <div>
         {userActive ? (
-          userActive.rol ? (
+          userActive.rol === "USER" ? (
             <div>
               <button
                 className="cursor-pointer"

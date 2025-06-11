@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export class UserService {
   private api = axios.create({
-    baseURL: `${API_URL}/api/users`,
+    baseURL: `${API_URL}/usuario`,
     headers: {
       "Content-Type": "application/json",
     },

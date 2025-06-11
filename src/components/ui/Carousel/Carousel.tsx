@@ -22,7 +22,7 @@ const Carousel = () => {
             <img
               src={`${p.imagen}`}
               alt={`${p.nombre}`}
-              className="rounded-md"
+              className="rounded-md w-[16rem] h-[16rem] object-cover"
             />
             <p className="text-yellow-500 text-sm font-bold">NUEVO</p>
             <p className="text-sm">{p.nombre}</p>

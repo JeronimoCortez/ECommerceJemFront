@@ -8,21 +8,28 @@ interface CreateUserModalProps {
   onClose: VoidFunction;
 }
 
-const CreateUserModal: FC<CreateUserModalProps> = ({ initialData, onClose }) => {
+const CreateUserModal: FC<CreateUserModalProps> = ({
+  initialData,
+  onClose,
+}) => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
-  const initialValues: IUsuario & {firstName:string, lastName:string} = initialData ? {
-    id: 0,
-    userName: "",
-    email: "",
-    rol: "",
-    dni: "",
-    phone: "",
-    direcciones: [],
-    ordenes: [],
-    firstName: "",
-    lastName: "",
-  }: initialData;
+  const initialValues: IUsuario & { firstName: string; lastName: string } =
+    initialData
+      ? {
+          id: 0,
+          userName: "",
+          email: "",
+          rol: "",
+          dni: "",
+          phone: "",
+          direcciones: [],
+          ordenes: [],
+          gender: "",
+          firstName: "",
+          lastName: "",
+        }
+      : initialData;
 
   const validationSchema = Yup.object({
     firstName: Yup.string().required("Nombre es requerido"),
@@ -37,10 +44,13 @@ const CreateUserModal: FC<CreateUserModalProps> = ({ initialData, onClose }) => 
   const passwordValidationSchema = Yup.object({
     currentPassword: Yup.string().required("Contraseña actual es requerida"),
     newPassword: Yup.string()
-      .notOneOf([Yup.ref('currentPassword')], "La nueva contraseña debe ser diferente a la actual")
+      .notOneOf(
+        [Yup.ref("currentPassword")],
+        "La nueva contraseña debe ser diferente a la actual"
+      )
       .required("Nueva contraseña es requerida"),
     repeatPassword: Yup.string()
-      .oneOf([Yup.ref('newPassword')], "Las contraseñas no coinciden")
+      .oneOf([Yup.ref("newPassword")], "Las contraseñas no coinciden")
       .required("Repetir contraseña es requerido"),
   });
 
@@ -61,7 +71,9 @@ const CreateUserModal: FC<CreateUserModalProps> = ({ initialData, onClose }) => 
               <div className="bg-white shadow drop-shadow-lg p-6 rounded-md w-[620px] relative">
                 <div className="flex items-center justify-center mb-6">
                   <div className="text-black">
-                    {initialData ? "Editar Datos Personales" : "Crear Nuevo Usuario"}
+                    {initialData
+                      ? "Editar Datos Personales"
+                      : "Crear Nuevo Usuario"}
                   </div>
                 </div>
 
@@ -72,7 +84,9 @@ const CreateUserModal: FC<CreateUserModalProps> = ({ initialData, onClose }) => 
                       name="firstName"
                       placeholder="Nombre*"
                       className={`border border-gray-300 p-2 rounded placeholder-black w-full ${
-                        touched.firstName && errors.firstName ? "border-red-500" : ""
+                        touched.firstName && errors.firstName
+                          ? "border-red-500"
+                          : ""
                       }`}
                       value={values.firstName}
                       onChange={handleChange}
@@ -108,7 +122,9 @@ const CreateUserModal: FC<CreateUserModalProps> = ({ initialData, onClose }) => 
                       name="lastName"
                       placeholder="Apellido*"
                       className={`border border-gray-300 p-2 rounded placeholder-black w-full ${
-                        touched.lastName && errors.lastName ? "border-red-500" : ""
+                        touched.lastName && errors.lastName
+                          ? "border-red-500"
+                          : ""
                       }`}
                       value={values.lastName}
                       onChange={handleChange}
@@ -191,7 +207,7 @@ const CreateUserModal: FC<CreateUserModalProps> = ({ initialData, onClose }) => 
                 initialValues={{
                   currentPassword: "",
                   newPassword: "",
-                  repeatPassword: ""
+                  repeatPassword: "",
                 }}
                 validationSchema={passwordValidationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -212,16 +228,19 @@ const CreateUserModal: FC<CreateUserModalProps> = ({ initialData, onClose }) => 
                             name="currentPassword"
                             placeholder="Contraseña Actual*"
                             className={`w-full p-1 border rounded ${
-                              touched.currentPassword && errors.currentPassword ? "border-red-500" : "border-gray-300"
+                              touched.currentPassword && errors.currentPassword
+                                ? "border-red-500"
+                                : "border-gray-300"
                             }`}
                             value={values.currentPassword}
                             onChange={handleChange}
                           />
-                          {touched.currentPassword && errors.currentPassword && (
-                            <div className="text-red-500 text-xs mt-1">
-                              {errors.currentPassword}
-                            </div>
-                          )}
+                          {touched.currentPassword &&
+                            errors.currentPassword && (
+                              <div className="text-red-500 text-xs mt-1">
+                                {errors.currentPassword}
+                              </div>
+                            )}
                         </div>
 
                         {/* Nueva Contraseña */}
@@ -231,7 +250,9 @@ const CreateUserModal: FC<CreateUserModalProps> = ({ initialData, onClose }) => 
                             name="newPassword"
                             placeholder="Nueva Contraseña*"
                             className={`w-full p-1 border rounded ${
-                              touched.newPassword && errors.newPassword ? "border-red-500" : "border-gray-300"
+                              touched.newPassword && errors.newPassword
+                                ? "border-red-500"
+                                : "border-gray-300"
                             }`}
                             value={values.newPassword}
                             onChange={handleChange}
@@ -250,7 +271,9 @@ const CreateUserModal: FC<CreateUserModalProps> = ({ initialData, onClose }) => 
                             name="repeatPassword"
                             placeholder="Repetir Contraseña*"
                             className={`w-full p-1 border rounded ${
-                              touched.repeatPassword && errors.repeatPassword ? "border-red-500" : "border-gray-300"
+                              touched.repeatPassword && errors.repeatPassword
+                                ? "border-red-500"
+                                : "border-gray-300"
                             }`}
                             value={values.repeatPassword}
                             onChange={handleChange}

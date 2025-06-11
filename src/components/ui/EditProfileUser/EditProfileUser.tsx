@@ -34,9 +34,9 @@ const EditProfileUser = () => {
     <div>
       <JEMBar />
       <LoginBar />
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white mt-20 mb-20">
+      <div className="min-h-[90vh] flex flex-col items-center justify-center bg-white ">
         <div className="bg-white shadow drop-shadow-lg p-6 rounded-md w-[620px] relative">
-          <div className="flex items-center justify-center mb-6">
+          <div className="flex items-center justify-center">
             <div className="text-black">Editar Datos Personales</div>
           </div>
           <div className="grid grid-cols-2 gap-4">

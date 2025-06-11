@@ -33,7 +33,9 @@ const Catalogue = () => {
     }
   };
 
-  const filteredProducts = products.filter((p) => p.gender === genderFilter);
+  const filteredProducts = products.filter(
+    (p) => p.genero?.toLowerCase() === genderFilter
+  );
 
   return (
     <div>
