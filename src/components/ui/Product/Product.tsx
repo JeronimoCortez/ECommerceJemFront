@@ -1,31 +1,52 @@
 import EditButton from "../EditButton/EditButton";
 import DeleteButton from "../DeleteButton/DeleteButton";
-
-interface Producto {
-  nombre: string;
-  categoria: string;
-  precioVenta: number;
-  costo: number;
-  ganancia: number;
-  stock: number;
-}
+import PaymentArDownButton from "../PaymentArDownButton/PaymentArDownButton";
+import NewButton from "../NewButton/NewButton";
+import CreateProduct from "../CreateProduct/CreateProduct";
+import { FC, useEffect, useState } from "react";
+import { IProduct } from "../../../types/IProduct";
+import ShowMoreButton from "../ShowMoreButton/ShowMoreButton";
+import productStore from "../../../store/productStore";
+import useProduct from "../../../hook/useProduct";
 
 interface Props {
-  data: Producto[];
+  data: IProduct[];
   sortKey: string;
+  vista: string;
 }
 
-const ProductTable: React.FC<Props> = ({ data, sortKey }) => {
+const ProductTable: FC<Props> = ({ data, sortKey, vista }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+
+  const handleEditClick = (product: IProduct) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const { getProducts } = useProduct();
+
+  useEffect(() => {
+    loadMoreProducts();
+  }, []);
+
+  const loadMoreProducts = async () => {
+    if (!hasMore) return;
+    const data = await getProducts(page, 9);
+    if (data) {
+      setPage((prev) => prev + 1);
+      setHasMore(!data.last);
+    }
+  };
+
   const sortedData = [...data].sort((a, b) => {
     switch (sortKey) {
       case "Categoría":
-        return a.categoria.localeCompare(b.categoria);
+        return a.categoria?.nombre.localeCompare(String(b.categoria?.nombre));
       case "Precio Venta":
-        return b.precioVenta - a.precioVenta;
-      case "Costo":
-        return b.costo - a.costo;
-      case "Ganancia":
-        return b.ganancia - a.ganancia;
+        return b.precio - a.precio;
       case "Stock":
         return b.stock - a.stock;
       default:
@@ -34,38 +55,45 @@ const ProductTable: React.FC<Props> = ({ data, sortKey }) => {
   });
 
   return (
-    <table className="w-full text-left">
-      <thead className="bg-black text-white">
-        <tr>
-          <th className="p-2">Producto</th>
-          <th>Categoría</th>
-          <th>Precio Venta</th>
-          <th>Costo</th>
-          <th>Ganancia</th>
-          <th>Stock</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {sortedData.map((p, i) => (
-          <tr
-            key={i}
-            className={`${p.stock < 15 ? "bg-red-500 text-white" : ""}`}
-          >
-            <td className="p-2">{p.nombre}</td>
-            <td>{p.categoria}</td>
-            <td>{`$${p.precioVenta.toLocaleString()}`}</td>
-            <td>{`$${p.costo.toLocaleString()}`}</td>
-            <td>{`$${p.ganancia.toLocaleString()}`}</td>
-            <td>{p.stock}</td>
-            <td className="flex gap-2 mt-[14px]">
-              <EditButton />
-              <DeleteButton />
-            </td>
+    <div className="mt-2">
+      <NewButton vista={vista} />
+      <table className="w-full text-left">
+        <thead className="bg-black text-white">
+          <tr>
+            <th className="p-2">Producto</th>
+            <th>Categoría</th>
+            <th>Precio Venta</th>
+            <th>Stock</th>
+            <th>Acciones</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {sortedData.map((p, i) => (
+            <tr
+              key={i}
+              // className={`${p.talles.map((t) => t.stock) < 15 ? "bg-red-500 text-white" : ""}`}
+            >
+              <td className="p-2">{p.nombre}</td>
+              <td>{p.categoria?.nombre || "Sin categoria"}</td>
+              <td>{`${p.precio.toLocaleString()}`}</td>
+              <td>{p.stock}</td>
+              <td className="flex gap-2 mt-[14px]">
+                <PaymentArDownButton />
+                <EditButton onClick={() => handleEditClick(p)} />
+                {isModalOpen && selectedProduct && (
+                  <CreateProduct
+                    initialData={p}
+                    onClose={() => setIsModalOpen(false)}
+                  />
+                )}
+                <DeleteButton />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <ShowMoreButton showMore={loadMoreProducts} />
+    </div>
   );
 };
 

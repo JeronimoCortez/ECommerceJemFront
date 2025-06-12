@@ -34,6 +34,7 @@ const CategoryTable: FC<Props> = ({ data, sortKey, vista, tipos }) => {
     loadMoreProducts();
   }, []);
 
+
   const loadMoreProducts = async () => {
     if (!hasMore) return;
     const data = await getProducts(page, 9);
