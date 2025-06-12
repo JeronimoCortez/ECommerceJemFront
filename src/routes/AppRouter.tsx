@@ -7,6 +7,7 @@ import ProductDetails from "../screen/ProductDetails/ProductDetails";
 import Accessories from "../screen/Accesories/Accesories";
 import CreateProduct from "../components/ui/CreateProduct/CreateProduct";
 import AddDiscount from "../components/ui/AddDiscount/AddDiscount";
+import EditProfileUser from "../components/ui/EditProfileUser/EditProfileUser";
 
 const AppRouter = () => {
   return (
@@ -19,6 +20,7 @@ const AppRouter = () => {
       <Route path="/catalogue" element={<Accessories />} />
       <Route path="/createProduct" element={<CreateProduct />} /> /* nuevo elemento */
       <Route path="/addDiscount" element={<AddDiscount />} /> /* nuevo elemento */
+      <Route path="/editProfileUser" element={<EditProfileUser />} />
     </Routes>
   );
 };
