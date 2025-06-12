@@ -1,6 +1,6 @@
 export enum Genero {
-  HOMBRE,
-  MUJER,
-  NINO,
-  NINA,
+  HOMBRE = "HOMBRE",
+  MUJER = "MUJER",
+  NINO = "NIÑO",
+  NINA = "NIÑA",
 }

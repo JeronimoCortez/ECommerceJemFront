@@ -47,7 +47,6 @@ const AdminPanel = () => {
       setSortKey(categoryOptions[0]);
     }
   }, [vista]);
-
   const loadMoreProducts = async () => {
     if (!hasMore) return;
     const data = await getProducts(page, 9);
@@ -112,10 +111,11 @@ const AdminPanel = () => {
         {vista === "productos" && (
           <ProductTable data={products} sortKey={sortKey} vista={vista} />
         )}
-        {/*
+
         {vista === "categoria" && (
           <CategoryTable sortKey={sortKey} vista={vista} />
         )}
+        {/*
         {vista === "compras" && <SalesTable data={} sortKey={sortKey} />} */}
       </div>
     </div>

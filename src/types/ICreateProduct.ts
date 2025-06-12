@@ -1,4 +1,6 @@
-import { TalleDTO } from "./dto/TalleDto";
+import { TalleDTO } from "./dto/TalleDTO";
+import { Genero } from "./enums/Genero.enum";
+import { ITalle } from "./ITalle";
 
 export interface ICreateProduct {
   nombre: string;
@@ -7,7 +9,7 @@ export interface ICreateProduct {
   descripcion: string;
   color: string;
   marca: string;
-  imagen: string;
-  genero: string;
-  talles: TalleDTO[];
+  imagen: string | File | null;
+  genero: Genero | null;
+  talles: TalleDTO[] | ITalle[];
 }

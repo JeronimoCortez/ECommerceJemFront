@@ -6,6 +6,11 @@ import { FC, useEffect, useState } from "react";
 import TallesModal from "../TallesModal/TallesModal";
 import { ICreateProduct } from "../../../types/ICreateProduct";
 import { Genero } from "../../../types/enums/Genero.enum";
+import { categoriaStore } from "../../../store/categoriaStore";
+import useCategoria from "../../../hook/useCategoria";
+import { ImagenService } from "../../../services/imagenService";
+import useProduct from "../../../hook/useProduct";
+import { ProductService } from "../../../services/productService";
 
 interface CreateProductProps {
   initialData?: IProduct;
@@ -14,24 +19,31 @@ interface CreateProductProps {
 
 const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
   const [showTalleModal, setShowTalleModal] = useState(false);
-  const [categorias, setCategorias] = useState();
+  const { categorias } = categoriaStore();
+  const { getCategories } = useCategoria();
+  const imagenService = new ImagenService();
+  const { createProduct, updateProduct } = useProduct();
+  const productService = new ProductService();
 
-  const initialValues: ICreateProduct | IProduct = initialData
-    ? {
-        ...initialData,
-        talles: initialData.talles ? initialData.talles : [],
-      }
-    : {
-        nombre: "",
-        precio: 0,
-        idCategoria: 0,
-        descripcion: "",
-        talles: [],
-        imagen: "",
-        color: "",
-        marca: "",
-        genero: "",
-      };
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const loadCategories = async () => {
+    await getCategories();
+  };
+
+  const initialValues: ICreateProduct | IProduct = {
+    nombre: initialData?.nombre || "",
+    precio: initialData?.precio || 0,
+    idCategoria: initialData?.categoria?.id ?? 0,
+    descripcion: initialData?.descripcion || "",
+    talles: initialData?.talles || [],
+    imagen: initialData?.imagen || null,
+    color: initialData?.color || "",
+    marca: initialData?.marca || "",
+    genero: initialData?.genero || null,
+  };
 
   const validationSchema = Yup.object({
     nombre: Yup.string()
@@ -42,7 +54,9 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
       .required("Ingrese un precio")
       .min(1, "El precio debe ser mayor a 0"),
 
-    categorias: Yup.array().min(1, "Debe seleccionar al menos una categoría"),
+    idCategoria: Yup.number()
+      .required("Debe seleccionar una categoría")
+      .moreThan(0, "Debe seleccionar una categoría válida"),
 
     descripcion: Yup.string()
       .required("Ingrese una descripción")
@@ -57,18 +71,10 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
       )
       .min(1, "Debe agregar al menos un talle"),
 
-    stock: Yup.number()
-      .required("Ingrese el stock")
-      .min(0, "El stock no puede ser negativo"),
-
     color: Yup.string().required("Ingrese un color"),
 
     marca: Yup.string().required("Ingrese una marca"),
-
-    descuentos: Yup.array().of(Yup.object()),
   });
-
-  useEffect(() => {});
 
   return (
     <div className="fixed inset-0 bg-[#D9D9D9]/75 flex items-center justify-center z-50">
@@ -76,9 +82,67 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
         initialValues={initialValues}
         enableReinitialize
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log("Enviado con:", values);
-          setSubmitting(false);
+        onSubmit={async (values) => {
+          console.log("Enviando formulario...");
+
+          if (!initialData) {
+            let imagenUrl: string | null = null;
+
+            if (values.imagen instanceof File) {
+              imagenUrl = await imagenService.uploadImage(values.imagen);
+            } else if (typeof values.imagen === "string") {
+              imagenUrl = values.imagen;
+            }
+
+            const productData = {
+              ...values,
+              imagen: imagenUrl,
+              talles: values.talles.map((t) => ({
+                talle: t.talle,
+                stock: t.stock,
+              })),
+            };
+            const productoCreado: IProduct | undefined =
+              await productService.createProduct(productData);
+            if (productoCreado) {
+              createProduct(productoCreado);
+            }
+          } else {
+            let imagenUrl: string | null = null;
+
+            if (initialData.imagen) {
+              await imagenService.eliminarImagen(initialData.id);
+            }
+
+            if (values.imagen instanceof File) {
+              imagenUrl = await imagenService.uploadImage(values.imagen);
+            } else if (typeof values.imagen === "string") {
+              imagenUrl = values.imagen;
+            }
+
+            const productoActualizado: IProduct = {
+              ...initialData,
+              ...values,
+              imagen: imagenUrl ?? "",
+              categoria: {
+                ...initialData.categoria,
+                id: values.idCategoria,
+              },
+              talles: values.talles.map((t) => ({
+                id: t.id ?? 0,
+                talle: t.talle,
+                stock: t.stock,
+                activo: t.activo ?? true,
+              })),
+              genero: values.genero as Genero,
+            };
+
+            if (productoActualizado) {
+              updateProduct(productoActualizado);
+            }
+          }
+
+          onClose();
         }}
       >
         {({ values, handleChange, setFieldValue, touched, errors }) => (
@@ -136,17 +200,6 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     </button>
                   </div>
 
-                  {/* Stock */}
-                  <input
-                    type="number"
-                    name="talles"
-                    value={values.talles
-                      .map((t) => `${t.talle}: ${t.stock}`)
-                      .join(", ")}
-                    placeholder="Stock:"
-                    className="w-full p-2 border border-gray-300 rounded mb-2"
-                  />
-
                   {/* Precio */}
                   <input
                     type="number"
@@ -162,23 +215,32 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     <input
                       type="file"
                       id="imagenJPG"
-                      name="imagenJPG"
+                      name="imagen"
                       accept="image/*"
                       onChange={(e) => {
                         const file = e.currentTarget.files?.[0] ?? null;
-                        setFieldValue("imagenJPG", file);
+                        console.log("Archivo seleccionado:", file);
+                        setFieldValue("imagen", file);
+                        e.currentTarget.value = "";
+                      }}
+                      onClick={(e) => {
+                        e.currentTarget.value = "";
                       }}
                       className="hidden"
                     />
+
                     <label
                       htmlFor="imagenJPG"
                       className="flex items-center justify-between px-4 py-2 cursor-pointer border border-gray-300 rounded w-full bg-white hover:bg-gray-100"
                     >
-                      {values.imagen?.toString() || "Seleccionar imagen JPG..."}
+                      <span className="truncate max-w-[calc(100%-2rem)]">
+                        {values.imagen instanceof File
+                          ? values.imagen.name
+                          : values.imagen || "Seleccionar imagen JPG..."}
+                      </span>
                       <Icon icon="formkit:folder" width="18" height="18" />
                     </label>
                   </div>
-
                   {/* Marca */}
                   <input
                     type="text"
@@ -202,7 +264,7 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                   <select
                     id="genero"
                     name="genero"
-                    value={values.genero}
+                    value={values.genero?.toString()}
                     onChange={handleChange}
                     className="w-full p-3 border border-gray-300 rounded"
                   >
@@ -216,22 +278,25 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     <p className="text-red-500">{errors.genero}</p>
                   )}
 
-                  {/* Categoria */}
+                  {/* /* Categoria */}
                   <select
-                    name="categorias"
-                    id="categorias"
-                    // value={categorias.map((c) => c.id.toString())}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded"
+                    name="idCategoria"
+                    id="idCategoria"
+                    value={values.idCategoria}
+                    onChange={(e) =>
+                      setFieldValue("idCategoria", Number(e.target.value))
+                    }
+                    className="w-full p-3 border border-gray-300 rounded my-2"
                   >
                     <option value="">Seleccione una categoria</option>
-                    <option value="calzado">Calzado</option>
-                    <option value="remera">Remera</option>
-                    <option value="pantalon">Pantalon</option>
+                    {categorias.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.nombre}
+                      </option>
+                    ))}
                   </select>
-
                   {/* Botones */}
-                  <div className="flex flex-col sm:flex-row gap-22 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
                     <button
                       type="submit"
                       className="w-full sm:w-auto bg-black buttons hover:cursor-pointer text-white py-2 px-6"

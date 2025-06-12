@@ -1,6 +1,6 @@
 import IBase from "./IBase";
 
 export interface ITalle extends IBase {
-  talle: string | number;
+  talle: string;
   stock: number;
 }

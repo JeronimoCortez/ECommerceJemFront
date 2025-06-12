@@ -1,8 +1,17 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useState } from "react";
+import { FC, useState } from "react";
 import AddDiscount from "../AddDiscount/AddDiscount";
+import { IDescuento } from "../../../types/IDescuento";
 
-const PaymentArDownButton = () => {
+type IPaymentArDownButton = {
+  idProducto: number;
+  descuento?: IDescuento;
+};
+
+const PaymentArDownButton: FC<IPaymentArDownButton> = ({
+  idProducto,
+  descuento,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -27,7 +36,18 @@ const PaymentArDownButton = () => {
             >
               ✕
             </button>
-            <AddDiscount onClose={() => setIsModalOpen(false)} />
+            {descuento ? (
+              <AddDiscount
+                initialValues={descuento}
+                idProduct={idProducto}
+                onClose={() => setIsModalOpen(false)}
+              />
+            ) : (
+              <AddDiscount
+                idProduct={idProducto}
+                onClose={() => setIsModalOpen(false)}
+              />
+            )}
           </div>
         </div>
       )}

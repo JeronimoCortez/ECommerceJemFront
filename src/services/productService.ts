@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IProduct } from "../types/IProduct";
+import { ICreateProduct } from "../types/ICreateProduct";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -47,11 +48,17 @@ export class ProductService {
     }
   }
 
-  async createProduct(product: IProduct): Promise<IProduct | undefined> {
+  async createProduct(product: ICreateProduct): Promise<IProduct | undefined> {
     try {
+      const token = localStorage.getItem("accessToken");
       const response = await axios.post<IProduct>(
-        `${API_URL}/producto`,
-        product
+        `${API_URL}/producto/create`,
+        product,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {
@@ -59,14 +66,17 @@ export class ProductService {
     }
   }
 
-  async updateProduct(
-    id: number,
-    updatedData: IProduct
-  ): Promise<IProduct | undefined> {
+  async updateProduct(updatedData: IProduct): Promise<IProduct | undefined> {
     try {
+      const token = localStorage.getItem("accessToken");
       const response = await axios.put<IProduct>(
-        `${API_URL}/producto/${id}`,
-        updatedData
+        `${API_URL}/producto`,
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {
@@ -75,9 +85,54 @@ export class ProductService {
   }
 
   async deleteProduct(id: number): Promise<IProduct | undefined> {
+    const token = localStorage.getItem("accessToken");
     try {
       const response = await axios.delete<IProduct>(
-        `${API_URL}/producto/${id}`
+        `${API_URL}/producto/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+
+  async darAlta(id: number): Promise<IProduct | undefined> {
+    const token = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.patch<IProduct>(
+        `${API_URL}/producto/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
+
+  async asignarDescuento(
+    idProducto: number,
+    idDiscount: number
+  ): Promise<IProduct | undefined> {
+    const token = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.patch<IProduct>(
+        `${API_URL}/producto/${idProducto}/addDiscount/${idDiscount}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {

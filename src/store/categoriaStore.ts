@@ -10,6 +10,9 @@ interface ICategoriaStore {
   addCategoria: (categoria: ICategoria) => void;
   editCategoria: (categoriaActualizada: ICategoria) => void;
   deleteCategoria: (id: number) => void;
+  setCategoriasPage: (
+    updater: ICategoria[] | ((prev: ICategoria[]) => ICategoria[])
+  ) => void;
 }
 
 export const categoriaStore = create<ICategoriaStore>()(
@@ -41,7 +44,13 @@ export const categoriaStore = create<ICategoriaStore>()(
         set((state) => ({
           categorias: state.categorias.filter((cat) => cat.id !== id),
         })),
+      setCategoriasPage: (updater) =>
+        set((state) => ({
+          categorias:
+            typeof updater === "function" ? updater(state.categorias) : updater,
+        })),
     }),
+
     {
       name: "categoria-store",
     }

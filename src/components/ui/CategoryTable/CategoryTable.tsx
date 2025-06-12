@@ -1,35 +1,51 @@
 import EditButton from "../EditButton/EditButton";
 import DeleteButton from "../DeleteButton/DeleteButton";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import NewButton from "../NewButton/NewButton";
 import { ICategoria } from "../../../types/ICategoria";
 import CreateCategory from "../CreateCategoryModal/CreateCategoryModal";
-import { ITipo } from "../../../types/ITipo";
+import { categoriaStore } from "../../../store/categoriaStore";
+import useCategoria from "../../../hook/useCategoria";
 
 interface Props {
-  data: ICategoria[];
   sortKey: string;
   vista: string;
-  tipos: ITipo[];
 }
 
-const CategoryTable: FC<Props> = ({ data, sortKey, vista, tipos }) => {
+const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<ICategoria | null>(
     null
   );
+  const { categorias } = categoriaStore();
+  const { getCategoriesPage } = useCategoria();
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    loadMoreCategorias();
+  }, []);
+
+  const loadMoreCategorias = async () => {
+    if (!hasMore) return;
+    const data = await getCategoriesPage(page, 9);
+    if (data) {
+      setPage((prev) => prev + 1);
+      setHasMore(!data.last);
+    }
+  };
 
   const handleEditClick = (category: ICategoria) => {
     setSelectedCategory(category);
     setIsModalOpen(true);
   };
 
-  const sortedData = [...data].sort((a, b) => {
+  const sortedData = [...categorias].sort((a, b) => {
     switch (sortKey) {
       case "Categoria":
-        return a.nombre.localeCompare(b.nombre);
+        return a.nombre.toString().localeCompare(b.nombre.toString());
       case "Tipo":
-        return a.tipo.nombre.localeCompare(b.tipo.nombre);
+        return (a.tipo?.nombre || "").localeCompare(b.tipo?.nombre || "");
       default:
         return 0;
     }
@@ -54,19 +70,19 @@ const CategoryTable: FC<Props> = ({ data, sortKey, vista, tipos }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedData.map((u, i) => (
-            <tr key={i}>
+          {sortedData?.map((u) => (
+            <tr key={u.id}>
               <td className="p-2">{u.nombre}</td>
-              <td>{u.tipo.nombre}</td>
+              <td>{u.tipo?.nombre || "Sin tipo "}</td>
               <td className="flex gap-2 mt-[14px]">
                 <EditButton onClick={() => handleEditClick(u)} />
-                {isModalOpen && (
-                  <CreateCategory
-                    tipos={tipos}
-                    initialData={selectedCategory || undefined}
-                    onClose={() => setIsModalOpen(false)}
-                  />
-                )}
+                {/* {isModalOpen && ( 
+                  // <CreateCategory
+                  //   tipos={tipos}
+                  //   initialData={selectedCategory || undefined}
+                  //   onClose={() => setIsModalOpen(false)}
+                  // />
+                // )}*/}
                 <DeleteButton />
               </td>
             </tr>

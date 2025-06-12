@@ -1,55 +1,79 @@
 import { useShallow } from "zustand/shallow";
 import { CategoriaService } from "../services/categoriaService";
-import categoriaStore from "../store/categoriaStore";
 import { ICategoria } from "../types/ICategoria";
 import Swal from "sweetalert2";
-
-const categoriaService = new CategoriaService();
+import { categoriaStore } from "../store/categoriaStore";
 
 const useCategoria = () => {
-  const { categories, setCategories, addCategory, deleteCategory, editCategory } =
-    categoriaStore(
-      useShallow((state) => ({
-        categories: state.categories,
-        setCategories: state.setCategories,
-        addCategory: state.addCategory,
-        editCategory: state.editCategory,
-        deleteCategory: state.deleteCategory,
-      }))
+  const {
+    categorias,
+    setCategorias,
+    addCategoria,
+    deleteCategoria,
+    editCategoria,
+    setCategoriasPage,
+  } = categoriaStore(
+    useShallow((state) => ({
+      categorias: state.categorias,
+      setCategorias: state.setCategorias,
+      addCategoria: state.addCategoria,
+      editCategoria: state.editCategoria,
+      deleteCategoria: state.deleteCategoria,
+      setCategoriasPage: state.setCategoriasPage,
+    }))
   );
+  const categoriaService = new CategoriaService();
 
   const getCategories = async () => {
     const data = await categoriaService.getCategorias();
-    if (data) setCategories(data);
+    console.log("Categorias recibidas:", data);
+    if (Array.isArray(data)) {
+      setCategorias(data);
+    } else {
+      setCategorias([]);
+    }
+  };
+
+  const getCategoriesPage = async (page: number, size: number = 9) => {
+    const data = await categoriaService.getCategoriasPage(page, size);
+    if (data) {
+      setCategoriasPage((prev: ICategoria[]) => {
+        const newProducts = data.content.filter(
+          (np) => !prev.some((pp) => pp.id === np.id)
+        );
+        return [...prev, ...newProducts];
+      });
+    }
+    return data;
   };
 
   const createCategory = async (newCategoria: ICategoria) => {
     try {
       await categoriaService.createCategoria(newCategoria);
-      addCategory(newCategoria);
+      addCategoria(newCategoria);
       Swal.fire("Éxito", "Sprint creado correctamente", "success");
     } catch (error) {
-      deleteCategory(newCategoria.id);
+      deleteCategoria(newCategoria.id);
       console.error("Error: ", error);
     }
   };
 
   const updateCategory = async (id: number, categoryUpdate: ICategoria) => {
-    const estadoPrevio = categories.find((p) => p.id === categoryUpdate.id);
+    const estadoPrevio = categorias.find((p) => p.id === categoryUpdate.id);
     try {
       await categoriaService.updateCategoria(id, categoryUpdate);
-      editCategory(categoryUpdate);
+      editCategoria(categoryUpdate);
       Swal.fire("Éxito", "Sprint actualizado correctamente", "success");
     } catch (error) {
       if (estadoPrevio) {
-        editCategory(estadoPrevio);
+        editCategoria(estadoPrevio);
       }
       console.error("Error: ", error);
     }
   };
 
   const deleteCategoryHook = async (id: number) => {
-    const estadoPrevio = categories.find((p) => p.id === id);
+    const estadoPrevio = categorias.find((p) => p.id === id);
     const confirm = await Swal.fire({
       title: "¿Estas seguro?",
       text: "Esta accion no se puede deshacer",
@@ -60,7 +84,7 @@ const useCategoria = () => {
     });
     if (!confirm.isConfirmed) return;
     try {
-      await categoriaService.deleteCategoria(id), deleteCategory(id);
+      await categoriaService.deleteCategoria(id), deleteCategoria(id);
     } catch (error) {
       if (estadoPrevio) createCategory(estadoPrevio);
       console.error("Error: ", error);
@@ -72,6 +96,7 @@ const useCategoria = () => {
     createCategory,
     updateCategory,
     deleteCategoryHook,
+    getCategoriesPage,
   };
 };
 

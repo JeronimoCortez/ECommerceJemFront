@@ -3,7 +3,7 @@ import { IProduct } from "./IProduct";
 import { ITipo } from "./ITipo";
 
 export interface ICategoria extends IBase {
-  nombre: String;
+  nombre: string;
   tipo: ITipo;
   productos: IProduct[];
 }

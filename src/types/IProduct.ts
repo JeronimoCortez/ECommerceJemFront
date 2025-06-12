@@ -2,7 +2,7 @@ import IBase from "./IBase";
 import { ICategoria } from "./ICategoria";
 import { IDescuento } from "./IDescuento";
 import { ITalle } from "./ITalle";
-import { Genero } from "../types/enums/Genero.enum"
+import { Genero } from "../types/enums/Genero.enum";
 
 export interface IProduct extends IBase {
   nombre: string;
@@ -11,10 +11,9 @@ export interface IProduct extends IBase {
   descripcion: string;
   talles: ITalle[];
   stock: number;
-  imagen: File | null;
+  imagen: string;
   color: string;
   marca: string;
-  genero: string;
-  descuentos: IDescuento[];
+  descuento: IDescuento;
   genero: Genero;
 }

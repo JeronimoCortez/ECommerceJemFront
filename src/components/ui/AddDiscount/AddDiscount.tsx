@@ -1,10 +1,14 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { IDescuento } from "../../../types/IDescuento";
+import useDescuento from "../../../hook/useDescuento";
+import { DescuentoService } from "../../../services/descuentoService";
+import useProduct from "../../../hook/useProduct";
 
 interface AddDiscountProps {
   onClose: () => void;
   initialValues?: IDescuento;
+  idProduct: number;
 }
 
 const defaultValues: IDescuento = {
@@ -18,7 +22,7 @@ const defaultValues: IDescuento = {
 const validationSchema = Yup.object({
   descuento: Yup.number()
     .required("Ingrese un porcentaje de descuento")
-    .min(1, "Debe ser al menos 1%"),
+    .min(0, "Debe ser al menos 0%"),
   fechaInicio: Yup.string()
     .required("Ingrese la fecha de inicio")
     .matches(/^\d{4}-\d{2}-\d{2}$/, "Formato inválido"),
@@ -26,11 +30,11 @@ const validationSchema = Yup.object({
     .required("Ingrese una fecha límite")
     .matches(/^\d{4}-\d{2}-\d{2}$/, "Formato inválido")
     .test(
-      "is-after",
+      "is-after-or-equal",
       "La fecha límite debe ser posterior a la de inicio",
       function (value) {
         const { fechaInicio } = this.parent;
-        return new Date(value) > new Date(fechaInicio);
+        return new Date(value) >= new Date(fechaInicio);
       }
     ),
 });
@@ -38,14 +42,26 @@ const validationSchema = Yup.object({
 const AddDiscount = ({
   onClose,
   initialValues = defaultValues,
+  idProduct,
 }: AddDiscountProps) => {
+  const { addDescuento } = useDescuento();
+  const { asignarDescuentoHook } = useProduct();
+  const descuentoService = new DescuentoService();
+
   return (
-    <Formik<IDescuento>
+    <Formik
       initialValues={initialValues}
       enableReinitialize
       validationSchema={validationSchema}
-      onSubmit={(values) => {
-        console.log(values);
+      onSubmit={async (values) => {
+        if (initialValues) {
+          const descuento: IDescuento | undefined =
+            await descuentoService.createDescuento(values);
+          if (descuento) {
+            await addDescuento(values);
+            await asignarDescuentoHook(idProduct, descuento);
+          }
+        }
         onClose();
       }}
     >
@@ -82,7 +98,11 @@ const AddDiscount = ({
                   type="date"
                   name="fechaInicio"
                   onChange={handleChange}
-                  value={values.fechaInicio}
+                  value={
+                    values.fechaInicio
+                      ? new Date(values.fechaInicio).toISOString().split("T")[0]
+                      : ""
+                  }
                   className="w-full sm:w-80 px-4 py-2 border border-gray-300 rounded"
                 />
                 {touched.fechaInicio && errors.fechaInicio && (
@@ -98,7 +118,11 @@ const AddDiscount = ({
                   type="date"
                   name="fechaLimite"
                   onChange={handleChange}
-                  value={values.fechaLimite}
+                  value={
+                    values.fechaLimite
+                      ? new Date(values.fechaLimite).toISOString().split("T")[0]
+                      : ""
+                  }
                   className="w-full sm:w-80 px-4 py-2 border border-gray-300 rounded"
                 />
                 {touched.fechaLimite && errors.fechaLimite && (

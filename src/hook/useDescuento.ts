@@ -7,16 +7,21 @@ import Swal from "sweetalert2";
 const descuentoService = new DescuentoService();
 
 const useDescuento = () => {
-  const { descuentos, setDescuentos, addDescuento, deleteDescuento, editDescuento } =
-    descuentoStore(
-      useShallow((state) => ({
-        descuentos: state.descuentos,
-        setDescuentos: state.setDescuentos,
-        addDescuento: state.addDescuento,
-        editDescuento: state.editDescuento,
-        deleteDescuento: state.deleteDescuento,
-      }))
-    );
+  const {
+    descuentos,
+    setDescuentos,
+    addDescuento,
+    deleteDescuento,
+    editDescuento,
+  } = descuentoStore(
+    useShallow((state) => ({
+      descuentos: state.descuentos,
+      setDescuentos: state.setDescuentos,
+      addDescuento: state.addDescuento,
+      editDescuento: state.editDescuento,
+      deleteDescuento: state.deleteDescuento,
+    }))
+  );
 
   const getDescuentos = async () => {
     const data = await descuentoService.getDescuentos();
@@ -25,9 +30,7 @@ const useDescuento = () => {
 
   const createDescuento = async (newDescuento: IDescuento) => {
     try {
-      await descuentoService.createDescuento(newDescuento);
       addDescuento(newDescuento);
-      Swal.fire("Éxito", "Sprint creado correctamente", "success");
     } catch (error) {
       deleteDescuento(newDescuento.id);
       console.error("Error: ", error);
@@ -71,8 +74,9 @@ const useDescuento = () => {
     getDescuentos,
     createDescuento,
     updateDescuento,
+    addDescuento,
     deleteDescuentoHook,
   };
-}
+};
 
 export default useDescuento;

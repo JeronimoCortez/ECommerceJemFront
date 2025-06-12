@@ -2,13 +2,23 @@ import { useEffect, useState } from "react";
 
 interface TallesModalProps {
   isOpen: boolean;
-  initialTalles: { talle: string | number; stock: number }[];
+  initialTalles: { talle: string; stock: number }[];
   onClose: () => void;
-  onSave: (talles: { talle: string | number; stock: number }[]) => void;
+  onSave: (talles: { talle: string; stock: number }[]) => void;
 }
 
 const posiblesTallesAlfabeticos = ["XS", "S", "M", "L", "XL", "XXL"];
-const posiblesTallesNumericos = [36, 37, 38, 39, 40, 41, 42, 43, 44];
+const posiblesTallesNumericos = [
+  "36",
+  "37",
+  "38",
+  "39",
+  "40",
+  "41",
+  "42",
+  "43",
+  "44",
+];
 
 const TallesModal = ({
   isOpen,
@@ -17,9 +27,7 @@ const TallesModal = ({
   onSave,
 }: TallesModalProps) => {
   const [tipo, setTipo] = useState<"alfabetico" | "numerico">("alfabetico");
-  const [talles, setTalles] = useState<
-    { talle: string | number; stock: number }[]
-  >([]);
+  const [talles, setTalles] = useState<{ talle: string; stock: number }[]>([]);
 
   useEffect(() => {
     if (isOpen) {
@@ -27,10 +35,7 @@ const TallesModal = ({
     }
   }, [isOpen, initialTalles]);
 
-  const handleStockChange = (
-    talleValue: string | number,
-    nuevoStock: number
-  ) => {
+  const handleStockChange = (talleValue: string, nuevoStock: number) => {
     const nuevosTalles = talles.map((t) =>
       t.talle === talleValue ? { ...t, stock: nuevoStock } : t
     );
@@ -42,7 +47,7 @@ const TallesModal = ({
     setTalles([]); // Limpiamos al cambiar de tipo
   };
 
-  const toggleTalle = (talleValue: string | number) => {
+  const toggleTalle = (talleValue: string) => {
     const index = talles.findIndex((t) => t.talle === talleValue);
     if (index !== -1) {
       const nuevosTalles = [...talles];
