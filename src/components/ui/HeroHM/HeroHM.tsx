@@ -13,17 +13,19 @@ const HeroHM = () => {
           alt="Foto zapatillas Acsis ff blast pure gel"
         />
       </div>
-      <div className="mt-2 flex flex-col justify-center items-center">
+      <div className="mt-4 flex flex-col justify-center items-center text-center">
         <h4 className="uppercase text-xl font-bold">
           Zapatillas Acsis ff blast + pure gel
         </h4>
-        <p className="font-thin">
-          Las Zapatillas Asics FF Blast+ Pure Gel combinan ligereza,
-          amortiguación avanzada y un diseño moderno para ofrecer máximo confort
-          y rendimiento en cada paso.
+        <p className="max-w-2xl mx-auto text-gray-700">
+          Las nuevas Asics GEL-Pulse FF BLAST+™ combinan amortiguación avanzada,
+          ligereza y soporte para que disfrutes de un confort dinámico en cada
+          kilómetro. Diseñadas para corredores que buscan rendimiento en
+          entrenamientos diarios o largas distancias, estas zapatillas fusionan
+          tecnología innovadora con un estilo moderno y versátil.
         </p>
-        <div className="mt-2 mb-2 bg-[#000] text-white px-10 py-1 hover:cursor-pointer">
-          <a href="" className="uppercase">
+        <div className="mt-2 mb-4 bg-black text-white px-6 py-2 rounded-full hover:cursor-pointer hover:bg-gray-900 transition-colors">
+          <a href="/accesories" className="uppercase">
             Comprar
           </a>
         </div>

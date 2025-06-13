@@ -10,6 +10,7 @@ interface ICategoriaStore {
   addCategoria: (categoria: ICategoria) => void;
   editCategoria: (categoriaActualizada: ICategoria) => void;
   deleteCategoria: (id: number) => void;
+  darAlta: (id: number) => void;
   setCategoriasPage: (
     updater: ICategoria[] | ((prev: ICategoria[]) => ICategoria[])
   ) => void;
@@ -44,6 +45,15 @@ export const categoriaStore = create<ICategoriaStore>()(
         set((state) => ({
           categorias: state.categorias.filter((cat) => cat.id !== id),
         })),
+      
+        darAlta: (id) => {
+        set((state) => ({
+          categorias: state.categorias.map((c) =>
+            c.id === id ? { ...c, activo: true } : c
+          ),
+        }));
+      },
+      
       setCategoriasPage: (updater) =>
         set((state) => ({
           categorias:

@@ -1,12 +1,6 @@
-import { FC } from "react";
-import { IProduct } from "../../../types/IProduct";
 import SeeMoreButton from "../SeeMoreButton/SeeMoreButton";
 
-interface HeroProps {
-  product: IProduct;
-}
-
-const Hero: FC<HeroProps> = ({product}) => {
+const Hero = () => {
   return (
     <div>
       <div className="w-full mt-6">
@@ -22,7 +16,7 @@ const Hero: FC<HeroProps> = ({product}) => {
         <p className="mt-4 max-w-2xl mx-auto text-gray-700">
         Siempre puedes contar con un clásico. Los icónicos colores contrastantes se combinan con materiales premium y un acolchado suave para ofrecer una comodidad duradera que cambia las reglas del partido. Las posibilidades son infinitas. ¿Cómo vas a llevar tus Dunk?
         </p>
-        <SeeMoreButton productId={product.id}/>
+        <SeeMoreButton />
       </div>
     </div>
   );

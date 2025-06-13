@@ -11,6 +11,7 @@ const useCategoria = () => {
     addCategoria,
     deleteCategoria,
     editCategoria,
+    darAlta,
     setCategoriasPage,
   } = categoriaStore(
     useShallow((state) => ({
@@ -19,6 +20,7 @@ const useCategoria = () => {
       addCategoria: state.addCategoria,
       editCategoria: state.editCategoria,
       deleteCategoria: state.deleteCategoria,
+      darAlta: state.darAlta,
       setCategoriasPage: state.setCategoriasPage,
     }))
   );
@@ -91,11 +93,29 @@ const useCategoria = () => {
     }
   };
 
+  const altaCategoria = async (id: number) => {
+    const confirm = await Swal.fire({
+      title: "¿Estas seguro?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Si, activar",
+      cancelButtonText: "Cancelar",
+    });
+    if (!confirm.isConfirmed) return;
+    try {
+      await categoriaService.darAlta(id);
+      darAlta(id);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
   return {
     getCategories,
     createCategory,
     updateCategory,
     deleteCategoryHook,
+    altaCategoria,
     getCategoriesPage,
   };
 };

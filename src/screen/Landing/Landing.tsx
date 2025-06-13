@@ -7,12 +7,9 @@ import Hero from "../../components/ui/Hero/Hero";
 import Carousel from "../../components/ui/Carousel/Carousel";
 import { userStore } from "../../store/userStore";
 import AdminButton from "../../components/ui/AdminButton/AdminButton";
-import productStore from "../../store/productStore";
 
 const Landing = () => {
   const { userActive } = userStore();
-  const { products } = productStore();
-  const nikeDunk = products[0]; //poner primero el producto de la NIKE DUNK LOW RETRO
 
   return (
     <div>
@@ -23,7 +20,7 @@ const Landing = () => {
       <LoginBar />
       <Header />
       <Filter />
-      {nikeDunk && <Hero product={nikeDunk} />}
+      <Hero />
       <Carousel />
       <Footer />
     </div>
