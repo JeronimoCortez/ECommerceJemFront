@@ -11,6 +11,7 @@ import OrdersUser from "../screen/OrdersUser/OrdersUser";
 import Profile from "../screen/Profile/Profile";
 import Admin from "../screen/Admin/Admin";
 import Catalogue from "../screen/Catalogue/Catalogue";
+import Order from "../components/ui/Order/Order";
 
 const AppRouter = () => {
   return (
@@ -27,6 +28,7 @@ const AppRouter = () => {
       <Route path="/ordersUser/:id" element={<OrdersUser />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/order" element={<Order />} />
     </Routes>
   );
 };

@@ -17,8 +17,6 @@ const ProductContent: FC<ProductContentProps> = ({ product }) => {
 
   const handleBuy = () => {
     const detalle: IDetalle = {
-      id: new Date().getTime(),
-      activo: true,
       producto: product,
       talle: selectTalle?.talle || "",
       cantidad: 1,

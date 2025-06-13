@@ -8,6 +8,7 @@ import useUser from "../../../hook/useUser";
 import { orderStore } from "../../../store/orderStore";
 import { userStore } from "../../../store/userStore";
 import ShowMoreButton from "../ShowMoreButton/ShowMoreButton";
+import RoleButton from "../RoleButton/RoleButton";
 
 interface Props {
   sortKey: string;
@@ -90,6 +91,7 @@ const UserTable: FC<Props> = ({ sortKey, vista }) => {
                     Dar alta
                   </button>
                 )}
+                <RoleButton user={u} />
               </td>
             </tr>
           ))}

@@ -18,7 +18,7 @@ const RoleButton: FC<RoleButtonProps> = ({ user }) => {
   return (
     <button
       onClick={onChange}
-      className={`px-3 py-1 rounded text-white text-sm  hover:cursor-pointer${
+      className={`px-3 py-1 rounded text-sm  hover:cursor-pointer${
         user.rol === Role.ADMIN ? "bg-yellow-600" : "bg-blue-600"
       }`}
     >

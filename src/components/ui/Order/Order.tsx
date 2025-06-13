@@ -1,142 +1,86 @@
-import { useState, useEffect, FC } from "react";
-import { Form, Formik } from "formik";
-import * as Yup from "yup";
-import { IUsuario } from "../../../types/IUsuario";
+import React, { useEffect, useState } from "react";
+import JEMBar from "../JEMBar/JEMBar";
+import { shoppingCartStore } from "../../../store/shoppingCartStore";
+import { DetalleService } from "../../../services/detalleService";
+import { userStore } from "../../../store/userStore";
+import { initMercadoPago } from "@mercadopago/sdk-react";
+import { OrderService } from "../../../services/orderServices";
+const PUBLIC_KEY = import.meta.env.MP_ACCESS_TOKEN;
 
-interface IOrderProps {
-  user: IUsuario;
-}
-
-const Order: FC<IOrderProps> = ({ user }) => {
-  const [selectedAddressId, setSelectedAddressId] = useState<number | "">("");
-
-  const initialValues = {
-    calle: "",
-    localidad: "",
-    cp: "",
-    direccionSeleccionada: "",
-  };
-
-  const validationSchema = Yup.object({
-    calle: Yup.string().required("La calle es obligatoria"),
-    localidad: Yup.string().required("La localidad es obligatoria"),
-    cp: Yup.string().required("El código postal es obligatorio"),
-  });
+const Order = () => {
+  const { detalles } = shoppingCartStore();
+  const { userActive } = userStore();
+  const [detalleIds, setDetalleIds] = useState<number[]>([]);
+  const idUser = userActive?.id || 0;
+  const orderService = new OrderService();
 
   useEffect(() => {
-    // Cargar por ID si hace falta
+    initMercadoPago(PUBLIC_KEY);
   }, []);
 
-  return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={(values) => {
-        console.log("Datos enviados: ", values);
-      }}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleSubmit,
-        handleBlur,
-        setFieldValue,
-      }) => (
-        <Form onSubmit={handleSubmit}>
-          <div className="min-h-screen flex flex-col items-center justify-center bg-white mt-20 mb-20">
-            <div className="bg-white shadow drop-shadow-lg p-6 rounded-md w-[620px] relative">
-              <h2 className="text-black mb-4">Envío</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <input
-                    name="calle"
-                    value={values.calle}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Calle*"
-                    className="border border-gray-300 p-2 rounded placeholder-black w-full"
-                  />
-                  {touched.calle && errors.calle && (
-                    <div className="text-red-500 text-sm">{errors.calle}</div>
-                  )}
-                </div>
-                <div>
-                  <select
-                    name="direccionSeleccionada"
-                    value={selectedAddressId}
-                    onChange={(e) => {
-                      const id =
-                        e.target.value === "" ? "" : parseInt(e.target.value);
-                      setSelectedAddressId(id);
-                      setFieldValue("direccionSeleccionada", id);
-                      const selected = user.direcciones.find(
-                        (d) => d.id === id
-                      );
-                      if (selected) {
-                        setFieldValue("calle", selected.calle);
-                        setFieldValue("localidad", selected.localidad);
-                        setFieldValue("cp", selected.cp);
-                      } else {
-                        setFieldValue("calle", "");
-                        setFieldValue("localidad", "");
-                        setFieldValue("cp", "");
-                      }
-                    }}
-                    className="w-full p-3 border border-gray-300 rounded"
-                  >
-                    <option value="">Seleccione una dirección existente</option>
-                    {user.direcciones.map((dir) => (
-                      <option key={dir.id} value={dir.id}>
-                        {`${dir.calle}, ${dir.localidad}, CP ${dir.cp}`}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <input
-                    name="localidad"
-                    value={values.localidad}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Localidad*"
-                    className="border border-gray-300 p-2 rounded placeholder-black w-full"
-                  />
-                  {touched.localidad && errors.localidad && (
-                    <div className="text-red-500 text-sm">
-                      {errors.localidad}
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <input
-                    name="cp"
-                    value={values.cp}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Código Postal*"
-                    className="border border-gray-300 p-2 rounded placeholder-black w-full"
-                  />
-                  {touched.cp && errors.cp && (
-                    <div className="text-red-500 text-sm">{errors.cp}</div>
-                  )}
-                </div>
-              </div>
+  const crearDetalles = async () => {
+    const detalleService = new DetalleService();
+    const ids: number[] = [];
 
-              <div className="flex items-center justify-center mt-4">
-                <button
-                  type="submit"
-                  className="bg-black text-white py-1 w-48 rounded-full"
-                >
-                  Realizar Pago
-                </button>
-              </div>
+    for (const d of detalles) {
+      const detalleCreado = await detalleService.createDetalle(d);
+      console.log(detalleCreado?.id);
+      if (detalleCreado?.id) {
+        ids.push(detalleCreado.id);
+      }
+    }
+
+    setDetalleIds(ids);
+    return ids;
+  };
+
+  const handlePago = async () => {
+    try {
+      const idDetalles = await crearDetalles();
+      console.log(idDetalles);
+
+      const preferenceId = await orderService.crearPreferenciaMP(
+        idDetalles,
+        idUser
+      );
+
+      window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=${preferenceId}`;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <div>
+      <JEMBar />
+      <div className="h-[90vh] flex items-center justify-center flex-col w-[100vw]">
+        {detalles.map((detalle) => (
+          <div
+            key={detalle.id}
+            className="flex items-center w-[50vw] justify-around"
+          >
+            <img
+              src={`${detalle.producto.imagen}`}
+              alt={`imagen ${detalle.producto.nombre}`}
+              className="w-[100px] object-cover"
+            />
+            <div className="flex flex-col items-center justify-center gap-1">
+              <p className="">{detalle.producto.nombre}</p>
+              <p>
+                Talle: {detalle.talle} Color: {detalle.producto.color}
+              </p>
+              <p>Cantidad: {detalle.cantidad}</p>
             </div>
           </div>
-        </Form>
-      )}
-    </Formik>
+        ))}
+        <button
+          onClick={handlePago}
+          className="all:unset bg-[#000] py-2 cursor-pointer mt-2 px-4 text-white"
+        >
+          Realizar pago
+        </button>
+      </div>
+    </div>
   );
 };
 

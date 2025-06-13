@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { IDetalle } from "../types/IDetalle";
 
 interface IShoppingCartStore {
@@ -7,21 +8,30 @@ interface IShoppingCartStore {
   deleteDetalle: (id: number) => void;
 }
 
-export const shoppingCartStore = create<IShoppingCartStore>((set) => ({
-  detalles: [],
-  addDetalle: (nuevoDetalle) => {
-    set((state) => {
-      const detalleExiste = state.detalles.some(
-        (detalle) => detalle.id === nuevoDetalle.id
-      );
-      if (detalleExiste) return state;
-      return {
-        detalles: [...state.detalles, nuevoDetalle],
-      };
-    });
-  },
-  deleteDetalle: (id) =>
-    set((state) => ({
-      detalles: state.detalles.filter((detalle) => detalle.id !== id),
-    })),
-}));
+export const shoppingCartStore = create<IShoppingCartStore>()(
+  persist(
+    (set) => ({
+      detalles: [],
+      addDetalle: (detalle) => {
+        set((state) => {
+          const detalleExiste = state.detalles.some(
+            (d) => d.producto.nombre === detalle.producto.nombre
+          );
+          if (detalleExiste) return state;
+          return {
+            detalles: [...state.detalles, detalle],
+          };
+        });
+      },
+      deleteDetalle: (id) =>
+        set((state) => ({
+          detalles: state.detalles.filter(
+            (detalle) => detalle.producto.id !== id
+          ),
+        })),
+    }),
+    {
+      name: "shopping-cart",
+    }
+  )
+);

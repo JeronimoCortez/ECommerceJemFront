@@ -75,4 +75,30 @@ export class OrderService {
       throw error;
     }
   }
+
+  async crearPreferenciaMP(
+    detalleIds: number[],
+    idUsuario: number
+  ): Promise<string> {
+    try {
+      const token = localStorage.getItem("accessToken");
+      console.log(detalleIds);
+      const response = await axios.post<{ preferenceId: string }>(
+        `http://localhost:8080/pay/mp`,
+        { id: detalleIds },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            idUsuario: idUsuario,
+          },
+        }
+      );
+      return response.data.preferenceId;
+    } catch (error) {
+      console.error("Error:", error);
+      throw error;
+    }
+  }
 }
