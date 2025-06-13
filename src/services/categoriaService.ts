@@ -55,10 +55,17 @@ export class CategoriaService {
     categoria: ICreateCategoria
   ): Promise<ICategoria | undefined> {
     try {
+      const token = localStorage.getItem("accessToken");
       const response = await axios.post<ICategoria>(
         `${API_URL}/categoria/create`,
-        categoria
+        categoria,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+
       return response.data;
     } catch (error) {
       console.error("Error: ", error);
@@ -69,9 +76,15 @@ export class CategoriaService {
     updatedData: ICategoria
   ): Promise<ICategoria | undefined> {
     try {
+      const token = localStorage.getItem("accessToken");
       const response = await axios.put<ICategoria>(
-        `${API_URL}/categoria/`,
-        updatedData
+        `${API_URL}/categoria`,
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {

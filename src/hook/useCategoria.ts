@@ -50,7 +50,7 @@ const useCategoria = () => {
   const createCategory = async (newCategoria: ICategoria) => {
     try {
       addCategoria(newCategoria);
-      Swal.fire("Éxito", "Sprint creado correctamente", "success");
+      Swal.fire("Éxito", "Categoria creada correctamente", "success");
     } catch (error) {
       deleteCategoria(newCategoria.id);
       console.error("Error: ", error);

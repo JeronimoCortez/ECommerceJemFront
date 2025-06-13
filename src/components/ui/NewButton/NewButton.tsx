@@ -30,13 +30,18 @@ const NewButton = ({ vista }: Props) => {
       </button>
 
       {/* Se abre mal el modal, y no se puede cerrar */}
-      {vista === "productos" && isOpen && <CreateProduct onClose={closeModal} />}
-      {vista === "usuarios" && isOpen && <CreateUserModal onClose={closeModal} />}
+      {vista === "productos" && isOpen && (
+        <CreateProduct onClose={closeModal} />
+      )}
+      {vista === "usuarios" && isOpen && (
+        <CreateUserModal onClose={closeModal} />
+      )}
       {/* Corregir el envio de props */}
-      {/* {vista === "categoria" && isOpen && <CreateCategory onClose={closeModal} />} */}
+      {vista === "categoria" && isOpen && (
+        <CreateCategory onClose={closeModal} />
+      )}
     </div>
   );
 };
 
 export default NewButton;
-

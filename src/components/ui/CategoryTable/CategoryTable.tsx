@@ -41,6 +41,11 @@ const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
     setIsModalOpen(true);
   };
 
+  const handleNewClick = () => {
+    setSelectedCategory(null);
+    setIsModalOpen(true);
+  };
+
   const sortedData = [...categorias].sort((a, b) => {
     switch (sortKey) {
       case "Categoria":
@@ -54,13 +59,7 @@ const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
 
   return (
     <div className="mt-2">
-      <NewButton
-        vista={vista}
-        onClick={() => {
-          setSelectedCategory(null);
-          setIsModalOpen(true);
-        }}
-      />
+      <NewButton vista={vista} onClick={handleNewClick} />
 
       <table className="w-full text-left">
         <thead className="bg-black text-white">
@@ -74,25 +73,25 @@ const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
           {sortedData?.map((u) => (
             <tr key={u.id}>
               <td className="p-2">{u.nombre}</td>
-              <td>{u.tipo?.nombre || "Sin tipo "}</td>
+              <td>{u.tipo?.nombre || "Sin tipo"}</td>
               <td className="flex gap-2 mt-[14px]">
                 <EditButton onClick={() => handleEditClick(u)} />
-                {/* {isModalOpen && ( 
-                  // <CreateCategory
-                  //   tipos={tipos}
-                  //   initialData={selectedCategory || undefined}
-                  //   onClose={() => setIsModalOpen(false)}
-                  // />
-                // )}*/}
                 <DeleteButton />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {isModalOpen && (
+        <CreateCategory
+          initialData={selectedCategory ?? undefined}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
+
       <ShowMoreButton showMore={loadMoreCategorias} />
     </div>
   );
 };
-
 export default CategoryTable;

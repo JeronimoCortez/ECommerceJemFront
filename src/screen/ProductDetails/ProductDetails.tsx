@@ -6,25 +6,20 @@ import Logo from "../../components/ui/Logo/Logo";
 import productStore from "../../store/productStore";
 import { ProductService } from "../../services/productService";
 
-
 const ProductDetails = () => {
   const { id } = useParams();
-  const { productActive, setProductActive, products } = productStore();
-  const service = new ProductService();
+  const { productActive, setProductActive } = productStore();
+  const productService = new ProductService();
 
   useEffect(() => {
     const fetchProduct = async () => {
-      if (!id) return;
-      const productId = parseInt(id);
-      try {
-        const product = await service.getProduct(productId);
-        setProductActive(product!); 
-      } catch (error) {
-        console.error("Error: ", error);
+      const product = await productService.getProduct(Number(id));
+      if (product) {
+        setProductActive(product);
       }
     };
     fetchProduct();
-  }, [id, products, setProductActive]);
+  }, []);
 
   return (
     <>
@@ -32,7 +27,13 @@ const ProductDetails = () => {
         <Logo className="text-white left-0 absolute p-4 hidden md:block" />
         <PublicityBar />
       </div>
-      <ProductContent product={productActive!} />
+      {productActive ? (
+        <ProductContent product={productActive} />
+      ) : (
+        <p className="text-center text-xl font-bold">
+          Error al cargar producto
+        </p>
+      )}
     </>
   );
 };
