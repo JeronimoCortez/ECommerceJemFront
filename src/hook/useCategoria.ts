@@ -49,7 +49,6 @@ const useCategoria = () => {
 
   const createCategory = async (newCategoria: ICategoria) => {
     try {
-      await categoriaService.createCategoria(newCategoria);
       addCategoria(newCategoria);
       Swal.fire("Éxito", "Sprint creado correctamente", "success");
     } catch (error) {
@@ -58,10 +57,10 @@ const useCategoria = () => {
     }
   };
 
-  const updateCategory = async (id: number, categoryUpdate: ICategoria) => {
+  const updateCategory = async (categoryUpdate: ICategoria) => {
     const estadoPrevio = categorias.find((p) => p.id === categoryUpdate.id);
     try {
-      await categoriaService.updateCategoria(id, categoryUpdate);
+      await categoriaService.updateCategoria(categoryUpdate);
       editCategoria(categoryUpdate);
       Swal.fire("Éxito", "Sprint actualizado correctamente", "success");
     } catch (error) {

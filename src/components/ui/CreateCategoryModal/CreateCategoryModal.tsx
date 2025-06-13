@@ -2,21 +2,21 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { FC } from "react";
 import { ICategoria } from "../../../types/ICategoria";
-import { ITipo } from "../../../types/ITipo";
+import useCategoria from "../../../hook/useCategoria";
+import { ICreateCategoria } from "../../../types/ICreateCategoria";
+import { CategoriaService } from "../../../services/categoriaService";
 
 interface CreateCategoryProps {
   initialData?: ICategoria;
-  tipos: ITipo[];
   onClose: VoidFunction;
 }
 
-const CreateCategory: FC<CreateCategoryProps> = ({ initialData, tipos, onClose }) => {
-  const initialValues: ICategoria = initialData ?? {
-    id: 0,
-    activo: true,
-    nombre: "",
-    tipo: tipos[0],
-    productos: [],
+const CreateCategory: FC<CreateCategoryProps> = ({ initialData, onClose }) => {
+  const categoriaService = new CategoriaService();
+  const { createCategory, updateCategory } = useCategoria();
+  const initialValues: ICreateCategoria | ICategoria = {
+    nombre: initialData?.nombre || "",
+    nombreTipo: initialData?.tipo?.nombre ?? "",
   };
 
   const validationSchema = Yup.object({
@@ -32,19 +32,34 @@ const CreateCategory: FC<CreateCategoryProps> = ({ initialData, tipos, onClose }
         initialValues={initialValues}
         enableReinitialize
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log("Enviado con:", values);
-          setSubmitting(false);
+        onSubmit={async (values) => {
+          if (!initialData) {
+            const categoriaCreada: ICategoria | undefined =
+              await categoriaService.createCategoria(values);
+            if (categoriaCreada) {
+              createCategory(categoriaCreada);
+            }
+          } else {
+            const categoriaActualizada: ICategoria = {
+              ... initialData,
+              ... values
+            }
+            if (categoriaActualizada) {
+              updateCategory(categoriaActualizada)
+            }
+          }
+          onClose();
         }}
       >
-        {({ values, handleChange, setFieldValue, touched, errors }) => (
+        {({ values, handleChange, touched, errors }) => (
           <Form>
             <div className="flex flex-col min-h-screen items-center justify-center px-4 py-8">
               <div className="w-full max-w-md border border-black p-6 bg-white">
                 <div className="text-center text-1xl font-bold mb-4">
-                  <h1>{initialData ? "Editar Categoría" : "Crear Categoría"}</h1>
+                  <h1>
+                    {initialData ? "Editar Categoría" : "Crear Categoría"}
+                  </h1>
                 </div>
-
                 {/* Nombre */}
                 <input
                   type="text"
@@ -53,29 +68,20 @@ const CreateCategory: FC<CreateCategoryProps> = ({ initialData, tipos, onClose }
                   placeholder="Nombre:"
                   onChange={handleChange}
                   className={`w-full p-2 border rounded mb-2 ${
-                    touched.nombre && errors.nombre ? "border-red-500" : "border-gray-300"
+                    touched.nombre && errors.nombre
+                      ? "border-red-500"
+                      : "border-gray-300"
                   }`}
                 />
-
                 {/* Tipo */}
-                <select
+                <input
+                  type="text"
                   name="tipo"
-                  value={values.tipo.id}
-                  onChange={(e) => {
-                    const selectedTipo = tipos.find(t => t.id === Number(e.target.value));
-                    setFieldValue("tipo", selectedTipo);
-                  }}
-                  className={`w-full p-2 border rounded mb-4 ${
-                    touched.tipo && errors.tipo ? "border-red-500" : "border-gray-300"
-                  }`}
-                >
-                  {tipos.map(tipo => (
-                    <option key={tipo.id} value={tipo.id}>
-                      {tipo.nombre}
-                    </option>
-                  ))}
-                </select>
-
+                  value={values.nombreTipo}
+                  onChange={handleChange}
+                  placeholder="Tipo:"
+                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                />-
                 {/* Botones */}
                 <div className="flex flex-col sm:flex-row gap-22 justify-center">
                   <button

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ICategoria } from "../types/ICategoria";
+import { ICreateCategoria } from "../types/ICreateCategoria";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -51,11 +52,11 @@ export class CategoriaService {
   }
 
   async createCategoria(
-    categoria: ICategoria
+    categoria: ICreateCategoria
   ): Promise<ICategoria | undefined> {
     try {
       const response = await axios.post<ICategoria>(
-        `${API_URL}/categoria`,
+        `${API_URL}/categoria/create`,
         categoria
       );
       return response.data;
@@ -65,12 +66,11 @@ export class CategoriaService {
   }
 
   async updateCategoria(
-    id: number,
     updatedData: ICategoria
   ): Promise<ICategoria | undefined> {
     try {
       const response = await axios.put<ICategoria>(
-        `${API_URL}/categoria/${id}`,
+        `${API_URL}/categoria/`,
         updatedData
       );
       return response.data;
