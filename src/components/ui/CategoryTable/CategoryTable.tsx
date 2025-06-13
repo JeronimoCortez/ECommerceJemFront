@@ -19,7 +19,8 @@ const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
     null
   );
   const { categorias } = categoriaStore();
-  const { getCategoriesPage } = useCategoria();
+  const { getCategoriesPage, deleteCategoryHook, altaCategoria } =
+    useCategoria();
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
@@ -41,11 +42,6 @@ const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
     setIsModalOpen(true);
   };
 
-  const handleNewClick = () => {
-    setSelectedCategory(null);
-    setIsModalOpen(true);
-  };
-
   const sortedData = [...categorias].sort((a, b) => {
     switch (sortKey) {
       case "Categoria":
@@ -59,7 +55,13 @@ const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
 
   return (
     <div className="mt-2">
-      <NewButton vista={vista} onClick={handleNewClick} />
+      <NewButton
+        vista={vista}
+        onClick={() => {
+          setSelectedCategory(null);
+          setIsModalOpen(true);
+        }}
+      />
 
       <table className="w-full text-left">
         <thead className="bg-black text-white">
@@ -70,28 +72,39 @@ const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedData?.map((u) => (
-            <tr key={u.id}>
-              <td className="p-2">{u.nombre}</td>
-              <td>{u.tipo?.nombre || "Sin tipo"}</td>
+          {sortedData?.map((c, i) => (
+            <tr key={i} className={`${c.activo ? "" : "bg-red-500"}`}>
+              <td className="p-2">{c.nombre}</td>
+              <td>{c.tipo?.nombre || "Sin tipo "}</td>
+              <td>{c.activo ? "SI" : "NO"}</td>
               <td className="flex gap-2 mt-[14px]">
-                <EditButton onClick={() => handleEditClick(u)} />
-                <DeleteButton />
+                {c.activo ? (
+                  <>
+                    <EditButton onClick={() => handleEditClick(c)} />
+                    <DeleteButton onClick={() => deleteCategoryHook(c.id)} />
+                    {isModalOpen && (
+                      <CreateCategory
+                        initialData={selectedCategory || undefined}
+                        onClose={() => setIsModalOpen(false)}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <button
+                    className="font-bold text-center cursor-pointer"
+                    onClick={() => altaCategoria(c.id)}
+                  >
+                    Activar
+                  </button>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      {isModalOpen && (
-        <CreateCategory
-          initialData={selectedCategory ?? undefined}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
-
       <ShowMoreButton showMore={loadMoreCategorias} />
     </div>
   );
 };
+
 export default CategoryTable;

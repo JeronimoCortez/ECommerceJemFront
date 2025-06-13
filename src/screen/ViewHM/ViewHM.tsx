@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import Location from "../../components/ui/Location/Location";
 import HeroHM from "../../components/ui/HeroHM/HeroHM";
-import ProductsHM from "../../components/ui/ProductsHM/ProductsHM";
 import AdvertisingHM from "../../components/ui/AdvertisingHM/AdvertisingHM";
 import Footer from "../../components/ui/Footer/Footer";
 import PublicityBar from "../../components/ui/PublicityBar/PublicityBar";
@@ -15,7 +14,6 @@ const ViewHM = () => {
       <FilterHM />
       <Location location={String(gender)} subLocation={"Home"} />
       <HeroHM />
-      <ProductsHM />
       <AdvertisingHM />
       <Footer />
     </>
