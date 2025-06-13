@@ -9,7 +9,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addDetalle } = shoppingCartStore();
   const handleAddToCart = () => {
     addDetalle({
-      id: 0,
+      id: new Date().getTime(),
       activo: false,
       cantidad: 0,
       talle: {
