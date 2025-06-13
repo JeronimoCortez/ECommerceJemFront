@@ -6,6 +6,7 @@ import { ICategoria } from "../../../types/ICategoria";
 import CreateCategory from "../CreateCategoryModal/CreateCategoryModal";
 import { categoriaStore } from "../../../store/categoriaStore";
 import useCategoria from "../../../hook/useCategoria";
+import ShowMoreButton from "../ShowMoreButton/ShowMoreButton";
 
 interface Props {
   sortKey: string;
@@ -89,6 +90,7 @@ const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
           ))}
         </tbody>
       </table>
+      <ShowMoreButton showMore={loadMoreCategorias} />
     </div>
   );
 };

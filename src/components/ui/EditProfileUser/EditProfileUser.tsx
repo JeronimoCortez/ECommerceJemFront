@@ -3,7 +3,7 @@ import JEMBar from "../JEMBar/JEMBar";
 import LoginBar from "../LoginBar/LoginBar";
 import UpArrow from "../UpArrow/UpArrow";
 
-const EditProfileUser = () => {
+const ProfileForm = () => {
   const [addressOpen, setAddressOpen] = useState(false);
   const [pwdOpen, setPwdOpen] = useState(false);
   const addressRef = useRef<HTMLDivElement>(null);
@@ -34,9 +34,9 @@ const EditProfileUser = () => {
     <div>
       <JEMBar />
       <LoginBar />
-      <div className="min-h-[90vh] flex flex-col items-center justify-center bg-white ">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white mt-20 mb-20">
         <div className="bg-white shadow drop-shadow-lg p-6 rounded-md w-[620px] relative">
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center mb-6">
             <div className="text-black">Editar Datos Personales</div>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -142,4 +142,4 @@ const EditProfileUser = () => {
   );
 };
 
-export default EditProfileUser;
+export default ProfileForm;

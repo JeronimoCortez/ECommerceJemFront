@@ -1,6 +1,12 @@
+import { FC } from "react";
+import { IProduct } from "../../../types/IProduct";
 import SeeMoreButton from "../SeeMoreButton/SeeMoreButton";
 
-const Hero = () => {
+interface HeroProps {
+  product: IProduct;
+}
+
+const Hero: FC<HeroProps> = ({product}) => {
   return (
     <div>
       <div className="w-full mt-6">
@@ -11,16 +17,12 @@ const Hero = () => {
         />
       </div>
       <div className="text-center px-4 mb-10 mt-4">
-        <p className="font-bold">Las botas más ágiles de Nike</p>
-        <h2 className="text-2xl font-bold">NIKE HYPERVENOM</h2>
+        <p className="font-bold">Las botas con más estilo de Nike</p>
+        <h2 className="text-2xl font-bold">NIKE DUNK LOW RETRO</h2>
         <p className="mt-4 max-w-2xl mx-auto text-gray-700">
-          Pasados dos años ya de la primera versión, sigue evolucionando el
-          concepto de Hypervenom, e introduce diversos cambios en las nuevas
-          Phantom. Se introducen cambios en el Nikeskin haciéndolo más grueso,
-          así como el “collar” de Nike y los briocables, buscando una bota más
-          estable y con un golpeo más fuerte.
+        Siempre puedes contar con un clásico. Los icónicos colores contrastantes se combinan con materiales premium y un acolchado suave para ofrecer una comodidad duradera que cambia las reglas del partido. Las posibilidades son infinitas. ¿Cómo vas a llevar tus Dunk?
         </p>
-        <SeeMoreButton />
+        <SeeMoreButton productId={product.id}/>
       </div>
     </div>
   );
