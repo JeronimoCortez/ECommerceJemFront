@@ -6,10 +6,12 @@ interface IUserStore {
   users: IUsuario[];
   userActive: IUsuario | null;
   setUserActive: (userActive: IUsuario | null) => void;
-  setUsers: (users: IUsuario[]) => void;
+  setUsers: (updater: IUsuario[] | ((prev: IUsuario[]) => IUsuario[])) => void;
   addUser: (user: IUsuario) => void;
   editUser: (userUpdate: IUsuario) => void;
   deleteUser: (id: number) => void;
+  darAlta: (id: number) => void;
+  appendUsers: (newUsers: IUsuario[]) => void;
 }
 
 export const userStore = create<IUserStore>()(
@@ -17,19 +19,48 @@ export const userStore = create<IUserStore>()(
     (set) => ({
       users: [],
       userActive: null,
+
       setUserActive: (userIn) => set(() => ({ userActive: userIn })),
-      setUsers: (usersArray) => set(() => ({ users: usersArray })),
+
+      setUsers: (updater) =>
+        set((state) => ({
+          users: typeof updater === "function" ? updater(state.users) : updater,
+        })),
+
+      appendUsers: (newUsers) =>
+        set((state) => {
+          const existingIds = new Set(state.users.map((u) => u.id));
+          const filteredNewUsers = newUsers.filter(
+            (u) => !existingIds.has(u.id)
+          );
+          return {
+            users: [...state.users, ...filteredNewUsers],
+          };
+        }),
       addUser: (newUser) =>
-        set((state) => ({ users: [...state.users, newUser] })),
+        set((state) => ({
+          users: [...state.users, newUser],
+        })),
+
       editUser: (userUpdate) =>
         set((state) => ({
           users: state.users.map((user) =>
             user.id === userUpdate.id ? { ...user, ...userUpdate } : user
           ),
         })),
+
       deleteUser: (id) =>
         set((state) => ({
-          users: state.users.filter((user) => user.id !== id),
+          users: state.users.map((user) =>
+            user.id === id ? { ...user, activo: false } : user
+          ),
+        })),
+
+      darAlta: (id) =>
+        set((state) => ({
+          users: state.users.map((u) =>
+            u.id === id ? { ...u, activo: true } : u
+          ),
         })),
     }),
     {

@@ -16,6 +16,7 @@ const useUser = () => {
     addUser,
     editUser,
     deleteUser,
+    darAlta,
   } = userStore(
     useShallow((state) => ({
       users: state.users,
@@ -25,13 +26,21 @@ const useUser = () => {
       addUser: state.addUser,
       editUser: state.editUser,
       deleteUser: state.deleteUser,
+      darAlta: state.darAlta,
     }))
   );
 
-  const getAllUsers = async () => {
+  const getUsers = async (page: number, size: number = 9) => {
     try {
-      const data = await userService.getAll();
-      if (data) setUsers(data);
+      const data = await userService.getUsers(page, size);
+      if (data) {
+        setUsers((prev: IUsuario[]) => {
+          const newProducts = data.content.filter(
+            (np) => !prev.some((pp) => pp.id === np.id)
+          );
+          return [...prev, ...newProducts];
+        });
+      }
       return data;
     } catch (error) {
       console.error("Error al obtener usuarios:", error);
@@ -116,16 +125,34 @@ const useUser = () => {
     return updateUser(id, { rol: role });
   };
 
+  const altaUsuario = async (id: number) => {
+    const confirm = await Swal.fire({
+      title: "¿Estas seguro?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Si, activar",
+      cancelButtonText: "Cancelar",
+    });
+    if (!confirm.isConfirmed) return;
+    try {
+      await userService.darAlta(id);
+      darAlta(id);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
   return {
     users,
     userActive,
-    getAllUsers,
+    getUsers,
     getUserById,
     createUser,
     updateUser,
     deleteUserById,
     updateUserRole,
     setUserActive,
+    altaUsuario,
   };
 };
 

@@ -3,6 +3,15 @@ import { IUsuario } from "../types/IUsuario";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  number: number;
+  size: number;
+}
+
 export class UserService {
   private api = axios.create({
     baseURL: `${API_URL}/usuario`,
@@ -11,9 +20,11 @@ export class UserService {
     },
   });
 
-  async getAll(): Promise<IUsuario[]> {
+  async getUsers(page: number = 0, size: number): Promise<Page<IUsuario>> {
     try {
-      const response = await this.api.get<IUsuario[]>("/");
+      const response = await this.api.get<Page<IUsuario>>("", {
+        params: { page, size },
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -52,11 +63,33 @@ export class UserService {
   }
 
   async delete(id: number): Promise<void> {
+    const token = localStorage.getItem("accessToken");
     try {
-      await this.api.delete(`/${id}`);
+      await this.api.delete(`/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.error(`Error deleting user ${id}:`, error);
       throw error;
+    }
+  }
+  async darAlta(id: number): Promise<IUsuario | undefined> {
+    const token = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.patch<IUsuario>(
+        `${API_URL}/usuario/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error: ", error);
     }
   }
 }

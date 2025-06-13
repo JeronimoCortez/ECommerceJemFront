@@ -28,10 +28,17 @@ const useOrder = () => {
     }))
   );
 
-  const getOrders = async () => {
+  const getOrders = async (page: number, size: number = 9) => {
     try {
-      const data = await orderService.getAll();
-      if (data) setOrders(data);
+      const data = await orderService.getOrders(page, size);
+      if (data) {
+        setOrders((prev: IOrdenCompra[]) => {
+          const newOrders = data.content.filter(
+            (np) => !prev.some((pp) => pp.id === np.id)
+          );
+          return [...prev, ...newOrders];
+        });
+      }
       return data;
     } catch (error) {
       console.error("Error al obtener órdenes:", error);
@@ -67,7 +74,10 @@ const useOrder = () => {
     }
   };
 
-  const updateOrder = async (id: number, orderUpdate: Partial<IOrdenCompra>) => {
+  const updateOrder = async (
+    id: number,
+    orderUpdate: Partial<IOrdenCompra>
+  ) => {
     const previousState = orders.find((o) => o.id === id);
     try {
       const updatedOrder = await orderService.update(id, orderUpdate);

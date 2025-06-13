@@ -104,10 +104,8 @@ const AdminPanel = () => {
           />
           <Search />
         </div>
-        {/* {vista === "usuarios" && (
-          <UserTable data={} sortKey={sortKey} vista={vista} />
-        )}
-          */}
+        {vista === "usuarios" && <UserTable sortKey={sortKey} vista={vista} />}
+
         {vista === "productos" && (
           <ProductTable data={products} sortKey={sortKey} vista={vista} />
         )}
@@ -115,8 +113,8 @@ const AdminPanel = () => {
         {vista === "categoria" && (
           <CategoryTable sortKey={sortKey} vista={vista} />
         )}
-        {/*
-        {vista === "compras" && <SalesTable data={} sortKey={sortKey} />} */}
+
+        {vista === "compras" && <SalesTable sortKey={sortKey} />}
       </div>
     </div>
   );

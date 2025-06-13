@@ -1,13 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteButton from "../DeleteButton/DeleteButton";
-import NewButton from "../NewButton/NewButton";
-import { IOrdenCompra } from "../../../types/IOrdenCompra";
 import { Estado } from "../../../types/enums/Estado.enum";
+import { orderStore } from "../../../store/orderStore";
+import useOrder from "../../../hook/useOrder";
 
 interface Props {
-  data: IOrdenCompra[];
   sortKey: string;
-  vista: string;
 }
 
 const getRowColor = (estado: Estado) => {
@@ -23,34 +21,31 @@ const getRowColor = (estado: Estado) => {
   }
 };
 
-const getEstadoText = (estado: Estado) => {
-  switch (estado) {
-    case Estado.PENDIENTE:
-      return "Pendiente";
-    case Estado.EN_PROCESO:
-      return "En Proceso";
-    case Estado.COMPLETADO:
-      return "Completado";
-    default:
-      return "";
-  }
-};
+const SalesTable: React.FC<Props> = ({ sortKey }) => {
+  const { orders } = orderStore();
+  const { getOrders } = useOrder();
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
-const SalesTable: React.FC<Props> = ({ data, sortKey, vista }) => {
-  const [sales, setSales] = useState<IOrdenCompra[]>(data);
+  useEffect(() => {
+    loadMoreOrders();
+  }, []);
 
-  const handleEstadoChange = (id: number, newEstado: Estado) => {
-    setSales(prevSales =>
-      prevSales.map(sale =>
-        sale.id === id ? { ...sale, estado: newEstado } : sale
-      )
-    );
+  const loadMoreOrders = async () => {
+    if (!hasMore) return;
+    const data = await getOrders(page, 9);
+    if (data) {
+      setPage((prev) => prev + 1);
+      setHasMore(!data.last);
+    }
   };
 
-  const sortedData = [...sales].sort((a, b) => {
+  const sortedData = [...orders].sort((a, b) => {
     switch (sortKey) {
       case "Usuario":
-        return a.usuario?.userName.localeCompare(b.usuario?.userName || "") || 0;
+        return (
+          a.usuario?.userName.localeCompare(b.usuario?.userName || "") || 0
+        );
       case "Fecha":
         return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
       case "Precio":
@@ -64,8 +59,6 @@ const SalesTable: React.FC<Props> = ({ data, sortKey, vista }) => {
 
   return (
     <div className="mt-2">
-      <NewButton vista={vista} onClick={() => console.log("Nueva venta")} />
-      
       <table className="w-full text-left">
         <thead className="bg-black text-white">
           <tr>
@@ -77,7 +70,7 @@ const SalesTable: React.FC<Props> = ({ data, sortKey, vista }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedData.map((sale) => (
+          {orders.map((sale) => (
             <tr key={sale.id} className={getRowColor(sale.estado)}>
               <td className="p-2">{sale.usuario?.userName || "N/A"}</td>
               <td>{new Date(sale.fecha).toLocaleDateString()}</td>
@@ -85,9 +78,6 @@ const SalesTable: React.FC<Props> = ({ data, sortKey, vista }) => {
               <td>
                 <select
                   value={sale.estado}
-                  onChange={(e) =>
-                    handleEstadoChange(sale.id, parseInt(e.target.value) as Estado)
-                  }
                   className="border border-gray-300 py-1 rounded bg-white"
                 >
                   <option value={Estado.PENDIENTE}>Pendiente</option>

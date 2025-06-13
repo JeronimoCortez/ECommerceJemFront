@@ -2,18 +2,31 @@ import axios from "axios";
 import { IOrdenCompra } from "../types/IOrdenCompra";
 
 const API_URL = import.meta.env.VITE_API_URL;
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  number: number;
+  size: number;
+}
 
 export class OrderService {
   private api = axios.create({
-    baseURL: `${API_URL}/api/orders`,
+    baseURL: `${API_URL}/orden-compra`,
     headers: {
       "Content-Type": "application/json",
     },
   });
 
-  async getAll(): Promise<IOrdenCompra[]> {
+  async getOrders(
+    page: number = 0,
+    size: number = 9
+  ): Promise<Page<IOrdenCompra>> {
     try {
-      const response = await this.api.get<IOrdenCompra[]>("/");
+      const response = await this.api.get<Page<IOrdenCompra>>("", {
+        params: { page, size },
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching orders:", error);
