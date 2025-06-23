@@ -52,9 +52,6 @@ const Accessories: React.FC = () => {
             {filteredProducts.map((p: IProduct) => (
               <ProductCard key={p.id} product={p} />
             ))}
-            {filteredProducts.map((p: IProduct) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
 
             <ShowMoreButton showMore={loadMoreProducts} />
           </div>

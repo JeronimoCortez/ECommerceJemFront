@@ -5,7 +5,7 @@ import { shoppingCartStore } from "../../../store/shoppingCartStore";
 
 const ShoppingCartButton = () => {
   const [isOpenShoppingCart, setOpenShoppingCart] = useState<Boolean>(false);
-  const { detalles } = shoppingCartStore();
+  const { detallesShoppingCart: detalles } = shoppingCartStore();
   return (
     <>
       <button

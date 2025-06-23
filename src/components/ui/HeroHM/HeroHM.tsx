@@ -1,4 +1,10 @@
-const HeroHM = () => {
+import { FC } from "react";
+
+type IPropsHeroHM = {
+  gender: string;
+};
+
+const HeroHM: FC<IPropsHeroHM> = ({ gender }) => {
   return (
     <div>
       <div className="flex max-w-full">
@@ -25,7 +31,14 @@ const HeroHM = () => {
           tecnología innovadora con un estilo moderno y versátil.
         </p>
         <div className="mt-2 mb-4 bg-black text-white px-6 py-2 rounded-full hover:cursor-pointer hover:bg-gray-900 transition-colors">
-          <a href="/accesories" className="uppercase">
+          <a
+            href={`${
+              gender.toLowerCase() === "hombre"
+                ? "../product/7"
+                : "../product/8"
+            }`}
+            className="uppercase"
+          >
             Comprar
           </a>
         </div>

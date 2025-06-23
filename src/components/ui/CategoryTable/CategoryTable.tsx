@@ -76,7 +76,6 @@ const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
             <tr key={i} className={`${c.activo ? "" : "bg-red-500"}`}>
               <td className="p-2">{c.nombre}</td>
               <td>{c.tipo?.nombre || "Sin tipo "}</td>
-              <td>{c.activo ? "SI" : "NO"}</td>
               <td className="flex gap-2 mt-[14px]">
                 {c.activo ? (
                   <>

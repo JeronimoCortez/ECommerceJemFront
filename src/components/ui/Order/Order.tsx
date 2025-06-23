@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import JEMBar from "../JEMBar/JEMBar";
-import { shoppingCartStore } from "../../../store/shoppingCartStore";
-import { DetalleService } from "../../../services/detalleService";
 import { userStore } from "../../../store/userStore";
 import { initMercadoPago } from "@mercadopago/sdk-react";
 import { OrderService } from "../../../services/orderServices";
+import { DetalleStore } from "../../../store/detalleStore";
+import { shoppingCartStore } from "../../../store/shoppingCartStore";
 const PUBLIC_KEY = import.meta.env.MP_ACCESS_TOKEN;
 
 const Order = () => {
-  const { detalles } = shoppingCartStore();
+  const { detalles } = DetalleStore();
+  const { detallesShoppingCart } = shoppingCartStore();
   const { userActive } = userStore();
-  const [detalleIds, setDetalleIds] = useState<number[]>([]);
   const idUser = userActive?.id || 0;
   const orderService = new OrderService();
 
@@ -18,26 +18,13 @@ const Order = () => {
     initMercadoPago(PUBLIC_KEY);
   }, []);
 
-  const crearDetalles = async () => {
-    const detalleService = new DetalleService();
-    const ids: number[] = [];
-
-    for (const d of detalles) {
-      const detalleCreado = await detalleService.createDetalle(d);
-      console.log(detalleCreado?.id);
-      if (detalleCreado?.id) {
-        ids.push(detalleCreado.id);
-      }
-    }
-
-    setDetalleIds(ids);
-    return ids;
-  };
-
   const handlePago = async () => {
     try {
-      const idDetalles = await crearDetalles();
-      console.log(idDetalles);
+      const idDetalles: number[] = detalles.map((d) => d.id!);
+      if (idDetalles.length === 0) {
+        console.log("No hay detalles para procesar.");
+        return;
+      }
 
       const preferenceId = await orderService.crearPreferenciaMP(
         idDetalles,
@@ -45,6 +32,7 @@ const Order = () => {
       );
 
       window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=${preferenceId}`;
+      localStorage.removeItem("shopping-cart");
     } catch (error) {
       console.error(error);
     }
@@ -54,13 +42,13 @@ const Order = () => {
     <div>
       <JEMBar />
       <div className="h-[90vh] flex items-center justify-center flex-col w-[100vw]">
-        {detalles.map((detalle) => (
+        {detallesShoppingCart.map((detalle) => (
           <div
             key={detalle.id}
             className="flex items-center w-[50vw] justify-around"
           >
             <img
-              src={`${detalle.producto.imagen}`}
+              src={detalle.producto.imagen || "../NoImage.png"}
               alt={`imagen ${detalle.producto.nombre}`}
               className="w-[100px] object-cover"
             />

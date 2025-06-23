@@ -12,8 +12,11 @@ const LoginBar = () => {
   };
 
   const handleNavigateToProfile = () => {
-    // RUTA PERFIL
     navigate("/profile");
+  };
+
+  const handleNavigateToOrders = () => {
+    navigate(`/ordersUser/${userActive?.id}`);
   };
   return (
     <div className="bg-gray-300 text-black text-right py-1 text-sm ">
@@ -32,9 +35,17 @@ const LoginBar = () => {
               </button>
             </div>
           ) : (
-            <button className="cursor-pointer" onClick={handleCloseSession}>
-              Cerrar Sesión
-            </button>
+            <>
+              <button
+                className="cursor-pointer"
+                onClick={handleNavigateToOrders}
+              >
+                Mis ordenes /
+              </button>
+              <button className="cursor-pointer" onClick={handleCloseSession}>
+                Cerrar Sesión
+              </button>
+            </>
           )
         ) : (
           <>

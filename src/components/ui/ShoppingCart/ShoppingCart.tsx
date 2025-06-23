@@ -3,15 +3,21 @@ import { FC, useEffect, useState } from "react";
 import { shoppingCartStore } from "../../../store/shoppingCartStore";
 import { ProductCounter } from "../ProductCounter/ProductCounter";
 import { useNavigate } from "react-router-dom";
+import { useDetalle } from "../../../hook/useDetalle";
 
 type IPropsShoppingCart = {
   onClose: VoidFunction;
 };
 
 const ShoppingCart: FC<IPropsShoppingCart> = ({ onClose }) => {
-  const { detalles, deleteDetalle } = shoppingCartStore();
+  const {
+    detallesShoppingCart: detalles,
+    deleteDetalle,
+    updateCantidad,
+  } = shoppingCartStore();
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
+  const { createDetalles } = useDetalle();
 
   useEffect(() => {
     const nuevoTotal = detalles.reduce((acc, detalle) => {
@@ -19,6 +25,11 @@ const ShoppingCart: FC<IPropsShoppingCart> = ({ onClose }) => {
     }, 0);
     setTotal(nuevoTotal);
   }, [detalles]);
+
+  const handleCreateDetalles = async () => {
+    await createDetalles(detalles);
+    navigate("/order");
+  };
 
   return (
     <div className="fixed inset-0 bg-[#D9D9D9]/75 z-[999] ">
@@ -43,7 +54,16 @@ const ShoppingCart: FC<IPropsShoppingCart> = ({ onClose }) => {
               <p>
                 Talle: {detalle.talle} Color: {detalle.producto.color}
               </p>
-              <ProductCounter detalle={detalle} />
+              <ProductCounter
+                maxCounter={
+                  detalle.producto.talles.find((t) => t.talle === detalle.talle)
+                    ?.stock
+                }
+                count={detalle.cantidad}
+                setCount={(newCount) =>
+                  updateCantidad(detalle.producto.id, newCount)
+                }
+              />
             </div>
             <div className="flex flex-col items-center gap-1">
               <Icon
@@ -63,7 +83,7 @@ const ShoppingCart: FC<IPropsShoppingCart> = ({ onClose }) => {
             Total: <span className="absolute right-0">${total}</span>
           </p>
           <button
-            onClick={() => navigate("/order")}
+            onClick={handleCreateDetalles}
             className="w-full bg-[#000] text-white rounded-full mt-2 hover:cursor-pointer"
           >
             Finalizar compra

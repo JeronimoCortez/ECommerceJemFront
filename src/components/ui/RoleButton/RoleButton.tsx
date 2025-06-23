@@ -8,17 +8,16 @@ interface RoleButtonProps {
 }
 
 const RoleButton: FC<RoleButtonProps> = ({ user }) => {
-  const { updateUserRole } = useUser();
+  const { modificarRolHook } = useUser();
 
   const onChange = () => {
-    const newRole = user.rol === Role.ADMIN ? Role.USER : Role.ADMIN;
-    updateUserRole(user.id, newRole);
+    modificarRolHook(user.id);
   };
 
   return (
     <button
       onClick={onChange}
-      className={`px-3 py-1 rounded text-sm  hover:cursor-pointer${
+      className={`px-3 py-1 rounded text-sm text-white font-bold hover:cursor-pointer ${
         user.rol === Role.ADMIN ? "bg-yellow-600" : "bg-blue-600"
       }`}
     >

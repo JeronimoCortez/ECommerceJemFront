@@ -1,312 +1,202 @@
-import { useState, FC } from "react";
-import { Formik, Form } from "formik";
+import { FC } from "react";
+import { ICreateUsuario } from "../../../types/ICreateUsuario";
+import { Role } from "../../../types/enums/Role.enum";
 import * as Yup from "yup";
-import { IUsuario } from "../../../types/IUsuario";
+import { Form, Formik } from "formik";
+import useUser from "../../../hook/useUser";
 
-interface CreateUserModalProps {
-  initialData?: IUsuario;
+type IPropsCreateUserModal = {
   onClose: VoidFunction;
-}
+};
 
-const CreateUserModal: FC<CreateUserModalProps> = ({
-  initialData,
-  onClose,
-}) => {
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-
-  const initialValues: IUsuario & { firstName: string; lastName: string } =
-    initialData
-      ? {
-          id: 0,
-          userName: "",
-          email: "",
-          rol: "",
-          dni: "",
-          phone: "",
-          direcciones: [],
-          ordenes: [],
-          gender: "",
-          firstName: "",
-          lastName: "",
-        }
-      : initialData;
+const CreateUserModal: FC<IPropsCreateUserModal> = ({ onClose }) => {
+  const { createUser } = useUser();
 
   const validationSchema = Yup.object({
-    firstName: Yup.string().required("Nombre es requerido"),
-    lastName: Yup.string().required("Apellido es requerido"),
-    dni: Yup.string()
-      .matches(/^\d+$/, "DNI debe contener solo números")
-      .required("DNI es requerido"),
-    phone: Yup.string().required("Teléfono es requerido"),
-    email: Yup.string().email("Email inválido").required("Email es requerido"),
+    nombreCompleto: Yup.string().required("Ingrese el nombre completo"),
+    email: Yup.string().email("Email inválido").required("Ingrese el email"),
+    phone: Yup.string().required("Ingrese el teléfono"),
+    dni: Yup.string().required("Ingrese el DNI"),
+    contrasenia: Yup.string().required("Ingrese una contraseña"),
+    repetirContrasenia: Yup.string()
+      .oneOf([Yup.ref("contrasenia")], "Las contraseñas no coinciden")
+      .required("Debe repetir la contraseña"),
+    rol: Yup.mixed<Role>()
+      .oneOf(Object.values(Role))
+      .required("Seleccione un rol"),
   });
 
-  const passwordValidationSchema = Yup.object({
-    currentPassword: Yup.string().required("Contraseña actual es requerida"),
-    newPassword: Yup.string()
-      .notOneOf(
-        [Yup.ref("currentPassword")],
-        "La nueva contraseña debe ser diferente a la actual"
-      )
-      .required("Nueva contraseña es requerida"),
-    repeatPassword: Yup.string()
-      .oneOf([Yup.ref("newPassword")], "Las contraseñas no coinciden")
-      .required("Repetir contraseña es requerido"),
-  });
+  const initialValues: ICreateUsuario & { repetirContrasenia: string } = {
+    nombreCompleto: "",
+    email: "",
+    phone: "",
+    dni: "",
+    contrasenia: "",
+    repetirContrasenia: "",
+    rol: Role.USER,
+  };
 
   return (
-    <div className="fixed inset-0 bg-[#D9D9D9]/75 flex items-center justify-center z-50">
+    <div className="absolute top-0 left-0 w-full h-full bg-[#D9D9D9]/75 flex justify-center items-center">
       <Formik
         initialValues={initialValues}
-        enableReinitialize
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log("Form submitted", values);
-          setSubmitting(false);
+        onSubmit={async (values) => {
+          const { repetirContrasenia, ...createUserData } = values;
+          await createUser(createUserData);
+          onClose();
         }}
       >
-        {({ values, handleChange, touched, errors }) => (
-          <>
-            <Form>
-              <div className="bg-white shadow drop-shadow-lg p-6 rounded-md w-[620px] relative">
-                <div className="flex items-center justify-center mb-6">
-                  <div className="text-black">
-                    {initialData
-                      ? "Editar Datos Personales"
-                      : "Crear Nuevo Usuario"}
-                  </div>
-                </div>
+        {({ values, handleChange, errors, touched, handleBlur }) => (
+          <Form className="w-[50vw] h-[70vh] bg-white rounded p-4 flex flex-col gap-2 justify-center">
+            <h5 className="text-center font-bold">Crear usuario</h5>
 
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Nombre */}
-                  <div>
-                    <input
-                      name="firstName"
-                      placeholder="Nombre*"
-                      className={`border border-gray-300 p-2 rounded placeholder-black w-full ${
-                        touched.firstName && errors.firstName
-                          ? "border-red-500"
-                          : ""
-                      }`}
-                      value={values.firstName}
-                      onChange={handleChange}
-                    />
-                    {touched.firstName && errors.firstName && (
-                      <div className="text-red-500 text-xs mt-1">
-                        {errors.firstName}
-                      </div>
-                    )}
-                  </div>
+            <div className="flex flex-col">
+              <label htmlFor="nombreCompleto" className="text-xs font-bold">
+                Nombre completo
+              </label>
+              <input
+                type="text"
+                id="nombreCompleto"
+                name="nombreCompleto"
+                value={values.nombreCompleto}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`border border-gray-300 p-2 rounded ${
+                  errors.nombreCompleto && touched.nombreCompleto
+                    ? "border-red-500"
+                    : ""
+                }`}
+              />
+            </div>
 
-                  {/* DNI */}
-                  <div>
-                    <input
-                      name="dni"
-                      placeholder="DNI (sin puntos ni espacios)*"
-                      className={`border border-gray-300 p-2 rounded placeholder-black w-full ${
-                        touched.dni && errors.dni ? "border-red-500" : ""
-                      }`}
-                      value={values.dni}
-                      onChange={handleChange}
-                    />
-                    {touched.dni && errors.dni && (
-                      <div className="text-red-500 text-xs mt-1">
-                        {errors.dni}
-                      </div>
-                    )}
-                  </div>
+            <div className="flex flex-col">
+              <label htmlFor="email" className="text-xs font-bold">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`border border-gray-300 p-2 rounded ${
+                  errors.email && touched.email ? "border-red-500" : ""
+                }`}
+              />
+            </div>
 
-                  {/* Apellido */}
-                  <div>
-                    <input
-                      name="lastName"
-                      placeholder="Apellido*"
-                      className={`border border-gray-300 p-2 rounded placeholder-black w-full ${
-                        touched.lastName && errors.lastName
-                          ? "border-red-500"
-                          : ""
-                      }`}
-                      value={values.lastName}
-                      onChange={handleChange}
-                    />
-                    {touched.lastName && errors.lastName && (
-                      <div className="text-red-500 text-xs mt-1">
-                        {errors.lastName}
-                      </div>
-                    )}
-                  </div>
+            <div className="flex flex-col">
+              <label htmlFor="dni" className="text-xs font-bold">
+                DNI
+              </label>
+              <input
+                type="text"
+                name="dni"
+                id="dni"
+                value={values.dni}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`border border-gray-300 p-2 rounded ${
+                  errors.dni && touched.dni ? "border-red-500" : ""
+                }`}
+              />
+            </div>
 
-                  {/* Teléfono */}
-                  <div>
-                    <input
-                      name="phone"
-                      placeholder="Teléfono*"
-                      className={`border border-gray-300 p-2 rounded placeholder-black w-full ${
-                        touched.phone && errors.phone ? "border-red-500" : ""
-                      }`}
-                      value={values.phone}
-                      onChange={handleChange}
-                    />
-                    {touched.phone && errors.phone && (
-                      <div className="text-red-500 text-xs mt-1">
-                        {errors.phone}
-                      </div>
-                    )}
-                  </div>
+            <div className="flex flex-col">
+              <label htmlFor="phone" className="text-xs font-bold">
+                Teléfono
+              </label>
+              <input
+                type="text"
+                name="phone"
+                id="phone"
+                value={values.phone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`border border-gray-300 p-2 rounded ${
+                  errors.phone && touched.phone ? "border-red-500" : ""
+                }`}
+              />
+            </div>
 
-                  {/* Email */}
-                  <div>
-                    <input
-                      name="email"
-                      placeholder="Correo electrónico*"
-                      className={`border border-gray-300 p-2 rounded placeholder-black w-full ${
-                        touched.email && errors.email ? "border-red-500" : ""
-                      }`}
-                      value={values.email}
-                      onChange={handleChange}
-                    />
-                    {touched.email && errors.email && (
-                      <div className="text-red-500 text-xs mt-1">
-                        {errors.email}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-center mt-6 space-x-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowPasswordModal(true)}
-                    className="text-black py-1 hover:underline"
-                  >
-                    Cambiar Contraseña
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-center mt-4 space-x-4">
-                  <button
-                    type="submit"
-                    className="bg-black text-white py-1 w-48 rounded-full"
-                  >
-                    {initialData ? "Actualizar" : "Crear"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="bg-[#5A0000] text-white py-1 w-48 rounded-full"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              </div>
-            </Form>
-
-            {/* Modal de Contraseña */}
-            {showPasswordModal && (
-              <Formik
-                initialValues={{
-                  currentPassword: "",
-                  newPassword: "",
-                  repeatPassword: "",
-                }}
-                validationSchema={passwordValidationSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                  console.log("Password changed", values);
-                  setSubmitting(false);
-                  setShowPasswordModal(false);
-                }}
+            <div className="flex flex-col">
+              <label htmlFor="rol" className="text-xs font-bold">
+                Rol
+              </label>
+              <select
+                name="rol"
+                id="rol"
+                value={values.rol}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`border border-gray-300 p-2 rounded ${
+                  errors.rol && touched.rol ? "border-red-500" : ""
+                }`}
               >
-                {({ values, handleChange, touched, errors }) => (
-                  <div className="fixed inset-0 bg-[#D9D9D9]/75 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-md shadow-lg p-6 w-60 space-y-4">
-                      <div className="text-center">Cambiar Contraseña</div>
-                      <Form>
-                        {/* Contraseña Actual */}
-                        <div>
-                          <input
-                            type="password"
-                            name="currentPassword"
-                            placeholder="Contraseña Actual*"
-                            className={`w-full p-1 border rounded ${
-                              touched.currentPassword && errors.currentPassword
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            }`}
-                            value={values.currentPassword}
-                            onChange={handleChange}
-                          />
-                          {touched.currentPassword &&
-                            errors.currentPassword && (
-                              <div className="text-red-500 text-xs mt-1">
-                                {errors.currentPassword}
-                              </div>
-                            )}
-                        </div>
+                <option value={Role.ADMIN}>ADMIN</option>
+                <option value={Role.USER}>USER</option>
+              </select>
+            </div>
 
-                        {/* Nueva Contraseña */}
-                        <div>
-                          <input
-                            type="password"
-                            name="newPassword"
-                            placeholder="Nueva Contraseña*"
-                            className={`w-full p-1 border rounded ${
-                              touched.newPassword && errors.newPassword
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            }`}
-                            value={values.newPassword}
-                            onChange={handleChange}
-                          />
-                          {touched.newPassword && errors.newPassword && (
-                            <div className="text-red-500 text-xs mt-1">
-                              {errors.newPassword}
-                            </div>
-                          )}
-                        </div>
+            <div className="flex flex-col">
+              <label htmlFor="contrasenia" className="text-xs font-bold">
+                Contraseña
+              </label>
+              <input
+                type="password"
+                name="contrasenia"
+                id="contrasenia"
+                value={values.contrasenia}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`border border-gray-300 p-2 rounded ${
+                  errors.contrasenia && touched.contrasenia
+                    ? "border-red-500"
+                    : ""
+                }`}
+              />
+            </div>
 
-                        {/* Repetir Contraseña */}
-                        <div>
-                          <input
-                            type="password"
-                            name="repeatPassword"
-                            placeholder="Repetir Contraseña*"
-                            className={`w-full p-1 border rounded ${
-                              touched.repeatPassword && errors.repeatPassword
-                                ? "border-red-500"
-                                : "border-gray-300"
-                            }`}
-                            value={values.repeatPassword}
-                            onChange={handleChange}
-                          />
-                          {touched.repeatPassword && errors.repeatPassword && (
-                            <div className="text-red-500 text-xs mt-1">
-                              {errors.repeatPassword}
-                            </div>
-                          )}
-                        </div>
+            <div className="flex flex-col">
+              <label htmlFor="repetirContrasenia" className="text-xs font-bold">
+                Repetir contraseña
+              </label>
+              <input
+                type="password"
+                name="repetirContrasenia"
+                id="repetirContrasenia"
+                value={values.repetirContrasenia}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`border border-gray-300 p-2 rounded ${
+                  errors.repetirContrasenia && touched.repetirContrasenia
+                    ? "border-red-500"
+                    : ""
+                }`}
+              />
+              {errors.repetirContrasenia && touched.repetirContrasenia && (
+                <p className="text-xs font-thin">{errors.repetirContrasenia}</p>
+              )}
+            </div>
 
-                        <div className="flex justify-center gap-2">
-                          <button
-                            type="submit"
-                            className="bg-black text-white py-1 px-4 rounded-full"
-                          >
-                            Cambiar
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setShowPasswordModal(false)}
-                            className="bg-[#5A0000] text-white py-1 px-4 rounded-full"
-                          >
-                            Cancelar
-                          </button>
-                        </div>
-                      </Form>
-                    </div>
-                  </div>
-                )}
-              </Formik>
-            )}
-          </>
+            <div className="flex justify-center gap-2">
+              <button
+                className="bg-[#000] cursor-pointer px-4 py-2 text-white"
+                type="submit"
+              >
+                Enviar
+              </button>
+              <button
+                type="button"
+                className="bg-[#5A0000] cursor-pointer px-4 py-2 text-white"
+                onClick={onClose}
+              >
+                Cancelar
+              </button>
+            </div>
+          </Form>
         )}
       </Formik>
     </div>

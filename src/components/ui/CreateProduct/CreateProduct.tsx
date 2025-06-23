@@ -11,6 +11,7 @@ import useCategoria from "../../../hook/useCategoria";
 import { ImagenService } from "../../../services/imagenService";
 import useProduct from "../../../hook/useProduct";
 import { ProductService } from "../../../services/productService";
+import Swal from "sweetalert2";
 
 interface CreateProductProps {
   initialData?: IProduct;
@@ -22,10 +23,17 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
   const { categorias } = categoriaStore();
   const { getCategories } = useCategoria();
   const imagenService = new ImagenService();
-  const { createProduct, updateProduct } = useProduct();
+  const { createProduct, updateProduct, eliminarImagenHook } = useProduct();
   const productService = new ProductService();
+  const [preview, setPreview] = useState<string | null>(
+    initialData?.imagen && initialData.imagen.length > 0
+      ? initialData.imagen
+      : null
+  );
 
   useEffect(() => {
+    console.log("Value preview: ", preview);
+
     loadCategories();
   }, []);
 
@@ -60,7 +68,8 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
 
     descripcion: Yup.string()
       .required("Ingrese una descripción")
-      .min(5, "Debe tener al menos 5 caracteres"),
+      .min(5, "Debe tener al menos 5 caracteres")
+      .max(1000, "Maximo 1000 caracteres"),
 
     talles: Yup.array()
       .of(
@@ -75,6 +84,10 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
 
     marca: Yup.string().required("Ingrese una marca"),
   });
+
+  const handleRemoveImage = async () => {
+    await eliminarImagenHook(initialData!.id);
+  };
 
   return (
     <div className="fixed inset-0 bg-[#D9D9D9]/75 flex items-center justify-center z-50">
@@ -171,13 +184,24 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                   />
 
                   {/* Descripción */}
-                  <textarea
-                    name="descripcion"
-                    value={values.descripcion}
-                    onChange={handleChange}
-                    placeholder="Descripción:"
-                    className="w-full p-2 border border-gray-300 rounded mb-2"
-                  />
+                  <div>
+                    <textarea
+                      name="descripcion"
+                      value={values.descripcion}
+                      onChange={handleChange}
+                      placeholder="Descripción:"
+                      className={`w-full p-2 border rounded  ${
+                        touched.descripcion && errors.descripcion
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
+                    />
+                    {touched.descripcion && errors.descripcion && (
+                      <p className="text-red-500 text-xs">
+                        *{errors.descripcion}
+                      </p>
+                    )}
+                  </div>
 
                   {/* Talles */}
                   <div className="flex flex-col sm:flex-row gap-2 mb-2">
@@ -207,40 +231,13 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     value={values.precio}
                     onChange={handleChange}
                     placeholder="Precio:"
-                    className="w-full p-2 border border-gray-300 rounded mb-2"
+                    className={`w-full p-2 border rounded mb-2 ${
+                      touched.nombre && errors.nombre
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
                   />
 
-                  {/* Imagen */}
-                  <div className="relative w-full mb-2">
-                    <input
-                      type="file"
-                      id="imagenJPG"
-                      name="imagen"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.currentTarget.files?.[0] ?? null;
-                        console.log("Archivo seleccionado:", file);
-                        setFieldValue("imagen", file);
-                        e.currentTarget.value = "";
-                      }}
-                      onClick={(e) => {
-                        e.currentTarget.value = "";
-                      }}
-                      className="hidden"
-                    />
-
-                    <label
-                      htmlFor="imagenJPG"
-                      className="flex items-center justify-between px-4 py-2 cursor-pointer border border-gray-300 rounded w-full bg-white hover:bg-gray-100"
-                    >
-                      <span className="truncate max-w-[calc(100%-2rem)]">
-                        {values.imagen instanceof File
-                          ? values.imagen.name
-                          : values.imagen || "Seleccionar imagen JPG..."}
-                      </span>
-                      <Icon icon="formkit:folder" width="18" height="18" />
-                    </label>
-                  </div>
                   {/* Marca */}
                   <input
                     type="text"
@@ -248,7 +245,11 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     value={values.marca}
                     onChange={handleChange}
                     placeholder="Marca:"
-                    className="w-full p-2 border border-gray-300 rounded mb-2"
+                    className={`w-full p-2 border rounded mb-2 ${
+                      touched.nombre && errors.nombre
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
                   />
 
                   {/* Color */}
@@ -258,7 +259,11 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     value={values.color}
                     onChange={handleChange}
                     placeholder="Color:"
-                    className="w-full p-2 border border-gray-300 rounded mb-4"
+                    className={`w-full p-2 border rounded mb-2 ${
+                      touched.nombre && errors.nombre
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
                   />
                   {/* Género */}
                   <select
@@ -266,7 +271,11 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     name="genero"
                     value={values.genero?.toString()}
                     onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded"
+                    className={`w-full p-2 border rounded mb-2 ${
+                      touched.nombre && errors.nombre
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
                   >
                     <option value="">Seleccione un género</option>
                     <option value={Genero.HOMBRE}>Hombre</option>
@@ -286,15 +295,93 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     onChange={(e) =>
                       setFieldValue("idCategoria", Number(e.target.value))
                     }
-                    className="w-full p-3 border border-gray-300 rounded my-2"
+                    className={`w-full p-2 border rounded mb-2 ${
+                      touched.nombre && errors.nombre
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    }`}
                   >
-                    <option value="">Seleccione una categoria</option>
+                    <option value={0}>Seleccione una categoria</option>
                     {categorias.map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.nombre}
+                        {c.nombre} {c.tipo.nombre}
                       </option>
                     ))}
                   </select>
+
+                  {/* IMAGEN */}
+                  <input
+                    type="file"
+                    id="imagenJPG"
+                    name="imagen"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.currentTarget.files?.[0] ?? null;
+                      console.log("Seleccionado:", file);
+                      if (file) {
+                        const urlPreview = URL.createObjectURL(file);
+                        console.log("Preview generado:", urlPreview);
+                        setPreview(urlPreview);
+                        setFieldValue("imagen", file);
+                      } else {
+                        setFieldValue("imagen", null);
+                        setPreview(null);
+                      }
+                    }}
+                    onClick={(e) => {
+                      e.currentTarget.value = "";
+                    }}
+                  />
+
+                  <label
+                    htmlFor="imagenJPG"
+                    className="flex items-center gap-3 border border-gray-300 rounded p-2 cursor-pointer hover:bg-gray-100 my-2"
+                  >
+                    {values.imagen ? (
+                      <img
+                        src={
+                          preview
+                            ? preview
+                            : typeof values.imagen === "string"
+                            ? values.imagen
+                            : "/assets/noImage.jpeg"
+                        }
+                        alt="Imagen seleccionada"
+                        className="w-12 h-12 object-cover rounded"
+                      />
+                    ) : (
+                      <Icon icon="mdi:folder" width={24} height={24} />
+                    )}
+                    <span className="text-gray-700">
+                      {values.imagen ? "Cambiar imagen" : "Seleccionar imagen"}
+                    </span>
+                  </label>
+
+                  {values.imagen && (
+                    <div
+                      className="my-1 text-center text-red-500 font-bold cursor-pointer border border-red-500"
+                      onClick={async () => {
+                        const confirm = await Swal.fire({
+                          title: "¿Estás seguro que deseas eliminar la imagen?",
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonText: "Sí, eliminar",
+                          cancelButtonText: "Cancelar",
+                        });
+                        if (!confirm.isConfirmed) return;
+
+                        if (initialData) {
+                          await handleRemoveImage();
+                        }
+                        setFieldValue("imagen", null);
+                        setPreview(null);
+                      }}
+                    >
+                      <p>Eliminar imagen</p>
+                    </div>
+                  )}
+
                   {/* Botones */}
                   <div className="flex flex-col sm:flex-row gap-2 justify-center">
                     <button
@@ -314,6 +401,7 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                 </div>
               </div>
             </Form>
+
             {showTalleModal && (
               <TallesModal
                 isOpen={true}

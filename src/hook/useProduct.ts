@@ -4,8 +4,10 @@ import { useShallow } from "zustand/shallow";
 import { IProduct } from "../types/IProduct";
 import Swal from "sweetalert2";
 import { IDescuento } from "../types/IDescuento";
+import { ImagenService } from "../services/imagenService";
 
 const productService = new ProductService();
+const imagenService = new ImagenService();
 
 const useProduct = () => {
   const {
@@ -16,6 +18,8 @@ const useProduct = () => {
     editProduct,
     darAlta,
     asignarDescuento,
+    eliminarDescuento,
+    eliminarImagen,
   } = productStore(
     useShallow((state) => ({
       products: state.products,
@@ -25,6 +29,8 @@ const useProduct = () => {
       deleteProduct: state.deleteProduct,
       darAlta: state.darAlta,
       asignarDescuento: state.asignarDescuento,
+      eliminarDescuento: state.eliminarDescuento,
+      eliminarImagen: state.eliminarImagen,
     }))
   );
 
@@ -105,8 +111,7 @@ const useProduct = () => {
     descuento: IDescuento
   ) => {
     const confirm = await Swal.fire({
-      title:
-        "¿Estas seguro que desea asignar descuento? No podra eliminarlo luego",
+      title: "¿Estas seguro que desea asignar descuento?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Si, asignar",
@@ -121,6 +126,32 @@ const useProduct = () => {
     }
   };
 
+  const eliminarDescuentoHook = async (idProduct: number) => {
+    const confirm = await Swal.fire({
+      title: "¿Estas seguro que desea eliminar descuento?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Si, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+    if (!confirm.isConfirmed) return;
+    try {
+      await productService.eliminarDescuento(idProduct);
+      eliminarDescuento(idProduct);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  const eliminarImagenHook = async (idProducto: number) => {
+    try {
+      await imagenService.eliminarImagen(idProducto);
+      eliminarImagen(idProducto);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
   return {
     getProducts,
     createProduct,
@@ -128,6 +159,8 @@ const useProduct = () => {
     deleteProductHook,
     altaPrducto,
     asignarDescuentoHook,
+    eliminarDescuentoHook,
+    eliminarImagenHook,
   };
 };
 

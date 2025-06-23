@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IOrdenCompra } from "../types/IOrdenCompra";
+import { Estado } from "../types/enums/Estado.enum";
 
 const API_URL = import.meta.env.VITE_API_URL;
 export interface Page<T> {
@@ -69,9 +70,49 @@ export class OrderService {
 
   async delete(id: number): Promise<void> {
     try {
-      await this.api.delete(`/${id}`);
+      const token = localStorage.getItem("accessToken");
+      await this.api.delete(`/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.error(`Error deleting order ${id}:`, error);
+      throw error;
+    }
+  }
+
+  async alta(id: number): Promise<void> {
+    const token = localStorage.getItem("accessToken");
+    try {
+      await this.api.patch(
+        `/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error(`Error alta order ${id}:`, error);
+      throw error;
+    }
+  }
+  async modificarEstado(id: number, estado: Estado): Promise<void> {
+    const token = localStorage.getItem("accessToken");
+    try {
+      await this.api.patch(
+        `/modificarEstado/${id}`,
+        { estado: estado },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error(`Error order ${id}:`, error);
       throw error;
     }
   }
@@ -82,7 +123,6 @@ export class OrderService {
   ): Promise<string> {
     try {
       const token = localStorage.getItem("accessToken");
-      console.log(detalleIds);
       const response = await axios.post<{ preferenceId: string }>(
         `http://localhost:8080/pay/mp`,
         { id: detalleIds },
@@ -98,6 +138,18 @@ export class OrderService {
       return response.data.preferenceId;
     } catch (error) {
       console.error("Error:", error);
+      throw error;
+    }
+  }
+
+  async getOrdersByUser(idUser: number) {
+    try {
+      const response = await this.api.get<IOrdenCompra[]>(
+        `/ordersUser/${idUser}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching order ${idUser}:`, error);
       throw error;
     }
   }

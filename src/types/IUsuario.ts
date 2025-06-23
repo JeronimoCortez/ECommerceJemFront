@@ -4,7 +4,7 @@ import { IDireccion } from "./IDireccion";
 import { IOrdenCompra } from "./IOrdenCompra";
 
 export interface IUsuario extends IBase {
-  userName: string;
+  nombreCompleto: string;
   email: string;
   rol: Role;
   dni: string;

@@ -3,7 +3,7 @@ import { userStore } from "../store/userStore";
 import { useShallow } from "zustand/shallow";
 import { IUsuario } from "../types/IUsuario";
 import Swal from "sweetalert2";
-import { Role } from "../types/enums/Role.enum";
+import { ICreateUsuario } from "../types/ICreateUsuario";
 
 const userService = new UserService();
 
@@ -17,6 +17,7 @@ const useUser = () => {
     editUser,
     deleteUser,
     darAlta,
+    modificarRol,
   } = userStore(
     useShallow((state) => ({
       users: state.users,
@@ -27,24 +28,27 @@ const useUser = () => {
       editUser: state.editUser,
       deleteUser: state.deleteUser,
       darAlta: state.darAlta,
+      modificarRol: state.modificarRol,
     }))
   );
-
   const getUsers = async (page: number, size: number = 9) => {
     try {
       const data = await userService.getUsers(page, size);
-      if (data) {
+
+      if (data && Array.isArray(data.content)) {
         setUsers((prev: IUsuario[]) => {
-          const newProducts = data.content.filter(
+          const newUsers = data.content.filter(
             (np) => !prev.some((pp) => pp.id === np.id)
           );
-          return [...prev, ...newProducts];
+          return [...prev, ...newUsers];
         });
+      } else {
+        console.warn("La respuesta no contiene 'content' como array:", data);
       }
+
       return data;
     } catch (error) {
       console.error("Error al obtener usuarios:", error);
-      Swal.fire("Error", "No se pudieron obtener los usuarios", "error");
       throw error;
     }
   };
@@ -61,7 +65,7 @@ const useUser = () => {
     }
   };
 
-  const createUser = async (userData: Omit<IUsuario, "id">) => {
+  const createUser = async (userData: Omit<ICreateUsuario, "id">) => {
     try {
       const createdUser = await userService.create(userData);
       if (createdUser) {
@@ -71,7 +75,6 @@ const useUser = () => {
       }
     } catch (error) {
       console.error("Error al crear usuario:", error);
-      Swal.fire("Error", "No se pudo crear el usuario", "error");
       throw error;
     }
   };
@@ -82,14 +85,17 @@ const useUser = () => {
       const updatedUser = await userService.update(id, userUpdate);
       if (updatedUser) {
         editUser(updatedUser);
-        if (userActive?.id === id) setUserActive(updatedUser);
         Swal.fire("Éxito", "Usuario actualizado correctamente", "success");
         return updatedUser;
       }
     } catch (error) {
       if (previousState) editUser(previousState);
       console.error("Error al actualizar usuario:", error);
-      Swal.fire("Error", "No se pudo actualizar el usuario", "error");
+      Swal.fire(
+        "Error",
+        "No se pudo actualizar el usuario, verifique los datos ingresados",
+        "error"
+      );
       throw error;
     }
   };
@@ -121,10 +127,6 @@ const useUser = () => {
     }
   };
 
-  const updateUserRole = async (id: number, role: Role) => {
-    return updateUser(id, { rol: role });
-  };
-
   const altaUsuario = async (id: number) => {
     const confirm = await Swal.fire({
       title: "¿Estas seguro?",
@@ -142,6 +144,36 @@ const useUser = () => {
     }
   };
 
+  const modificarRolHook = async (idUsuario: number) => {
+    const confirm = await Swal.fire({
+      title: "¿Estas seguro que desea modificar el rol?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Si, modificar",
+      cancelButtonText: "Cancelar",
+    });
+    if (!confirm.isConfirmed) return;
+    try {
+      await userService.modificarRol(idUsuario);
+      modificarRol(idUsuario);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  const changePassword = async (
+    idUser: number,
+    contrasenia: string,
+    nuevaContrasenia: string
+  ) => {
+    try {
+      await userService.changePassword(idUser, contrasenia, nuevaContrasenia);
+    } catch (error) {
+      Swal.fire("Error", "Verifique los datos ingresados", "error");
+      console.error("Error: ", error);
+    }
+  };
+
   return {
     users,
     userActive,
@@ -150,9 +182,10 @@ const useUser = () => {
     createUser,
     updateUser,
     deleteUserById,
-    updateUserRole,
     setUserActive,
     altaUsuario,
+    modificarRolHook,
+    changePassword,
   };
 };
 

@@ -3,7 +3,7 @@ import { IOrdenCompra } from "../../../types/IOrdenCompra";
 import OrderUser from "../OrderUser/OrderUser";
 
 type IListOrderUser = {
-  orders: IOrdenCompra[];
+  orders?: IOrdenCompra[];
 };
 
 const ListOrderUser: FC<IListOrderUser> = ({ orders }) => {
@@ -34,23 +34,24 @@ const ListOrderUser: FC<IListOrderUser> = ({ orders }) => {
           />
           <p>Mostrar solo pendientes</p>
         </div>
-        {showPending
+        {showPending && orders
           ? orders
-              .filter((order) => order.estado === 0)
+              .filter((order) => order.estado === "PENDIENTE")
               .map((order) => (
                 <div className="cursor-pointer bg-[#F6CF4C]/50 w-full py-4 text-center font-bold">
                   <p>Fecha: {new Date(order.fecha).toISOString()}</p>
                 </div>
               ))
-          : orders.map((order) => (
+          : orders &&
+            orders.map((order) => (
               <div
                 onClick={() => handleSetOrderUser(order)}
                 className={`cursor-pointer ${
-                  order.estado === 0
+                  order.estado === "PENDIENTE"
                     ? "bg-[#F6CF4C]/50 w-full"
-                    : order.estado === 1
+                    : order.estado === "EN_PROCESO"
                     ? "bg-[#3366CC]/50 w-full"
-                    : order.estado === 2
+                    : order.estado === "COMPLETADO"
                     ? "bg-[#008000]/50 w-full"
                     : ""
                 } py-4 text-center font-bold`}
@@ -58,6 +59,7 @@ const ListOrderUser: FC<IListOrderUser> = ({ orders }) => {
                 <p>Fecha: {new Date(order.fecha).toISOString()}</p>
               </div>
             ))}
+        {!orders && <p className="Font-bold">No hay ordenes para mostrar</p>}
       </div>
       {orderActive && <OrderUser order={orderActive} />}
     </div>

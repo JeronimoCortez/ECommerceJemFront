@@ -14,13 +14,16 @@ interface ProductContentProps {
 const ProductContent: FC<ProductContentProps> = ({ product }) => {
   const [selectTalle, setSelectTalle] = useState<ITalle | null>(null);
   const { addDetalle } = shoppingCartStore();
+  const [count, setCount] = useState<number>(0);
 
   const handleBuy = () => {
     const detalle: IDetalle = {
       producto: product,
       talle: selectTalle?.talle || "",
-      cantidad: 1,
+      cantidad: count,
     };
+    setSelectTalle(null);
+    setCount(0);
     addDetalle(detalle);
   };
 
@@ -30,41 +33,45 @@ const ProductContent: FC<ProductContentProps> = ({ product }) => {
         <ShoppingCartButton />
       </div>
       <div className="flex flex-col md:flex-row justify-center items-center min-h-[calc(100vh-40px)] p-6 gap-8">
-        {/* Sección de imagen */}
         <div className="w-1/2 flex flex-col items-center gap-2">
           <img
             className="w-[30vw] md:h-[50vh] shadow-md"
-            src={product.imagen}
+            src={product.imagen || "../NoImage.png"}
             alt={product.nombre}
           />
-          <div className="flex gap-2">
-            {product.talles.map(
-              (t) =>
-                t.stock > 0 && (
-                  <button
-                    key={t.talle}
-                    onClick={() => setSelectTalle(t)}
-                    className={`w-[2rem] h-[2rem] border cursor-pointer bg-[#D9D9D9]/75 ${
-                      selectTalle?.talle === t.talle
-                        ? "font-bold border-black"
-                        : ""
-                    }`}
-                  >
-                    {t.talle}
-                  </button>
-                )
+          <div className="flex flex-col justify-center items-center gap-2">
+            <div className="flex gap-2">
+              {product.talles.map(
+                (t) =>
+                  t.stock > 0 && (
+                    <button
+                      key={t.talle}
+                      onClick={() => setSelectTalle(t)}
+                      className={`w-[2.5rem] h-[2rem] border cursor-pointer bg-[#FFF] ${
+                        selectTalle?.talle === t.talle
+                          ? "font-bold border-black"
+                          : ""
+                      }`}
+                    >
+                      {t.talle}
+                    </button>
+                  )
+              )}
+            </div>
+            {selectTalle && (
+              <ProductCounter
+                maxCounter={selectTalle.stock}
+                count={count}
+                setCount={setCount}
+              />
             )}
           </div>
         </div>
 
-        {/* Sección de detalles */}
         <div className="w-1/2 flex flex-col gap-1">
           <h4 className="text-[1rem] md:text-[2rem] font-bold">
             {product.nombre}
           </h4>
-          <h5 className="text-[1rem] md:text-[1.5rem] font-bold">
-            {product.descripcion}
-          </h5>
           <p className="text-xs md:text-sm">{product.descripcion}</p>
           <p className="text-xs md:text-sm">
             {product.marca} - {product.color}

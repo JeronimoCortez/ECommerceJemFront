@@ -43,17 +43,19 @@ export const categoriaStore = create<ICategoriaStore>()(
 
       deleteCategoria: (id) =>
         set((state) => ({
-          categorias: state.categorias.filter((cat) => cat.id !== id),
+          categorias: state.categorias.map((c) =>
+            c.id === id ? { ...c, activo: false } : c
+          ),
         })),
-      
-        darAlta: (id) => {
+
+      darAlta: (id) => {
         set((state) => ({
           categorias: state.categorias.map((c) =>
             c.id === id ? { ...c, activo: true } : c
           ),
         }));
       },
-      
+
       setCategoriasPage: (updater) =>
         set((state) => ({
           categorias:

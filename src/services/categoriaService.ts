@@ -93,9 +93,15 @@ export class CategoriaService {
   }
 
   async deleteCategoria(id: number): Promise<ICategoria | undefined> {
+    const token = localStorage.getItem("accessToken");
     try {
       const response = await axios.delete<ICategoria>(
-        `${API_URL}/categoria/${id}`
+        `${API_URL}/categoria/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {

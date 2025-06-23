@@ -23,7 +23,8 @@ const getRowColor = (estado: Estado) => {
 
 const SalesTable: React.FC<Props> = ({ sortKey }) => {
   const { orders } = orderStore();
-  const { getOrders } = useOrder();
+  const { getOrders, deleteOrderById, altaOrderHook, modificarEstadoHook } =
+    useOrder();
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
@@ -40,23 +41,6 @@ const SalesTable: React.FC<Props> = ({ sortKey }) => {
     }
   };
 
-  const sortedData = [...orders].sort((a, b) => {
-    switch (sortKey) {
-      case "Usuario":
-        return (
-          a.usuario?.userName.localeCompare(b.usuario?.userName || "") || 0
-        );
-      case "Fecha":
-        return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
-      case "Precio":
-        return b.precioTotal - a.precioTotal;
-      case "Estado":
-        return a.estado - b.estado;
-      default:
-        return 0;
-    }
-  });
-
   return (
     <div className="mt-2">
       <table className="w-full text-left">
@@ -71,14 +55,26 @@ const SalesTable: React.FC<Props> = ({ sortKey }) => {
         </thead>
         <tbody>
           {orders.map((sale) => (
-            <tr key={sale.id} className={getRowColor(sale.estado)}>
-              <td className="p-2">{sale.usuario?.userName || "N/A"}</td>
+            <tr key={sale.id} className={`${sale.activo ? "" : "bg-red-500"}`}>
+              <td className="p-2">{sale.usuario?.email || "N/A"}</td>
               <td>{new Date(sale.fecha).toLocaleDateString()}</td>
               <td>${sale.precioTotal.toLocaleString()}</td>
               <td>
                 <select
                   value={sale.estado}
-                  className="border border-gray-300 py-1 rounded bg-white"
+                  onChange={(e) => {
+                    const value = e.target.value as unknown as Estado;
+                    modificarEstadoHook(sale.id, value);
+                  }}
+                  className={`${
+                    sale.estado === Estado.PENDIENTE
+                      ? "text-yellow-500 font-bold"
+                      : sale.estado === Estado.EN_PROCESO
+                      ? "text-blue-500 font-bold"
+                      : sale.estado === Estado.COMPLETADO
+                      ? "text-green-500 font-bold"
+                      : ""
+                  } border border-gray-300 py-1 rounded`}
                 >
                   <option value={Estado.PENDIENTE}>Pendiente</option>
                   <option value={Estado.EN_PROCESO}>En Proceso</option>
@@ -86,7 +82,16 @@ const SalesTable: React.FC<Props> = ({ sortKey }) => {
                 </select>
               </td>
               <td className="flex gap-2 mt-[14px]">
-                <DeleteButton />
+                {sale.activo ? (
+                  <DeleteButton onClick={() => deleteOrderById(sale.id)} />
+                ) : (
+                  <button
+                    className="font-bold text-center cursor-pointer"
+                    onClick={() => altaOrderHook(sale.id)}
+                  >
+                    Activar
+                  </button>
+                )}
               </td>
             </tr>
           ))}

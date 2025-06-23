@@ -1,6 +1,7 @@
 import { IUsuario } from "../types/IUsuario";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { Role } from "../types/enums/Role.enum";
 
 interface IUserStore {
   users: IUsuario[];
@@ -12,6 +13,7 @@ interface IUserStore {
   deleteUser: (id: number) => void;
   darAlta: (id: number) => void;
   appendUsers: (newUsers: IUsuario[]) => void;
+  modificarRol: (idUsuario: number) => void;
 }
 
 export const userStore = create<IUserStore>()(
@@ -60,6 +62,16 @@ export const userStore = create<IUserStore>()(
         set((state) => ({
           users: state.users.map((u) =>
             u.id === id ? { ...u, activo: true } : u
+          ),
+        })),
+      modificarRol: (idUsuario) =>
+        set((state) => ({
+          users: state.users.map((u) =>
+            u.id === idUsuario
+              ? u.rol === Role.ADMIN
+                ? { ...u, rol: Role.USER }
+                : { ...u, rol: Role.ADMIN }
+              : u
           ),
         })),
     }),

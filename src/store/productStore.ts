@@ -14,6 +14,8 @@ interface IProductStore {
   deleteProduct: (idProduct: number) => void;
   darAlta: (id: number) => void;
   asignarDescuento: (idProduct: number, descuento: IDescuento) => void;
+  eliminarDescuento: (idProducto: number) => void;
+  eliminarImagen: (idProducto: number) => void;
 }
 
 const productStore = create<IProductStore>()((set) => ({
@@ -54,7 +56,36 @@ const productStore = create<IProductStore>()((set) => ({
   asignarDescuento: (idProduct, descuento) => {
     set((state) => ({
       products: state.products.map((p) =>
-        p.id === idProduct ? { ...p, descuento: descuento } : p
+        p.id === idProduct
+          ? {
+              ...p,
+              precio: p.precio * (1 - descuento.descuento / 100),
+              descuento: descuento,
+            }
+          : p
+      ),
+    }));
+  },
+  eliminarDescuento: (idProduct) => {
+    set((state) => ({
+      products: state.products.map((p) => {
+        if (p.id !== idProduct || !p.descuento) return p;
+
+        const porcentaje = p.descuento.descuento / 100;
+        const precioOriginal = p.precio / (1 - porcentaje);
+
+        return {
+          ...p,
+          precio: precioOriginal,
+          descuento: null,
+        };
+      }),
+    }));
+  },
+  eliminarImagen: (idProducto) => {
+    set((state) => ({
+      products: state.products.map((p) =>
+        p.id === idProducto ? { ...p, imagen: "" } : p
       ),
     }));
   },

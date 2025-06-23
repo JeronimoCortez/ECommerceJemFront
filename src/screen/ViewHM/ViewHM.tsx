@@ -13,7 +13,7 @@ const ViewHM = () => {
       <PublicityBar />
       <FilterHM />
       <Location location={String(gender)} subLocation={"Home"} />
-      <HeroHM />
+      <HeroHM gender={gender!} />
       <AdvertisingHM />
       <Footer />
     </>

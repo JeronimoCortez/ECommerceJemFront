@@ -16,6 +16,8 @@ const useOrder = () => {
     addOrder,
     editOrder,
     deleteOrder,
+    altaOrder,
+    modificarEstado,
   } = orderStore(
     useShallow((state) => ({
       orders: state.orders,
@@ -25,6 +27,8 @@ const useOrder = () => {
       addOrder: state.addOrder,
       editOrder: state.editOrder,
       deleteOrder: state.deleteOrder,
+      altaOrder: state.altaOrder,
+      modificarEstado: state.modificarEstado,
     }))
   );
 
@@ -112,7 +116,6 @@ const useOrder = () => {
     try {
       await orderService.delete(id);
       deleteOrder(id);
-      if (orderActive?.id === id) setOrderActive(null);
       Swal.fire("Eliminada", "La orden ha sido eliminada", "success");
       return true;
     } catch (error) {
@@ -122,8 +125,30 @@ const useOrder = () => {
     }
   };
 
-  const updateOrderStatus = async (id: number, estado: Estado) => {
-    return updateOrder(id, { estado });
+  const altaOrderHook = async (id: number) => {
+    const confirm = await Swal.fire({
+      title: "¿Estas seguro?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Si, activar",
+      cancelButtonText: "Cancelar",
+    });
+    if (!confirm.isConfirmed) return;
+    try {
+      await orderService.alta(id);
+      altaOrder(id);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  const modificarEstadoHook = async (id: number, estado: Estado) => {
+    try {
+      await orderService.modificarEstado(id, estado);
+      modificarEstado(id, estado);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
   };
 
   return {
@@ -134,8 +159,9 @@ const useOrder = () => {
     createOrder,
     updateOrder,
     deleteOrderById,
-    updateOrderStatus,
+    modificarEstadoHook,
     setOrderActive,
+    altaOrderHook,
   };
 };
 

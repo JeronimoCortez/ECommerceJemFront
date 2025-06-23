@@ -23,8 +23,16 @@ export class ImagenService {
 
   async eliminarImagen(idProducto: number) {
     try {
+      const token = localStorage.getItem("accessToken");
       const response = await axios.patch(
-        `${API_URL}/upload/eliminarImagen/${idProducto}`
+        `${API_URL}/upload/eliminarImagen/${idProducto}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       return response.data;
     } catch (error) {

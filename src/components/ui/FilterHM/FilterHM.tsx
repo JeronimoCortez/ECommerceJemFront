@@ -27,8 +27,8 @@ const FilterHM = () => {
             <a href={`${gender ? `/catalogue/${gender}` : "/accesories"}`}>
               Ver todo en {gender || "accesorios"}
             </a>
-            <a href="">Calzado</a>
-            <a href="">Ropa</a>
+            <a href={`/catalogue/${gender}/zapatilla`}>Calzado</a>
+            <a href={`/catalogue/${gender}/ropa`}>Ropa</a>
             <a href="/accesories">Accesorios</a>
           </div>
         </div>

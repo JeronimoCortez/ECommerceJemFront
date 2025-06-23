@@ -139,4 +139,21 @@ export class ProductService {
       console.error("Error: ", error);
     }
   }
+
+  async eliminarDescuento(idProducto: number) {
+    const token = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.delete<IProduct>(
+        `${API_URL}/producto/eliminarDescuento/${idProducto}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  }
 }

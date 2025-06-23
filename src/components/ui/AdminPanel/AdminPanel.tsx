@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Search from "../Search/Search";
 import JEMBar from "../JEMBar/JEMBar";
 import LoginBar from "../LoginBar/LoginBar";
 import SortFiltersAdmin from "../SortFiltersAdmin/SortFiltersAdmin";
@@ -102,7 +101,6 @@ const AdminPanel = () => {
             selected={sortKey}
             onSelect={setSortKey}
           />
-          <Search />
         </div>
         {vista === "usuarios" && <UserTable sortKey={sortKey} vista={vista} />}
 

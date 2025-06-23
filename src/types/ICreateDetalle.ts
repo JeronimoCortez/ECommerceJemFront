@@ -1,7 +1,5 @@
-import { IProduct } from "./IProduct";
-
 export interface ICreateDetalle {
   cantidad: number;
-  producto: IProduct;
+  idProducto: number;
   talle: string;
 }

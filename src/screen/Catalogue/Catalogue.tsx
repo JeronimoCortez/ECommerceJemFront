@@ -12,7 +12,7 @@ import ShowMoreButton from "../../components/ui/ShowMoreButton/ShowMoreButton";
 import { useParams } from "react-router-dom";
 
 const Catalogue = () => {
-  const { gender } = useParams();
+  const { gender, category } = useParams();
   const [filtersVisible, setFiltersVisible] = useState(true);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -33,9 +33,24 @@ const Catalogue = () => {
     }
   };
 
-  const filteredProducts = products.filter(
-    (p) => p.genero?.toLowerCase() === genderFilter
-  );
+  let filteredProducts;
+  if (genderFilter === "niños") {
+    filteredProducts = products.filter(
+      (p) =>
+        p.genero?.toLowerCase() === "niño" || p.genero?.toLowerCase() === "niña"
+    );
+  } else if (category) {
+    filteredProducts = products.filter((p) => {
+      return (
+        p.genero?.toLowerCase() === genderFilter &&
+        p.categoria.nombre.toLowerCase().includes(category.toLowerCase())
+      );
+    });
+  } else {
+    filteredProducts = products.filter(
+      (p) => p.genero?.toLowerCase() === genderFilter
+    );
+  }
 
   return (
     <div>

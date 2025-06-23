@@ -13,7 +13,7 @@ const OrderUser: FC<IOrderUser> = ({ order }) => {
         <div className="flex w-full justify-between items-center px-4">
           <img
             className="w-[40px] h-[40px] md:w-[80px] md:h-[80px] object-cover"
-            src={`${detalle.producto.imagen}`}
+            src={detalle.producto.imagen || "../NoImage.png"}
             alt="Imagen producto"
           />
           <p>{detalle.producto.descripcion}</p>

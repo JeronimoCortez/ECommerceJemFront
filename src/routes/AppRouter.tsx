@@ -22,7 +22,7 @@ const AppRouter = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path="/accesories" element={<Accessories />} />
-      <Route path="/catalogue/:gender" element={<Catalogue />} />
+      <Route path="/catalogue/:gender/:category?" element={<Catalogue />} />
       <Route path="/pagoExitoso" element={<PaymentSuccess />} />
       <Route path="/pagoRechazado" element={<PaymentFailure />} />
       <Route path="/ordersUser/:id" element={<OrdersUser />} />

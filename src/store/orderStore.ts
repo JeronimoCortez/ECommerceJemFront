@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { IOrdenCompra } from "../types/IOrdenCompra";
+import { Estado } from "../types/enums/Estado.enum";
 
 interface IOrderStore {
   orders: IOrdenCompra[];
@@ -11,6 +12,8 @@ interface IOrderStore {
   addOrder: (order: IOrdenCompra) => void;
   editOrder: (orderUpdate: IOrdenCompra) => void;
   deleteOrder: (id: number) => void;
+  altaOrder: (id: number) => void;
+  modificarEstado: (id: number, estado: Estado) => void;
 }
 
 export const orderStore = create<IOrderStore>()((set) => ({
@@ -31,6 +34,20 @@ export const orderStore = create<IOrderStore>()((set) => ({
     })),
   deleteOrder: (id) =>
     set((state) => ({
-      orders: state.orders.filter((order) => order.id !== id),
+      orders: state.orders.map((order) =>
+        order.id === id ? { ...order, activo: false } : order
+      ),
+    })),
+  altaOrder: (id) =>
+    set((state) => ({
+      orders: state.orders.map((order) =>
+        order.id === id ? { ...order, activo: true } : order
+      ),
+    })),
+  modificarEstado: (id, estado) =>
+    set((state) => ({
+      orders: state.orders.map((order) =>
+        order.id === id ? { ...order, estado: estado } : order
+      ),
     })),
 }));

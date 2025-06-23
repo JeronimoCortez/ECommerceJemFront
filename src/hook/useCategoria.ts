@@ -28,7 +28,6 @@ const useCategoria = () => {
 
   const getCategories = async () => {
     const data = await categoriaService.getCategorias();
-    console.log("Categorias recibidas:", data);
     if (Array.isArray(data)) {
       setCategorias(data);
     } else {
@@ -64,7 +63,7 @@ const useCategoria = () => {
     try {
       await categoriaService.updateCategoria(categoryUpdate);
       editCategoria(categoryUpdate);
-      Swal.fire("Éxito", "Sprint actualizado correctamente", "success");
+      Swal.fire("Éxito", "Categoria actualizada correctamente", "success");
     } catch (error) {
       if (estadoPrevio) {
         editCategoria(estadoPrevio);
