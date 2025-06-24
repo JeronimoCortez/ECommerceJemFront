@@ -20,7 +20,7 @@ const Accessories: React.FC = () => {
   const categoryFilter = "accesorios";
 
   const filteredProducts = products.filter(
-    (p) => p.categoria?.nombre.toLowerCase() === categoryFilter
+    (p) => p.categoria?.nombre.toLowerCase() === categoryFilter && p.activo
   );
 
   useEffect(() => {

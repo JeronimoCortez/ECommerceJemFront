@@ -38,7 +38,10 @@ const ListOrderUser: FC<IListOrderUser> = ({ orders }) => {
           ? orders
               .filter((order) => order.estado === "PENDIENTE")
               .map((order) => (
-                <div className="cursor-pointer bg-[#F6CF4C]/50 w-full py-4 text-center font-bold">
+                <div
+                  onClick={() => handleSetOrderUser(order)}
+                  className="cursor-pointer bg-[#F6CF4C]/50 w-full py-4 text-center font-bold"
+                >
                   <p>Fecha: {new Date(order.fecha).toISOString()}</p>
                 </div>
               ))

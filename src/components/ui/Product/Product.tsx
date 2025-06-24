@@ -89,12 +89,6 @@ const ProductTable: FC<Props> = ({ data, sortKey, vista }) => {
                     )}
                     <EditButton onClick={() => handleEditClick(p)} />
                     <DeleteButton onClick={() => deleteProduct(p.id)} />
-                    {isModalOpen && selectedProduct && (
-                      <CreateProduct
-                        initialData={selectedProduct}
-                        onClose={() => setIsModalOpen(false)}
-                      />
-                    )}
                   </>
                 ) : (
                   <button
@@ -109,6 +103,12 @@ const ProductTable: FC<Props> = ({ data, sortKey, vista }) => {
           ))}
         </tbody>
       </table>
+      {isModalOpen && selectedProduct && (
+        <CreateProduct
+          initialData={selectedProduct}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 };

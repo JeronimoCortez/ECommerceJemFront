@@ -341,11 +341,10 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                     {values.imagen ? (
                       <img
                         src={
-                          preview
-                            ? preview
-                            : typeof values.imagen === "string"
+                          preview ||
+                          (typeof values.imagen === "string"
                             ? values.imagen
-                            : "/assets/noImage.jpeg"
+                            : "../NoImage.jpg")
                         }
                         alt="Imagen seleccionada"
                         className="w-12 h-12 object-cover rounded"

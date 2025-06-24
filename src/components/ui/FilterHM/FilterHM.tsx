@@ -17,20 +17,22 @@ const FilterHM = () => {
       <div className="hidden md:flex justify-between items-center p-4">
         <Logo />
         <div>
-          <div className="flex justify-around items-center font-bold">
+          <div className="flex justify-around gap-2 items-center font-bold">
             <a href="/view/hombre">Hombre</a>
             <a href="/view/mujer">Mujer</a>
             <a href="/catalogue/niños">Niño/a</a>
             <a href="/accesories">Accesorios</a>
           </div>
-          <div className="flex justify-between items-center gap-6 ">
-            <a href={`${gender ? `/catalogue/${gender}` : "/accesories"}`}>
-              Ver todo en {gender || "accesorios"}
-            </a>
-            <a href={`/catalogue/${gender}/zapatilla`}>Calzado</a>
-            <a href={`/catalogue/${gender}/ropa`}>Ropa</a>
-            <a href="/accesories">Accesorios</a>
-          </div>
+          {gender && (
+            <div className="flex justify-between items-center gap-6 ">
+              <a href={`${gender ? `/catalogue/${gender}` : "/accesories"}`}>
+                Ver todo en {gender}
+              </a>
+              <a href={`/catalogue/${gender}/zapatilla`}>Calzado</a>
+              <a href={`/catalogue/${gender}/ropa`}>Ropa</a>
+              <a href={`/catalogue/${gender}/accesorios`}>Accesorios</a>
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <Search />

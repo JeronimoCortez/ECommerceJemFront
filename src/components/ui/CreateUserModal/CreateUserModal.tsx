@@ -37,7 +37,7 @@ const CreateUserModal: FC<IPropsCreateUserModal> = ({ onClose }) => {
   };
 
   return (
-    <div className="absolute top-0 left-0 w-full h-full bg-[#D9D9D9]/75 flex justify-center items-center">
+    <div className="fixed z-[999] top-0 left-0 w-full h-full bg-[#D9D9D9]/75 flex justify-center items-center">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -48,7 +48,7 @@ const CreateUserModal: FC<IPropsCreateUserModal> = ({ onClose }) => {
         }}
       >
         {({ values, handleChange, errors, touched, handleBlur }) => (
-          <Form className="w-[50vw] h-[70vh] bg-white rounded p-4 flex flex-col gap-2 justify-center">
+          <Form className="w-[50vw] bg-white rounded p-4 flex flex-col gap-2 justify-center">
             <h5 className="text-center font-bold">Crear usuario</h5>
 
             <div className="flex flex-col">

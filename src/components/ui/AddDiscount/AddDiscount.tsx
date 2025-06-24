@@ -23,12 +23,9 @@ const validationSchema = Yup.object({
   descuento: Yup.number()
     .required("Ingrese un porcentaje de descuento")
     .min(0, "Debe ser al menos 0%"),
-  fechaInicio: Yup.string()
-    .required("Ingrese la fecha de inicio")
-    .matches(/^\d{4}-\d{2}-\d{2}$/, "Formato inválido"),
+  fechaInicio: Yup.string().required("Ingrese la fecha de inicio"),
   fechaLimite: Yup.string()
     .required("Ingrese una fecha límite")
-    .matches(/^\d{4}-\d{2}-\d{2}$/, "Formato inválido")
     .test(
       "is-after-or-equal",
       "La fecha límite debe ser posterior a la de inicio",

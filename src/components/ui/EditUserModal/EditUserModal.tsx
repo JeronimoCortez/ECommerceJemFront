@@ -45,7 +45,7 @@ const EditUserModal: FC<IPropsEditUserModal> = ({ onClose, initialData }) => {
   };
 
   return (
-    <div className="absolute top-0 left-0 w-full h-full bg-[#D9D9D9]/75 flex justify-center items-center">
+    <div className="fixed z-[999] top-0 left-0 w-full h-full bg-[#D9D9D9]/75 flex justify-center items-center">
       <Formik
         enableReinitialize
         validationSchema={validationSchema}
@@ -73,96 +73,97 @@ const EditUserModal: FC<IPropsEditUserModal> = ({ onClose, initialData }) => {
         }}
       >
         {({ values, handleChange, errors, touched, handleBlur }) => (
-          <Form className="w-[50vw] h-[70vh] bg-white rounded p-4 flex flex-col gap-2 justify-center">
+          <Form className="w-[50vw] bg-white rounded p-4 flex flex-col gap-2 justify-center">
             <h5 className="text-center font-bold">Editar usuario</h5>
+            <div>
+              <div className="flex flex-col">
+                <label htmlFor="nombreCompleto" className="text-xs font-bold">
+                  Nombre completo
+                </label>
+                <input
+                  type="text"
+                  id="nombreCompleto"
+                  name="nombreCompleto"
+                  value={values.nombreCompleto}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`border border-gray-300 p-2 rounded ${
+                    errors.nombreCompleto && touched.nombreCompleto
+                      ? "border-red-500"
+                      : ""
+                  }`}
+                />
+              </div>
 
-            <div className="flex flex-col">
-              <label htmlFor="nombreCompleto" className="text-xs font-bold">
-                Nombre completo
-              </label>
-              <input
-                type="text"
-                id="nombreCompleto"
-                name="nombreCompleto"
-                value={values.nombreCompleto}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`border border-gray-300 p-2 rounded ${
-                  errors.nombreCompleto && touched.nombreCompleto
-                    ? "border-red-500"
-                    : ""
-                }`}
-              />
-            </div>
+              <div className="flex flex-col">
+                <label htmlFor="email" className="text-xs font-bold">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`border border-gray-300 p-2 rounded ${
+                    errors.email && touched.email ? "border-red-500" : ""
+                  }`}
+                />
+              </div>
 
-            <div className="flex flex-col">
-              <label htmlFor="email" className="text-xs font-bold">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`border border-gray-300 p-2 rounded ${
-                  errors.email && touched.email ? "border-red-500" : ""
-                }`}
-              />
-            </div>
+              <div className="flex flex-col">
+                <label htmlFor="dni" className="text-xs font-bold">
+                  DNI
+                </label>
+                <input
+                  type="text"
+                  name="dni"
+                  id="dni"
+                  value={values.dni}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`border border-gray-300 p-2 rounded ${
+                    errors.dni && touched.dni ? "border-red-500" : ""
+                  }`}
+                />
+              </div>
 
-            <div className="flex flex-col">
-              <label htmlFor="dni" className="text-xs font-bold">
-                DNI
-              </label>
-              <input
-                type="text"
-                name="dni"
-                id="dni"
-                value={values.dni}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`border border-gray-300 p-2 rounded ${
-                  errors.dni && touched.dni ? "border-red-500" : ""
-                }`}
-              />
-            </div>
+              <div className="flex flex-col">
+                <label htmlFor="phone" className="text-xs font-bold">
+                  Teléfono
+                </label>
+                <input
+                  type="text"
+                  name="phone"
+                  id="phone"
+                  value={values.phone}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`border border-gray-300 p-2 rounded ${
+                    errors.phone && touched.phone ? "border-red-500" : ""
+                  }`}
+                />
+              </div>
 
-            <div className="flex flex-col">
-              <label htmlFor="phone" className="text-xs font-bold">
-                Teléfono
-              </label>
-              <input
-                type="text"
-                name="phone"
-                id="phone"
-                value={values.phone}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`border border-gray-300 p-2 rounded ${
-                  errors.phone && touched.phone ? "border-red-500" : ""
-                }`}
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label htmlFor="rol" className="text-xs font-bold">
-                Rol
-              </label>
-              <select
-                name="rol"
-                id="rol"
-                value={values.rol}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`border border-gray-300 p-2 rounded ${
-                  errors.rol && touched.rol ? "border-red-500" : ""
-                }`}
-              >
-                <option value={Role.ADMIN}>ADMIN</option>
-                <option value={Role.USER}>USER</option>
-              </select>
+              <div className="flex flex-col">
+                <label htmlFor="rol" className="text-xs font-bold">
+                  Rol
+                </label>
+                <select
+                  name="rol"
+                  id="rol"
+                  value={values.rol}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`border border-gray-300 p-2 rounded ${
+                    errors.rol && touched.rol ? "border-red-500" : ""
+                  }`}
+                >
+                  <option value={Role.ADMIN}>ADMIN</option>
+                  <option value={Role.USER}>USER</option>
+                </select>
+              </div>
             </div>
 
             <div className="flex gap-2">
@@ -175,72 +176,75 @@ const EditUserModal: FC<IPropsEditUserModal> = ({ onClose, initialData }) => {
             </div>
             {isChangePassword && (
               <>
-                <div className="flex flex-col">
-                  <label htmlFor="contrasenia" className="text-xs font-bold">
-                    Contraseña
-                  </label>
-                  <input
-                    type="password"
-                    name="contrasenia"
-                    id="contrasenia"
-                    value={values.contrasenia}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`border border-gray-300 p-2 rounded ${
-                      errors.contrasenia && touched.contrasenia
-                        ? "border-red-500"
-                        : ""
-                    }`}
-                  />
-                </div>
+                <div>
+                  <div className="flex flex-col">
+                    <label htmlFor="contrasenia" className="text-xs font-bold">
+                      Contraseña
+                    </label>
+                    <input
+                      type="password"
+                      name="contrasenia"
+                      id="contrasenia"
+                      value={values.contrasenia}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={`border border-gray-300 p-2 rounded ${
+                        errors.contrasenia && touched.contrasenia
+                          ? "border-red-500"
+                          : ""
+                      }`}
+                    />
+                  </div>
 
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="nuevaContrasenia"
-                    className="text-xs font-bold"
-                  >
-                    Nueva contraseña
-                  </label>
-                  <input
-                    type="password"
-                    name="nuevaContrasenia"
-                    id="nuevaContrasenia"
-                    value={values.nuevaContrasenia}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`border border-gray-300 p-2 rounded ${
-                      errors.nuevaContrasenia && touched.nuevaContrasenia
-                        ? "border-red-500"
-                        : ""
-                    }`}
-                  />
-                </div>
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="nuevaContrasenia"
+                      className="text-xs font-bold"
+                    >
+                      Nueva contraseña
+                    </label>
+                    <input
+                      type="password"
+                      name="nuevaContrasenia"
+                      id="nuevaContrasenia"
+                      value={values.nuevaContrasenia}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={`border border-gray-300 p-2 rounded ${
+                        errors.nuevaContrasenia && touched.nuevaContrasenia
+                          ? "border-red-500"
+                          : ""
+                      }`}
+                    />
+                  </div>
 
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="repetirContrasenia"
-                    className="text-xs font-bold"
-                  >
-                    Repetir contraseña
-                  </label>
-                  <input
-                    type="password"
-                    name="repetirContrasenia"
-                    id="repetirContrasenia"
-                    value={values.repetirContrasenia}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`border border-gray-300 p-2 rounded ${
-                      errors.repetirContrasenia && touched.repetirContrasenia
-                        ? "border-red-500"
-                        : ""
-                    }`}
-                  />
-                  {errors.repetirContrasenia && touched.repetirContrasenia && (
-                    <p className="text-xs font-thin text-red-500">
-                      {errors.repetirContrasenia}
-                    </p>
-                  )}
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="repetirContrasenia"
+                      className="text-xs font-bold"
+                    >
+                      Repetir contraseña
+                    </label>
+                    <input
+                      type="password"
+                      name="repetirContrasenia"
+                      id="repetirContrasenia"
+                      value={values.repetirContrasenia}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={`border border-gray-300 p-2 rounded ${
+                        errors.repetirContrasenia && touched.repetirContrasenia
+                          ? "border-red-500"
+                          : ""
+                      }`}
+                    />
+                    {errors.repetirContrasenia &&
+                      touched.repetirContrasenia && (
+                        <p className="text-xs font-thin text-red-500">
+                          {errors.repetirContrasenia}
+                        </p>
+                      )}
+                  </div>
                 </div>
               </>
             )}

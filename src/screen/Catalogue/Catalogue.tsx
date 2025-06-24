@@ -37,18 +37,20 @@ const Catalogue = () => {
   if (genderFilter === "niños") {
     filteredProducts = products.filter(
       (p) =>
-        p.genero?.toLowerCase() === "niño" || p.genero?.toLowerCase() === "niña"
+        p.genero?.toLowerCase() === "niño" ||
+        (p.genero?.toLowerCase() === "niña" && p.activo)
     );
   } else if (category) {
     filteredProducts = products.filter((p) => {
       return (
         p.genero?.toLowerCase() === genderFilter &&
-        p.categoria.nombre.toLowerCase().includes(category.toLowerCase())
+        p.categoria.nombre.toLowerCase().includes(category.toLowerCase()) &&
+        p.activo
       );
     });
   } else {
     filteredProducts = products.filter(
-      (p) => p.genero?.toLowerCase() === genderFilter
+      (p) => p.genero?.toLowerCase() === genderFilter && p.activo
     );
   }
 
@@ -58,12 +60,12 @@ const Catalogue = () => {
       <FilterHM />
       <Location location={String(gender)} />
       <div className="flex justify-center">
-        {filtersVisible && <AsideFilters />}
+        {/* {filtersVisible && <AsideFilters />} */}
         <div className="flex-1">
-          <ProductControlsFilter
+          {/* <ProductControlsFilter
             filtersVisible={filtersVisible}
             onToggleFilters={() => setFiltersVisible((v) => !v)}
-          />
+          /> */}
           <div className="grid grid-cols-3 gap-6 my-4">
             <span className="text-lg">{filteredProducts.length} productos</span>
             {filteredProducts.map((p: IProduct) => (
