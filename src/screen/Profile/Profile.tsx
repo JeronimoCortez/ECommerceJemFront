@@ -1,4 +1,4 @@
-import EditProfileUser from "../../components/ui/EditProfileUser/EditProfileUser";
+import AsideProfile from "../../components/ui/AsideProfile/AsideProfile";
 import JEMBar from "../../components/ui/JEMBar/JEMBar";
 import LoginBar from "../../components/ui/LoginBar/LoginBar";
 
@@ -7,7 +7,7 @@ const Profile = () => {
     <div>
       <JEMBar />
       <LoginBar />
-      <EditProfileUser />
+      <AsideProfile />
     </div>
   );
 };

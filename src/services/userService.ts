@@ -1,6 +1,8 @@
 import axios from "axios";
 import { IUsuario } from "../types/IUsuario";
 import { ICreateUsuario } from "../types/ICreateUsuario";
+import { IEditProfileUser } from "../types/IEditProfileUser";
+import { IDireccion } from "../types/IDireccion";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -140,6 +142,46 @@ export class UserService {
       const response = await this.api.patch<IUsuario>(
         `/update/${idUser}/password`,
         passwordData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating user:`, error);
+      throw error;
+    }
+  }
+
+  async editProfile(idUser: number, data: IEditProfileUser) {
+    const token = localStorage.getItem("accessToken");
+
+    try {
+      const response = await this.api.patch<IUsuario>(
+        `/editProfile/${idUser}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating user:`, error);
+      throw error;
+    }
+  }
+
+  async añadirDireccion(idUser: number, direccion: IDireccion) {
+    const token = localStorage.getItem("accessToken");
+
+    try {
+      const response = await this.api.patch<IUsuario>(
+        `/addAddress/${idUser}`,
+        direccion,
         {
           headers: {
             Authorization: `Bearer ${token}`,

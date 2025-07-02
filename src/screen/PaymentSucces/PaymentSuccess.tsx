@@ -1,6 +1,8 @@
 import JEMBar from "../../components/ui/JEMBar/JEMBar";
+import { userStore } from "../../store/userStore";
 
 const PaymentSuccess = () => {
+  const { userActive } = userStore();
   return (
     <div>
       <JEMBar />
@@ -18,10 +20,10 @@ const PaymentSuccess = () => {
               Volver al inicio
             </a>
             <a
-              href=""
+              href={`/ordersUser/${userActive!.id}`}
               className="p-2 hover:cursor-pointer mt-4 w-[10rem] bg-[#fff] text-[#000]"
             >
-              Ver mis compras{" "}
+              Ver mis compras
             </a>
           </div>
         </div>

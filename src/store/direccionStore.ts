@@ -14,14 +14,18 @@ interface IDireccionStore {
 export const direccionStore = create<IDireccionStore>()((set) => ({
   direcciones: [],
   direccionActive: null,
-  setDireccionActive: (direccionIn) => set(() => ({ direccionActive: direccionIn })),
-  setDirecciones: (direccionArray) => set(() => ({ direcciones: direccionArray })),
+  setDireccionActive: (direccionIn) =>
+    set(() => ({ direccionActive: direccionIn })),
+  setDirecciones: (direccionArray) =>
+    set(() => ({ direcciones: direccionArray })),
   addDireccion: (newDireccion) =>
     set((state) => ({ direcciones: [...state.direcciones, newDireccion] })),
   editDireccion: (direccionUpdate) =>
     set((state) => ({
       direcciones: state.direcciones.map((direccion) =>
-        direccion.id === direccionUpdate.id ? { ...direccion, ...direccionUpdate } : direccion
+        direccion.id === direccionUpdate.id
+          ? { ...direccion, ...direccionUpdate }
+          : direccion
       ),
     })),
   deleteDireccion: (id) =>

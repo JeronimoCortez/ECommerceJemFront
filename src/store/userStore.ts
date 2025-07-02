@@ -2,6 +2,8 @@ import { IUsuario } from "../types/IUsuario";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Role } from "../types/enums/Role.enum";
+import { IEditProfileUser } from "../types/IEditProfileUser";
+import { IDireccion } from "../types/IDireccion";
 
 interface IUserStore {
   users: IUsuario[];
@@ -14,6 +16,9 @@ interface IUserStore {
   darAlta: (id: number) => void;
   appendUsers: (newUsers: IUsuario[]) => void;
   modificarRol: (idUsuario: number) => void;
+  editProfileUser: (idUsuario: number, data: IEditProfileUser) => void;
+  añadirDireccion: (idUsuario: number, direccion: IDireccion) => void;
+  editarDireccionUsuario: (idUsuario: number, direccion: IDireccion) => void;
 }
 
 export const userStore = create<IUserStore>()(
@@ -74,6 +79,61 @@ export const userStore = create<IUserStore>()(
               : u
           ),
         })),
+      editProfileUser: (idUsuario, data) =>
+        set((state) => {
+          const updatedUsers = state.users.map((user) =>
+            user.id === idUsuario ? { ...user, ...data, id: user.id } : user
+          );
+
+          const updatedActiveUser =
+            state.userActive?.id === idUsuario
+              ? { ...state.userActive, ...data }
+              : state.userActive;
+
+          return {
+            users: updatedUsers,
+            userActive: updatedActiveUser,
+          };
+        }),
+      añadirDireccion: (idUsuario, direccion) => {
+        set((state) => ({
+          users: state.users.map((u) =>
+            u.id === idUsuario
+              ? { ...u, direcciones: [...u.direcciones, direccion] }
+              : u
+          ),
+          userActive:
+            state.userActive?.id === idUsuario
+              ? {
+                  ...state.userActive,
+                  direcciones: [...state.userActive.direcciones, direccion],
+                }
+              : state.userActive,
+        }));
+      },
+      editarDireccionUsuario: (idUsuario, direccionActualizada) => {
+        set((state) => ({
+          users: state.users.map((u) =>
+            u.id === idUsuario
+              ? {
+                  ...u,
+                  direcciones: u.direcciones.map((d) =>
+                    d.id === direccionActualizada.id ? direccionActualizada : d
+                  ),
+                }
+              : u
+          ),
+          userActive:
+            state.userActive?.id === idUsuario
+              ? {
+                  ...state.userActive,
+                  direcciones: state.userActive.direcciones.map((d) =>
+                    d.id === direccionActualizada.id ? direccionActualizada : d
+                  ),
+                }
+              : state.userActive,
+        }));
+      },
     }),
     {
       name: "user-store",

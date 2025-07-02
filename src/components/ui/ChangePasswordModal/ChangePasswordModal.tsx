@@ -1,115 +1,92 @@
-import { FC, useEffect, useRef } from "react";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
+import { UserService } from "../../../services/userService";
+import { userStore } from "../../../store/userStore";
+import Swal from "sweetalert2";
 
-interface Props {
-  onClose: () => void;
-  onSubmit: (values: {
-    contraseñaActual: string;
-    nuevaContraseña: string;
-  }) => void;
-}
+const validationSchema = Yup.object({
+  contrasenia: Yup.string().required(),
+  nuevaContrasenia: Yup.string().required(),
+  repetirContrasenia: Yup.string()
+    .oneOf([Yup.ref("nuevaContrasenia")], "Las contraseñas no coinciden")
+    .required(),
+});
 
-const ChangePasswordModal: FC<Props> = ({ onClose, onSubmit }) => {
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose]);
-
+const ChangePasswordModal = () => {
+  const { userActive } = userStore();
+  const initialValues = {
+    contrasenia: "",
+    nuevaContrasenia: "",
+    repetirContrasenia: "",
+  };
+  const userService = new UserService();
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div
-        ref={modalRef}
-        className="bg-white rounded-md shadow-lg p-6 w-72 space-y-4"
+    <div>
+      <Formik
+        initialValues={initialValues}
+        enableReinitialize
+        validationSchema={validationSchema}
+        onSubmit={async (values, { resetForm }) => {
+          try {
+            await userService.changePassword(
+              userActive!.id,
+              values.contrasenia,
+              values.nuevaContrasenia
+            );
+            Swal.fire("Exito", "Contraseña cambiada con éxito", "success");
+            resetForm();
+          } catch (error) {
+            Swal.fire("Error", "Error al cambiar contraseña", "error");
+          }
+        }}
       >
-        <h2 className="text-center font-semibold">Cambiar Contraseña</h2>
-        <Formik
-          initialValues={{
-            contraseñaActual: "",
-            nuevaContraseña: "",
-            repetirContraseña: "",
-          }}
-          validationSchema={Yup.object({
-            contraseñaActual: Yup.string().required("Obligatorio"),
-            nuevaContraseña: Yup.string()
-              .min(6, "Mínimo 6 caracteres")
-              .required("Obligatorio"),
-            repetirContraseña: Yup.string()
-              .oneOf([Yup.ref("nuevaContraseña")], "No coinciden")
-              .required("Obligatorio"),
-          })}
-          onSubmit={(values) => {
-            onSubmit({
-              contraseñaActual: values.contraseñaActual,
-              nuevaContraseña: values.nuevaContraseña,
-            });
-            onClose();
-          }}
-        >
-          {({ handleChange, values, handleSubmit }) => (
-            <Form onSubmit={handleSubmit} className="space-y-3">
-              <div>
-                <input
-                  type="password"
-                  name="contraseñaActual"
-                  placeholder="Contraseña Actual*"
-                  className="w-full p-1 border border-gray-300 rounded"
-                  onChange={handleChange}
-                  value={values.contraseñaActual}
-                />
-                <ErrorMessage
-                  name="contraseñaActual"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
-              <div>
-                <input
-                  type="password"
-                  name="nuevaContraseña"
-                  placeholder="Nueva Contraseña*"
-                  className="w-full p-1 border border-gray-300 rounded"
-                  onChange={handleChange}
-                  value={values.nuevaContraseña}
-                />
-                <ErrorMessage
-                  name="nuevaContraseña"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
-              <div>
-                <input
-                  type="password"
-                  name="repetirContraseña"
-                  placeholder="Repetir Contraseña*"
-                  className="w-full p-1 border border-gray-300 rounded"
-                  onChange={handleChange}
-                  value={values.repetirContraseña}
-                />
-                <ErrorMessage
-                  name="repetirContraseña"
-                  component="div"
-                  className="text-red-500 text-sm"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-black text-white rounded-full py-1"
-              >
-                Cambiar Contraseña
-              </button>
-            </Form>
-          )}
-        </Formik>
-      </div>
+        {({ values, handleChange, errors, touched }) => (
+          <Form className="flex flex-col justify-center mx-auto mt-2 w-[70vw] gap-1">
+            <label htmlFor="contrasenia">Contraseña</label>
+            <input
+              id="contrasenia"
+              type="password"
+              value={values.contrasenia}
+              onChange={handleChange}
+              className={`${
+                touched.contrasenia && errors.contrasenia
+                  ? "border border-red-500 rounded p-1"
+                  : "border border-[#D9D9D9]/75 rounded p-1"
+              }`}
+            />
+            <label htmlFor="nuevaContrasenia">Nueva contraseña</label>
+            <input
+              id="nuevaContrasenia"
+              type="password"
+              value={values.nuevaContrasenia}
+              onChange={handleChange}
+              className={`${
+                touched.nuevaContrasenia && errors.nuevaContrasenia
+                  ? "border border-red-500 rounded p-1"
+                  : "border border-[#D9D9D9]/75 rounded p-1"
+              }`}
+            />
+            <label htmlFor="repetirContrasenia">Repetir nueva contraseña</label>
+            <input
+              id="repetirContrasenia"
+              type="password"
+              value={values.repetirContrasenia}
+              onChange={handleChange}
+              className={`${
+                touched.repetirContrasenia && errors.repetirContrasenia
+                  ? "border border-red-500 rounded p-1"
+                  : "border border-[#D9D9D9]/75 rounded p-1"
+              }`}
+            />
+            <button
+              type="submit"
+              className="bg-[#000] mx-auto cursor-pointer mt-2 w-[200px] p-2 text-white"
+            >
+              Enviar cambios
+            </button>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

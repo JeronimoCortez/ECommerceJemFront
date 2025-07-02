@@ -4,6 +4,9 @@ import { useShallow } from "zustand/shallow";
 import { IUsuario } from "../types/IUsuario";
 import Swal from "sweetalert2";
 import { ICreateUsuario } from "../types/ICreateUsuario";
+import { IEditProfileUser } from "../types/IEditProfileUser";
+import { IDireccion } from "../types/IDireccion";
+import { DireccionService } from "../services/direccionService";
 
 const userService = new UserService();
 
@@ -18,6 +21,9 @@ const useUser = () => {
     deleteUser,
     darAlta,
     modificarRol,
+    editProfileUser,
+    añadirDireccion,
+    editarDireccionUsuario,
   } = userStore(
     useShallow((state) => ({
       users: state.users,
@@ -29,6 +35,9 @@ const useUser = () => {
       deleteUser: state.deleteUser,
       darAlta: state.darAlta,
       modificarRol: state.modificarRol,
+      editProfileUser: state.editProfileUser,
+      añadirDireccion: state.añadirDireccion,
+      editarDireccionUsuario: state.editarDireccionUsuario,
     }))
   );
   const getUsers = async (page: number, size: number = 9) => {
@@ -174,6 +183,40 @@ const useUser = () => {
     }
   };
 
+  const editProfileHook = async (idUser: number, data: IEditProfileUser) => {
+    try {
+      await userService.editProfile(idUser, data);
+      editProfileUser(idUser, data);
+      Swal.fire("Editado", "El usuario ha sido editado con exito", "success");
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  const añadirDireccionHook = async (idUser: number, direccion: IDireccion) => {
+    try {
+      await userService.añadirDireccion(idUser, direccion);
+      añadirDireccion(idUser, direccion);
+      Swal.fire("Editado", "La direccion ha sido creada con exito", "success");
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  const editarDireccionUsuarioHook = async (
+    idUser: number,
+    direccion: IDireccion
+  ) => {
+    const direccionService = new DireccionService();
+    try {
+      await direccionService.updateDireccion(direccion);
+      editarDireccionUsuario(idUser, direccion);
+      Swal.fire("Editado", "La direccion ha sido editada con exito", "success");
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
   return {
     users,
     userActive,
@@ -186,6 +229,9 @@ const useUser = () => {
     altaUsuario,
     modificarRolHook,
     changePassword,
+    editProfileHook,
+    añadirDireccionHook,
+    editarDireccionUsuarioHook,
   };
 };
 

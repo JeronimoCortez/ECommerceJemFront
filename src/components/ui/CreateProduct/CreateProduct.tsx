@@ -160,15 +160,12 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
       >
         {({ values, handleChange, setFieldValue, touched, errors }) => (
           <>
-            <Form>
-              <div className="flex flex-col min-h-screen items-center justify-center px-4 py-8">
-                <div className="w-full max-w-md border border-black p-6 bg-white">
-                  <div className="text-center text-1xl font-bold mb-4">
-                    <h1>
-                      {initialData ? "Editar Producto" : "Crear Producto"}
-                    </h1>
-                  </div>
-
+            <Form className="flex  min-w-[70vw] max-h-screen items-center justify-center px-4 py-8">
+              <div className="w-full max-w-md border border-black p-6 bg-white">
+                <div className="text-center text-1xl font-bold mb-4">
+                  <h1>{initialData ? "Editar Producto" : "Crear Producto"}</h1>
+                </div>
+                <div>
                   {/* Nombre */}
                   <input
                     type="text"
@@ -251,7 +248,8 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                         : "border-gray-300"
                     }`}
                   />
-
+                </div>
+                <div>
                   {/* Color */}
                   <input
                     type="text"
@@ -380,23 +378,23 @@ const CreateProduct: FC<CreateProductProps> = ({ initialData, onClose }) => {
                       <p>Eliminar imagen</p>
                     </div>
                   )}
+                </div>
 
-                  {/* Botones */}
-                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                    <button
-                      type="submit"
-                      className="w-full sm:w-auto bg-black buttons hover:cursor-pointer text-white py-2 px-6"
-                    >
-                      Guardar
-                    </button>
-                    <button
-                      onClick={onClose}
-                      type="button"
-                      className="w-full sm:w-auto bg-[#5A0000] buttons hover:cursor-pointer text-white py-2 px-6"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
+                {/* Botones */}
+                <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                  <button
+                    type="submit"
+                    className="w-full sm:w-auto bg-black buttons hover:cursor-pointer text-white py-2 px-6"
+                  >
+                    Guardar
+                  </button>
+                  <button
+                    onClick={onClose}
+                    type="button"
+                    className="w-full sm:w-auto bg-[#5A0000] buttons hover:cursor-pointer text-white py-2 px-6"
+                  >
+                    Cancelar
+                  </button>
                 </div>
               </div>
             </Form>

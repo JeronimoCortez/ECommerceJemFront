@@ -8,6 +8,7 @@ import { IProduct } from "../../../types/IProduct";
 import useProduct from "../../../hook/useProduct";
 import productStore from "../../../store/productStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import InfoProduct from "../InfoProduct/InfoProduct";
 
 interface Props {
   data: IProduct[];
@@ -24,6 +25,7 @@ const ProductTable: FC<Props> = ({ data, sortKey, vista }) => {
   const [hasMore, setHasMore] = useState(true);
   const { getProducts } = useProduct();
   const { products } = productStore();
+  const [viewInfo, setViewInfo] = useState(false);
 
   useEffect(() => {
     loadMoreProducts();
@@ -45,6 +47,16 @@ const ProductTable: FC<Props> = ({ data, sortKey, vista }) => {
 
   const deleteProduct = async (id: number) => {
     await deleteProductHook(id);
+  };
+
+  const handleViewInfo = (product: IProduct) => {
+    setSelectedProduct(product);
+    setViewInfo(true);
+  };
+
+  const closeModal = () => {
+    setSelectedProduct(null);
+    setViewInfo(false);
   };
 
   return (
@@ -87,6 +99,13 @@ const ProductTable: FC<Props> = ({ data, sortKey, vista }) => {
                     ) : (
                       <PaymentArDownButton idProducto={p.id} />
                     )}
+                    <Icon
+                      icon="bxs:info-circle"
+                      width="24"
+                      height="24"
+                      className="cursor-pointer"
+                      onClick={() => handleViewInfo(p)}
+                    />
                     <EditButton onClick={() => handleEditClick(p)} />
                     <DeleteButton onClick={() => deleteProduct(p.id)} />
                   </>
@@ -108,6 +127,9 @@ const ProductTable: FC<Props> = ({ data, sortKey, vista }) => {
           initialData={selectedProduct}
           onClose={() => setIsModalOpen(false)}
         />
+      )}
+      {viewInfo && selectedProduct && (
+        <InfoProduct onClose={closeModal} product={selectedProduct} />
       )}
     </div>
   );

@@ -7,27 +7,32 @@ import Swal from "sweetalert2";
 const direccionService = new DireccionService();
 
 const useDireccion = () => {
-  const { direcciones, setDirecciones, addDireccion, deleteDireccion, editDireccion } =
-    direccionStore(
-      useShallow((state) => ({
-        direcciones: state.direcciones,
-        setDirecciones: state.setDirecciones,
-        addDireccion: state.addDireccion,
-        editDireccion: state.editDireccion,
-        deleteDireccion: state.deleteDireccion,
-      }))
-    );
+  const {
+    direcciones,
+    setDirecciones,
+    addDireccion,
+    deleteDireccion,
+    editDireccion,
+  } = direccionStore(
+    useShallow((state) => ({
+      direcciones: state.direcciones,
+      setDirecciones: state.setDirecciones,
+      addDireccion: state.addDireccion,
+      editDireccion: state.editDireccion,
+      deleteDireccion: state.deleteDireccion,
+    }))
+  );
 
-    const getDirecciones = async () => {
-      const data = await direccionService.getDirecciones();
-      if (data) setDirecciones(data);
-    };
+  const getDirecciones = async () => {
+    const data = await direccionService.getDirecciones();
+    if (data) setDirecciones(data);
+  };
 
-    const createDireccion = async (newDireccion: IDireccion) => {
+  const createDireccion = async (newDireccion: IDireccion) => {
     try {
       await direccionService.createDireccion(newDireccion);
       addDireccion(newDireccion);
-      Swal.fire("Éxito", "Sprint creado correctamente", "success");
+      Swal.fire("Éxito", "Direccion creada correctamente", "success");
     } catch (error) {
       deleteDireccion(newDireccion.id);
       console.error("Error: ", error);
@@ -38,7 +43,7 @@ const useDireccion = () => {
     try {
       await direccionService.updateDireccion(id, direccionUpdate);
       editDireccion(direccionUpdate);
-      Swal.fire("Éxito", "Sprint actualizado correctamente", "success");
+      Swal.fire("Éxito", "Direccion actualizada correctamente", "success");
     } catch (error) {
       if (estadoPrevio) {
         editDireccion(estadoPrevio);
@@ -72,6 +77,6 @@ const useDireccion = () => {
     updateDireccion,
     deleteDireccionHook,
   };
-}
+};
 
 export default useDireccion;
