@@ -1,54 +1,98 @@
-# React + TypeScript + Vite
+# ECommerceJemFront
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto es un **frontend de e-commerce** desarrollado con **React**, **TypeScript** y **Vite**. Permite la gestión y visualización de productos, usuarios, categorías, descuentos y órdenes de compra, integrando funcionalidades de administración y compra para usuarios finales y administradores.
 
-Currently, two official plugins are available:
+## Características principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Catálogo de productos** con filtros por género, categoría y búsqueda.
+- **Gestión de usuarios** (registro, login, edición, cambio de contraseña, roles).
+- **Carrito de compras** y proceso de compra con integración a MercadoPago.
+- **Panel de administración** para productos, categorías, usuarios y órdenes.
+- **Gestión de descuentos** y asignación a productos.
+- **Responsive design** y experiencia de usuario optimizada.
 
-## Expanding the ESLint configuration
+## Estructura del proyecto
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+├── public/                # Imágenes y recursos públicos
+├── src/
+│   ├── components/        # Componentes UI reutilizables
+│   ├── hook/              # Custom hooks para lógica de negocio
+│   ├── screen/            # Vistas principales (Landing, ProductDetails, etc.)
+│   ├── services/          # Servicios para llamadas a APIs
+│   ├── store/             # Zustand stores para manejo de estado global
+│   ├── types/             # Tipos y DTOs TypeScript
+│   └── index.css          # Estilos globales
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Instalación
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clona el repositorio:**
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+   ```sh
+   git clone <url-del-repo>
+   cd ECommerceJemFront
+   ```
+
+2. **Instala las dependencias:**
+
+   ```sh
+   npm install
+   ```
+
+3. **Configura las variables de entorno:**
+
+   - Crea un archivo `.env` en la raíz con las siguientes variables:
+     ```
+     VITE_API_URL=http://localhost:8080
+     MP_ACCESS_TOKEN=<tu_token_mercadopago>
+     ```
+
+4. **Inicia la aplicación:**
+   ```sh
+   npm run dev
+   ```
+
+## Scripts útiles
+
+- `npm run dev` – Inicia el servidor de desarrollo.
+- `npm run build` – Genera la build de producción.
+- `npm run lint` – Ejecuta ESLint para revisar el código.
+
+## Dependencias principales
+
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Zustand](https://zustand-demo.pmnd.rs/) (manejo de estado)
+- [Formik](https://formik.org/) y [Yup](https://github.com/jquense/yup) (formularios y validaciones)
+- [SweetAlert2](https://sweetalert2.github.io/) (alertas)
+- [@mercadopago/sdk-react](https://www.npmjs.com/package/@mercadopago/sdk-react) (integración pagos)
+
+## Estructura de carpetas destacada
+
+- **src/components/ui/**: Componentes visuales reutilizables (botones, formularios, tablas, modales, etc).
+- **src/hook/**: Hooks personalizados para lógica de negocio (productos, usuarios, categorías, etc).
+- **src/services/**: Servicios para interactuar con la API backend.
+- **src/store/**: Stores de Zustand para el manejo de estado global.
+- **src/types/**: Definiciones de tipos y DTOs.
+
+## Contribución
+
+1. Haz un fork del repositorio.
+2. Crea una rama para tu feature/fix: `git checkout -b mi-feature`
+3. Realiza tus cambios y haz commit: `git commit -am 'Agrega mi feature'`
+4. Haz push a tu rama: `git push origin mi-feature`
+5. Abre un Pull Request.
+
+## Licencia
+
+MIT
+
+---
+
+> Proyecto desarrollado para la materia Metodología de la UTN.
