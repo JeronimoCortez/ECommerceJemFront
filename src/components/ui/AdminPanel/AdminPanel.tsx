@@ -95,13 +95,13 @@ const AdminPanel = () => {
       </div>
 
       <div className="p-8">
-        <div className="flex justify-between items-center">
+        {/* <div className="flex justify-between items-center">
           <SortFiltersAdmin
             options={options}
             selected={sortKey}
             onSelect={setSortKey}
           />
-        </div>
+        </div> */}
         {vista === "usuarios" && <UserTable sortKey={sortKey} vista={vista} />}
 
         {vista === "productos" && (

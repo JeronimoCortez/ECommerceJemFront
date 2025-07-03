@@ -28,6 +28,17 @@ export class ProductService {
     }
   }
 
+  async getAllActivos(): Promise<IProduct[] | undefined> {
+    try {
+      const response = await axios.get<IProduct[]>(
+        `${API_URL}/producto/activos`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener productos paginados:", error);
+    }
+  }
+
   async getNuevos(): Promise<IProduct[] | undefined> {
     try {
       const response = await axios.get<IProduct[]>(

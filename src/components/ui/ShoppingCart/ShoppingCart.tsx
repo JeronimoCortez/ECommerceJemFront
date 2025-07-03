@@ -4,6 +4,7 @@ import { shoppingCartStore } from "../../../store/shoppingCartStore";
 import { ProductCounter } from "../ProductCounter/ProductCounter";
 import { useNavigate } from "react-router-dom";
 import { useDetalle } from "../../../hook/useDetalle";
+import { userStore } from "../../../store/userStore";
 
 type IPropsShoppingCart = {
   onClose: VoidFunction;
@@ -18,6 +19,7 @@ const ShoppingCart: FC<IPropsShoppingCart> = ({ onClose }) => {
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
   const { createDetalles } = useDetalle();
+  const { userActive } = userStore();
 
   useEffect(() => {
     const nuevoTotal = detalles.reduce((acc, detalle) => {
@@ -34,61 +36,90 @@ const ShoppingCart: FC<IPropsShoppingCart> = ({ onClose }) => {
   return (
     <div className="fixed inset-0 bg-[#D9D9D9]/75 z-[999] ">
       <div className="absolute bg-[#fff] w-[100vw] md:w-[30vw] h-[100vh] right-0">
-        <p className="text-center  font-bold mt-2">Mi compra</p>
-        <Icon
-          className="hover:cursor-pointer absolute right-0 top-0 mt-2"
-          icon="line-md:menu-to-close-alt-transition"
-          width="24"
-          height="24"
-          onClick={onClose}
-        />
-        {detalles?.map((detalle) => (
-          <div className="flex items-center justify-around">
-            <img
-              src={`${detalle.producto.imagen}`}
-              alt={`imagen ${detalle.producto.nombre}`}
-              className="w-[100px] object-cover"
+        {!userActive ? (
+          <>
+            <Icon
+              className="hover:cursor-pointer absolute right-0 top-0 mt-2"
+              icon="line-md:menu-to-close-alt-transition"
+              width="24"
+              height="24"
+              onClick={onClose}
             />
-            <div className="flex flex-col items-center justify-center gap-1">
-              <p className="">{detalle.producto.nombre}</p>
-              <p>
-                Talle: {detalle.talle} Color: {detalle.producto.color}
+            <div className="h-full flex flex-col items-center justify-center mt-6">
+              <img
+                className="w-[80%] h-[20%]"
+                src="./undraw_login_weas.svg"
+                alt="Inicio sesion obligatorio"
+              />
+              <p className="mt-1 text-xs">
+                Para poder finalizar tu compra debes{" "}
+                <a className="underline font-bold" href="/login">
+                  Iniciar sesion
+                </a>
               </p>
-              <ProductCounter
-                maxCounter={
-                  detalle.producto.talles.find((t) => t.talle === detalle.talle)
-                    ?.stock
-                }
-                count={detalle.cantidad}
-                setCount={(newCount) =>
-                  updateCantidad(detalle.producto.id, newCount)
-                }
-              />
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <Icon
-                onClick={() => deleteDetalle(detalle.producto.id)}
-                className="hover:cursor-pointer"
-                icon="line-md:trash"
-                width="24"
-                height="24"
-              />
-              <p>${detalle.producto.precio} c/u</p>
-            </div>
-          </div>
-        ))}
+          </>
+        ) : (
+          <>
+            <p className="text-center font-bold mt-2">Mi compra</p>
+            <Icon
+              className="hover:cursor-pointer absolute right-0 top-0 mt-2"
+              icon="line-md:menu-to-close-alt-transition"
+              width="24"
+              height="24"
+              onClick={onClose}
+            />
 
-        <div className="p-2 shadow-md">
-          <p className="font-bold">
-            Total: <span className="absolute right-0">${total}</span>
-          </p>
-          <button
-            onClick={handleCreateDetalles}
-            className="w-full bg-[#000] text-white rounded-full mt-2 hover:cursor-pointer"
-          >
-            Finalizar compra
-          </button>
-        </div>
+            {detalles?.map((detalle) => (
+              <div className="flex items-center justify-around">
+                <img
+                  src={`${detalle.producto.imagen}`}
+                  alt={`imagen ${detalle.producto.nombre}`}
+                  className="w-[100px] object-cover"
+                />
+                <div className="flex flex-col items-center justify-center gap-1">
+                  <p className="">{detalle.producto.nombre}</p>
+                  <p>
+                    Talle: {detalle.talle} Color: {detalle.producto.color}
+                  </p>
+                  <ProductCounter
+                    maxCounter={
+                      detalle.producto.talles.find(
+                        (t) => t.talle === detalle.talle
+                      )?.stock
+                    }
+                    count={detalle.cantidad}
+                    setCount={(newCount) =>
+                      updateCantidad(detalle.producto.id, newCount)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <Icon
+                    onClick={() => deleteDetalle(detalle.producto.id)}
+                    className="hover:cursor-pointer"
+                    icon="line-md:trash"
+                    width="24"
+                    height="24"
+                  />
+                  <p>${detalle.producto.precio} c/u</p>
+                </div>
+              </div>
+            ))}
+
+            <div className="p-2 shadow-md">
+              <p className="font-bold">
+                Total: <span className="absolute right-0">${total}</span>
+              </p>
+              <button
+                onClick={handleCreateDetalles}
+                className="w-full bg-[#000] text-white rounded-full mt-2 hover:cursor-pointer"
+              >
+                Finalizar compra
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

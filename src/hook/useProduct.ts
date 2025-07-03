@@ -14,6 +14,7 @@ const useProduct = () => {
     products,
     setProducts,
     addProduct,
+    addProducts,
     deleteProduct,
     editProduct,
     darAlta,
@@ -25,6 +26,7 @@ const useProduct = () => {
       products: state.products,
       setProducts: state.setProducts,
       addProduct: state.addProduct,
+      addProducts: state.addProducts,
       editProduct: state.editProduct,
       deleteProduct: state.deleteProduct,
       darAlta: state.darAlta,
@@ -34,18 +36,27 @@ const useProduct = () => {
     }))
   );
 
-  const getProducts = async (page: number, size: number = 9) => {
+  // const getProducts = async (page: number, size: number = 9) => {
+  //   const data = await productService.getProducts(page, size);
+  //   if (data) {
+  //     setProducts((prev: IProduct[]) => {
+  //       const newProducts = data.content.filter(
+  //         (np) => !prev.some((pp) => pp.id === np.id)
+  //       );
+  //       return [...prev, ...newProducts];
+  //     });
+  //   }
+  //   return data;
+  // };
+  const getProducts = async (page: number, size: number) => {
     const data = await productService.getProducts(page, size);
     if (data) {
-      setProducts((prev: IProduct[]) => {
-        const newProducts = data.content.filter(
-          (np) => !prev.some((pp) => pp.id === np.id)
-        );
-        return [...prev, ...newProducts];
-      });
+      addProducts(data.content);
     }
+
     return data;
   };
+
   const createProduct = async (newProduct: IProduct) => {
     try {
       addProduct(newProduct);

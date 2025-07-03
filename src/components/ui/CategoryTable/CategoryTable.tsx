@@ -101,7 +101,7 @@ const CategoryTable: FC<Props> = ({ sortKey, vista }) => {
           ))}
         </tbody>
       </table>
-      <ShowMoreButton showMore={loadMoreCategorias} />
+      {/* <ShowMoreButton showMore={loadMoreCategorias} /> */}
     </div>
   );
 };

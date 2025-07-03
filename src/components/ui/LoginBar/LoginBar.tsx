@@ -30,18 +30,18 @@ const LoginBar = () => {
               >
                 Mi perfil /
               </button>
-              <button className="cursor-pointer" onClick={handleCloseSession}>
-                Cerrar Sesión
-              </button>
-            </div>
-          ) : (
-            <>
               <button
                 className="cursor-pointer"
                 onClick={handleNavigateToOrders}
               >
                 Mis ordenes /
               </button>
+              <button className="cursor-pointer" onClick={handleCloseSession}>
+                Cerrar Sesión
+              </button>
+            </div>
+          ) : (
+            <>
               <button className="cursor-pointer" onClick={handleCloseSession}>
                 Cerrar Sesión
               </button>

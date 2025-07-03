@@ -50,7 +50,6 @@ const UserTable: FC<Props> = ({ sortKey, vista }) => {
 
   return (
     <div className="mt-2">
-      <Search />
       <NewButton vista={vista} />
 
       <table className="w-full text-left">
